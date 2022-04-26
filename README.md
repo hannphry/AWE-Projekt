@@ -15,4 +15,4 @@ Technischer Aufbau:
 
 
 ![Brainstorming Übersicht](https://user-images.githubusercontent.com/50337362/164915864-19244a85-5bbf-4c5e-89ba-85b82b40b0f5.jpg)
-Charts vielleicht hier mit: https://swimlane.gitbook.io/ngx-charts/
+Charts vielleicht hier mit: https://www.npmjs.com/package/angular-google-charts
