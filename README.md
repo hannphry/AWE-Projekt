@@ -1,4 +1,5 @@
-# AWE-Projekt
+# AWE-Projekt ![LogoS](https://user-images.githubusercontent.com/50337362/165817587-89b538ce-169d-4613-982a-c0dd5f44d674.png)
+
 Gruppe 2, Semester 4, Projekt Anwendungsentwicklung
 
 Deutsche Bahn unter der Lupe, wirklich so spät?
