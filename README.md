@@ -1,4 +1,4 @@
-# AWE-Projekt ![LogoS](https://user-images.githubusercontent.com/50337362/165818204-7f82689e-d018-4ddd-991f-bec777979be0.png)
+# AWE-Projekt![LogoS](https://user-images.githubusercontent.com/50337362/165818325-172a7e1c-1be5-4ecc-926a-7f2eb4e8cf99.png)
 
 Gruppe 2, Semester 4, Projekt Anwendungsentwicklung
 
