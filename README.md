@@ -14,7 +14,7 @@ Schreiben der Daten in eigene MongoDB-Datenbank.
 Technischer Aufbau:
 - Datenbank: MongoDB Atlas
 - Backend: NestJS mithilfe von Docker
-- Frontend: Angular mithilfe von NGIИX
+- Frontend: Angular + Google Charts mithilfe von NGIИX
   - Aufteilung in 4 "Abteile" (z.B. Wetter, Events, Nah- vs. Fernverkehr, Güter- vs. Personenverkehr)
 
 
