@@ -1,0 +1,15 @@
+#topics{
+    background-color: white;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    .topic{
+        width: 49vw;
+        height: 45vh;
+        //background-color: aqua;
+        border: 1px black solid;
+        h1{
+            font-size: 30px;
+        }
+    }
+}
