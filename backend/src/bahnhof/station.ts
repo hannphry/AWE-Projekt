@@ -29,5 +29,6 @@ export interface StationModel{
     name: string,
     shortcut: string,
     lon: number,
-    lat: number
+    lat: number,
+    hasDisabledEntry: boolean
 }
