@@ -13,7 +13,19 @@ export const StationSchema  = new mongoose.Schema({
     name: String,
     shortcut: String,
     lon: Number,
-    lat: Number
+    lat: Number,
+    type: String,
+    priceCategory : Number,
+    hasSteplessAccess : Boolean,
+    hasParking :Boolean,
+    hasBicycleParking :Boolean,
+    hasLocalPublicTransport :Boolean,
+    hasTaxiRank : Boolean,
+    hasCarRental : Boolean,
+    hasWiFi : Boolean,
+    federalState : String,
+    stationManagement :String,
+    has247service: Boolean
 });
 
 export interface Station extends mongoose.Document{
@@ -21,7 +33,19 @@ export interface Station extends mongoose.Document{
     name: string,
     shortcut: string,
     lon: number,
-    lat: number
+    lat: number,
+    type?: string,
+    priceCategory ?: number,
+    hasSteplessAccess ?: boolean,
+    hasParking ?:boolean,
+    hasBicycleParking ?:boolean,
+    hasLocalPublicTransport ?:boolean,
+    hasTaxiRank ?: boolean,
+    hasCarRental ?: boolean,
+    hasWiFi ?: boolean,
+    federalState ?: string,
+    stationManagement ?:string,
+    has247service?: boolean
 }
 
 export interface StationModel{
@@ -30,5 +54,16 @@ export interface StationModel{
     shortcut: string,
     lon: number,
     lat: number,
-    hasDisabledEntry: boolean
+    type?: string,
+    priceCategory ?: number,
+    hasSteplessAccess ?: boolean,
+    hasParking ?:boolean,
+    hasBicycleParking ?:boolean,
+    hasLocalPublicTransport ?:boolean,
+    hasTaxiRank ?: boolean,
+    hasCarRental ?: boolean,
+    hasWiFi ?: boolean,
+    federalState ?: string,
+    stationManagement ?:string,
+    has247service?: boolean
 }

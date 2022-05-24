@@ -18,7 +18,7 @@ export class StationModule {
     constructor(private httpService: HttpService){
         //this.getBahnhoefe();
     }
-
+    /*
     getBahnhoefe(){
         let data;
         this.httpService.get('https://api.deutschebahn.com/stada/v2/stations',{headers: {
@@ -40,7 +40,7 @@ export class StationModule {
             lat: elem.evaNumbers[0].geographicCoordinates.coordinates[0],
             lon: elem.evaNumbers[0].geographicCoordinates.coordinates[0]
         })
-        /*data.forEach(elem => {
+        data.forEach(elem => {
             let bahnhof: Bahnhof = {
                 id: elem.evaNumbers[0].number,
                 name: elem.name,
@@ -48,9 +48,10 @@ export class StationModule {
                 lat: elem.evaNumbers[0].geographicCoordinates.coordinates[0],
                 lon: elem.evaNumbers[0].geographicCoordinates.coordinates[0]
             }
-        });*/
+        });
         //this.data = data;
-    }
+    
+    }*/
 }
 
 

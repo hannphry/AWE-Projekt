@@ -41,4 +41,9 @@ export class StationController {
     this.stationService.fillStationData();
   }
 
+  @Get('stations/getStationDataFromAPI')
+  getStationDataFromAPI(){
+    return this.stationService.getAllStationsFromDBAPI();
+  }
+
 }
