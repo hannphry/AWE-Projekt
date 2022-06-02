@@ -21,11 +21,14 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@fastify/busboy": "^1.0.0",
     "@nestjs/common": "^8.0.0",
     "@nestjs/core": "^8.0.0",
     "@nestjs/mongoose": "^9.0.3",
     "@nestjs/platform-express": "^8.0.0",
     "axios": "^0.27.2",
+    "dicer": "^0.3.1",
+    "fast-xml-parser": "^4.0.8",
     "mongoose": "^6.3.2",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
