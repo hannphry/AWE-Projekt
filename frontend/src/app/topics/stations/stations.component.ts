@@ -268,15 +268,13 @@ export class StationsComponent implements OnInit {
         if(cmp >= 0.5 && cmp < 0.75) bubbleColour = 0.5;
         if(cmp >= 0.75) bubbleColour = 0.75;*/
         
-        console.log('Klasse, Stationen Mit Parkplätzen / Anzahl Stationen,Prozentgruppe, Anzahl Stationen')
+        //console.log('Klasse, Stationen Mit Parkplätzen / Anzahl Stationen,Prozentgruppe, Anzahl Stationen')
         stationsByStationManagement.push([type,(tmpStationsWithP.length/tmpStations.length),bubbleColour,tmpStations.length])
         counter++;
       });
       this.bubbleChart.values = stationsByStationManagement
-      console.log(this.bubbleChart)
+      //console.log(this.bubbleChart)
     });
-
-
   }
 
 }

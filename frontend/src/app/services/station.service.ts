@@ -14,7 +14,6 @@ export class StationService{
         return this.httpClient.get<Station[]>(`${environment.apiUrl}/stations`);
 
     }
-
 }
 
 

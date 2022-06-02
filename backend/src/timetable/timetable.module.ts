@@ -22,19 +22,19 @@ import XMLParser from 'fast-xml-parser/src/fxp';
 })
 export class TimetableModule {
     constructor(
-      private httpService: HttpService,
-      //private xmlparser: XMLParser
+      private httpService: HttpService
       ){
         this.test();
     }
 
     test(){
+      /*
       this.httpService.get('https://api.deutschebahn.com/timetables/v1/plan/8000001/220601/12', {headers: {
         Authorization: 'Bearer 112d350cb8cb41770e1abf08d88b7ab4',
         Accept: 'application/json'
       }}).subscribe(obj=>{
         let testData = obj.data;
         
-      })
+      })*/
     }
 }
