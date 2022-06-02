@@ -113,22 +113,29 @@ export class StationsComponent implements OnInit {
     type: ChartType.ComboChart,
     options: {
       title : 'Anzahl Stationen mit ÖPNV-Anschluss',
-      vAxis: {title: 'Anzahl'},
-      hAxis: {title: 'Bundesländer'},
+      //vAxis: {title: 'Anzahl'},
+      //hAxis: {title: 'Bundesländer'},
       seriesType: 'bars',
-      series: {2: {type: 'line'}},
+      series: {
+        //2: {type: 'line'}
+      },
       colors: [
-        '#aecbfc',
+        '#aaecdc',
         //'#aedcfc',
         //'#aeeafc',
-        '#aef2fc',
+        '#a7dde8',
         //'#aefcf4',
         //'#aefce1',
-        '#aefcc3'
+        '#9dc1eb'
       ],
+      vAxis: {
+        gridlines: {
+            color: 'transparent'
+        }
+    }
       
     },
-    columns: ['Bundesland','Stationen','ÖPNV', 'Differenz'],
+    columns: ['Bundesland','Stationen','ÖPNV' ],//, 'Differenz'],
     values: []
   }
 
@@ -145,6 +152,16 @@ export class StationsComponent implements OnInit {
         //'#aefce1',
         '#aefcc3'
       ],
+      vAxis: {
+        gridlines: {
+            color: 'transparent'
+        }
+      },
+      hAxis: {
+        gridlines: {
+          color: 'transparent'
+      }
+      }
     },
     columns: ['Preisklasse','Anzahl Stationen','Mit Taxi','24/7-Service'],
     values: []
@@ -164,6 +181,11 @@ export class StationsComponent implements OnInit {
         //'#aefce1',
         '#aefcc3'
       ],
+      vAxis: {
+        gridlines: {
+            color: 'transparent'
+        }
+      },
     },
     columns: ['Anzahl','Typ', 'Anzahl Mit Taxi','Anzahl mit Mietwagen'],
     values: [] //Blöcke aufeinander addieren
@@ -203,7 +225,7 @@ export class StationsComponent implements OnInit {
         
         let publicTransportStations = tmpStations.filter(obj => obj.hasLocalPublicTransport == true);
         
-        stateStations.push([state, tmpStations.length, publicTransportStations.length, (tmpStations.length - publicTransportStations.length)]);
+        stateStations.push([state, tmpStations.length, publicTransportStations.length]); // , (tmpStations.length - publicTransportStations.length)]);
         
 
       });

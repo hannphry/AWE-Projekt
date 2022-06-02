@@ -1,0 +1,47 @@
+/*
+//ColourPair1:
+$colour1: #ffa20040;
+$accentColour1: #e692004e;
+
+//ColourPair2:
+$colour2: #ffc80054;
+$accentColour2: #cda30d54;
+
+//ColourPair3:
+$colour3: #ffee0044;
+$accentColour3: #dfd0003b;
+
+//ColourPair4:
+$colour4: #c3ff0037;
+$accentColour4: #ace0002e;
+
+//$mainColour: #ffc60069;
+
+*/
+
+body #layout .row #information {
+    #info1{
+        background-color: #ffa20040;
+        .graphIcon{
+            background: #e692004e;
+        }
+    }
+    #info2{
+        background-color: #ffc80054;
+        .graphIcon{
+            background: #cda30d54;
+        }
+    }
+    #info3{
+        background-color: #ffee0044;
+        .graphIcon{
+            background: #dfd0003b;
+        }
+    }
+    #info4{
+        background-color: #c3ff0037;
+        .graphIcon{
+            background: #ace0002e;
+        }
+    }
+}

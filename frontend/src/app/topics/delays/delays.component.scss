@@ -1,0 +1,47 @@
+/*
+
+//ColourPair1:
+$colour1: #8dc6f47c;
+$accentColour1: #79abd57c;
+
+//ColourPair2:
+$colour2: #8db8f497;
+$accentColour2: #7a9dcf83;
+
+//ColourPair3:
+$colour3: #8d9bf458;
+$accentColour3: #7884d367;
+
+//ColourPair4:
+$colour4: #a98df44b;
+$accentColour4: #8771c34b;
+
+*/
+
+//$mainColour: #ffc60069;
+body #layout .row #information{
+    #info1{
+        background-color: #8dc6f47c;
+        .graphIcon{
+            background: #79abd57c;
+        }
+    }
+    #info2{
+        background-color: #8db8f497;
+        .graphIcon{
+            background: #7a9dcf83;
+        }
+    }
+    #info3{
+        background-color: #8d9bf458;
+        .graphIcon{
+            background: #7884d367;
+        }
+    }
+    #info4{
+        background-color: #a98df44b;
+        .graphIcon{
+            background: #8771c34b;
+        }
+    }
+}

@@ -1,9 +1,63 @@
 <div id="topics">
     <div class="topic" id="topic_stations" routerLink="stations">
-        Abteil: Bahnhöfe
-        <h1>{{this.amountLocalPublicTransport}}% aller Bahnhöfe und Stationen haben einen ÖPNV-Anschluss</h1>
+        <div class="upperElem">
+            <h2>
+                Abteil: Bahnhöfe
+            </h2>
+            <mat-icon id="storeIcon" class="topicIcon">store</mat-icon>
+        </div>
+        <h1>
+            {{this.amountLocalPublicTransport}}% aller Bahnhöfe und Stationen haben einen ÖPNV-Anschluss
+        </h1>
     </div>
-    <div class="topic" id="topic_routes" routerLink="routes">Abteil: Strecken</div>
-    <div class="topic" id="topic_delays" routerLink="delays">Abteil: Verzögerungen</div>
-    <div class="topic" id="topic_announcements" routerLink="announcements">Abteil: Aktuelle Meldungen</div>
+    <div class="topic" id="topic_routes" routerLink="routes">
+        <div class="upperElem">
+            <h2>
+                Abteil: Strecken
+            </h2>
+            <mat-icon id="mapIcon" class="topicIcon">map</mat-icon>
+        </div>
+        <h1>
+            Hier könnte ihre Werbung stehen
+        </h1>
+    </div>
+    <div class="topic" id="topic_delays" routerLink="delays">
+        <div class="upperElem">
+            <h2>
+                Abteil: Verzögerungen
+            </h2>
+            <mat-icon id="timerIcon" class="topicIcon">av_timer</mat-icon>
+        </div>
+        <h1>
+            Hier könnte ihre Werbung stehen
+        </h1>
+    </div>
+    <div class="topic" id="topic_announcements" routerLink="announcements">
+        <div class="upperElem">
+            <h2>
+                Abteil: Meldungen
+            </h2>
+            <mat-icon id="announcementIcon" class="topicIcon">announcement</mat-icon>
+        </div>
+        <h1>
+            Hier könnte ihre Werbung stehen
+        </h1>
+    </div>
 </div>
+
+<!--
+<button mat-icon-button id="menu" (click)="sidenav.toggle()">
+    <mat-icon>menu</mat-icon>
+</button>
+
+<mat-sidenav-container>
+    <mat-sidenav #sidenav>
+        <mat-nav-list>
+            <a *ngFor="let item of this.routes" mat-list-item routerLink="{{item.path}}" (click)="sidenav.toggle()">{{item.title}}</a>
+            <a mat-list-item (click)="sidenav.toggle()" mat-list-item>Close</a>
+        </mat-nav-list>
+    </mat-sidenav>
+    <mat-sidenav-content>
+  </mat-sidenav-content>
+</mat-sidenav-container>
+-->

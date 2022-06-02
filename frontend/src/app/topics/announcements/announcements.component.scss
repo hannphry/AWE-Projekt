@@ -1,0 +1,47 @@
+/*
+//ColourPair1:
+$colour1: #f899e778;
+$accentColour1: #cb7abc6d;
+
+//ColourPair2:
+$colour2: #f38bba96;
+$accentColour2: #d97aa58c;
+
+//ColourPair3:
+$colour3: #f662809a;
+$accentColour3: #d9667db2;
+
+//ColourPair4:
+$colour4: #ff787883;
+$accentColour4: #d9606063;
+
+//$mainColour: #ffc60069;
+
+*/
+
+body #layout .row #information {
+    #info1{
+        background-color:#f899e778;
+        .graphIcon{
+            background:#cb7abc6d;
+        }
+    }
+    #info2{
+        background-color: #f38bba96;
+        .graphIcon{
+            background:  #d97aa58c;
+        }
+    }
+    #info3{
+        background-color:#f662809a;
+        .graphIcon{
+            background:  #d9667db2;
+        }
+    }
+    #info4{
+        background-color: #ff787883;
+        .graphIcon{
+            background: #d9606063;
+        }
+    }
+}

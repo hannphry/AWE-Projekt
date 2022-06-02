@@ -1,16 +1,106 @@
+$backgroundColour: #263248e5;
+
 #header{
     width: 100%;
-    height: 40px;
-    background-color: #b3e7ff;
-    display: flex;
-    align-items: center;
-    padding-left: 0.5rem;
-    #logo{
-        background-image: url("../LogoS.png");
-        background-size: cover;
-        //background-attachment: fixed;
-        background-position: center;
-        height: 35px;
-        width: 50px;
+    height: 60px;
+    background-color: #fff;
+    border-bottom: 1px solid #00000030; 
+    box-shadow: 0px 8px 17px -17px;
+    position: absolute;
+    padding-left: 0;
+    padding-right: 0;
+    display: block;
+    /*
+    justify-content: flex-start;
+    align-items: center;*/
+    
+    #icons{
+        display: flex;
+        position: absolute;
+        align-items: center;
+        #headerLogo{
+            justify-content: center;
+            align-items: center;
+            background-color: $backgroundColour;
+            width: 140px;
+            height: 60px;
+            display: flex;
+            #logo{
+                background-image: url("../Logo.png");
+                background-size: cover;
+                //background-attachment: fixed;
+                background-position: center;
+                height: 50px;
+                width: 70px;
+                //position: absolute;
+            }
+            #logo:hover{
+                transition-duration: 100ms;
+                height: 55px;
+                width: 80px;
+            }
+        }
+    }
+
+    #title{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+        h1{
+            font-size: 32px;
+        }
     }
 }
+
+mat-sidenav-container{
+    //margin-top: 10px;
+    height: 90%;
+    mat-sidenav-content{
+        //left: 140px;
+    }
+}
+
+body{
+    width: 100%;
+    display: flex;
+    height: calc(100% - 64px);
+    #sidenav{
+        //height: calc(100% - 60px);
+        width: 140px;
+        background-color: $backgroundColour;
+        a{
+            color: white;
+            text-decoration: none;
+            padding-bottom: 0.8rem;
+        }
+        a:hover{
+            text-decoration: underline;
+            font-size: 19px;
+            transition-duration: 200ms;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        //position: sticky;
+    }
+    #router-outlet{
+        //height: calc(100% - 60px);
+        //width: 100%;
+        width: calc(100% - 140px);
+        padding-left: 1rem;
+        background-color: #f2f2f2;
+        //left: 140px;
+        //position: absolute;
+        //flex-shrink: 0;
+    }
+
+}
+
+
+
+/*
+Vier Abteile, vier verschiedene Farbrichtungen (Grün, Gelb, Blau, Rot)
+In den Abteilen dann Pastellversionen der jeweiligen Farbrichtung
+*/

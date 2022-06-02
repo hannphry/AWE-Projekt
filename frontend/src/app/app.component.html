@@ -1,5 +1,32 @@
-<div id="header">
-    <div id="logo" routerLink="../"></div>
-</div>
+<mat-toolbar>
+    <mat-toolbar-row id="header">
+        <div id="icons">
+            <div id="headerLogo">
+                <div id="logo" routerLink="../"></div>
+            </div>
+            <button mat-icon-button id="burgerMenu" (click)="this.displaySidenav()">
+                <mat-icon>menu</mat-icon>
+            </button>
+        </div>
+        <!--
+            <button mat-icon-button id="menu" (click)="sidenav.toggle()">
+                <mat-icon>menu</mat-icon>
+            </button>
+        -->
+        <div class="headerElem" id="title">
+            <h1>DB - unter der Lupe</h1>
+        </div>
+        <div id="sidenav">
+        </div>
+    </mat-toolbar-row>
+</mat-toolbar>
 
-<router-outlet></router-outlet>
+<body>
+    <mat-list id="sidenav">
+        <a mat-list-item *ngFor="let item of this.routes" routerLink="{{item.path}}">{{item.title}}</a>
+        <!--<a mat-list-item *ngFor="let item of this.exRoutes" href="{{item.url}}">{{item.title}}</a>-->
+    </mat-list>
+    <div id="router-outlet">
+        <router-outlet></router-outlet>
+    </div>
+</body>

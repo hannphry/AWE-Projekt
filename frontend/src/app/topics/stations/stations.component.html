@@ -1,12 +1,132 @@
-<p>stations works!</p>
-<p>{{this.stations.length}}</p>
+<body>
+    <!--Gitter deaktivieren?-->
+    
+    <!--<google-chart [title]="barChart.title" [type]="barChart.type" [columns]="barChart.columns" [data]="barChart.values"></google-chart>-->
+    
+    <!--Vielleicht in Reihen aufteilen, damit die Abstände und Ränder gleich sind-->
+    
+    <div id="layout">
+        <div id="topicName">
+            <div id="elem">
+                <h2>
+                    Abteil: Bahnhöfe
+                </h2>
+                <mat-icon id="storeIcon" class="topicIcon">store</mat-icon>
+            </div>
+        </div>
+        <div id="row1" class="row">
+            <div id="information">
+                <div class="info" id="info1">
+                    <mat-icon class="graphIcon"> tram</mat-icon>
+                    <div class="statistics">
+                        <p class="value">70,3%</p>
+                        <p class="desc">ÖPNV-Anschluss</p>
+                    </div>
+                </div>
+                <div class="info" id="info2">
+                    <mat-icon class="graphIcon"> attach_money</mat-icon>
+                    <div class="statistics">
+                        <p class="value">16,3%</p>
+                        <p class="desc">Ja-Anschluss</p>
+                    </div>
+                </div>
+            </div>
+            <div id="graphs">
+                <div class="graph">
+                    <google-chart class="googleChart" [title]="comboChart.title" [type]="comboChart.type" [columns]="comboChart.columns" [data]="comboChart.values" [options]="comboChart.options"  ></google-chart>
+                </div>
+                <div class="graph">
+                    <google-chart class="googleChart" [title]="steppedAreaChart.title" [type]="steppedAreaChart.type" [columns]="steppedAreaChart.columns" [data]="steppedAreaChart.values" [options]="steppedAreaChart.options"></google-chart>
+                </div>
+            </div>
+        </div>
+        <div id="row2" class="row">
+            <div id="information">
+                <div class="info" id="info3">
+                    <mat-icon class="graphIcon"> category</mat-icon>
+                    <div class="statistics">
+                        <p class="value">16,3%</p>
+                        <p class="desc">Ja-Anschluss</p>
+                    </div>
+                </div>
+                <div class="info" id="info4">
+                    <mat-icon class="graphIcon"> local_parking</mat-icon>
+                    <div class="statistics">
+                        <p class="value">16,3%</p>
+                        <p class="desc">Ja-Anschluss</p>
+                    </div>
+                </div>
+            </div>
+            <div id="graphs">
+                <div class="graph">
+                    <google-chart class="googleChart" [title]="areaChart.title" [type]="areaChart.type" [columns]="areaChart.columns" [data]="areaChart.values" [options]="areaChart.options"></google-chart>
+                </div>
+                <div class="graph">
+                    <google-chart class="googleChart" [title]="bubbleChart.title" [type]="bubbleChart.type" [columns]="bubbleChart.columns" [data]="bubbleChart.values" [options]="bubbleChart.options"></google-chart>
+                </div>
+            </div>
+        </div>
+    </div>        
+</body>
+    
+    
+    
+    
+    <!-- 
+        Eine große Kennzahl in der Farbe
+        Etwas dunklerer Hintergrund (leichtes grau)
+        
+    -->
+    <!--
+    <div id="charts">
+        <div class="chart">
+            <div class="info">
+                <mat-icon class="graphIcon"> tram</mat-icon>
+                <div class="statistics">
+                    <p class="value">70,3%</p>
+                    <p class="desc">ÖPNV-Anschluss</p>
+                </div>
+            </div>
+            <div class="graph">
+                <google-chart class="googleChart" [title]="comboChart.title" [type]="comboChart.type" [columns]="comboChart.columns" [data]="comboChart.values" [options]="comboChart.options"  ></google-chart>
+            </div>
+        </div>
+        <div class="chart">
+            <div class="info">
+                <mat-icon class="graphIcon"> attach_money</mat-icon>
+                <div class="statistics">
+                    <p class="value">16,3%</p>
+                    <p class="desc">Ja-Anschluss</p>
+                </div>
+            </div>
+            <div class="graph">
+                <google-chart class="googleChart" [title]="steppedAreaChart.title" [type]="steppedAreaChart.type" [columns]="steppedAreaChart.columns" [data]="steppedAreaChart.values" [options]="steppedAreaChart.options"></google-chart>
+            </div>
+        </div>
+        <div class="chart">
+           <div class="info">
+               <mat-icon class="graphIcon"> category</mat-icon>
+               <div class="statistics">
+                   <p class="value">16,3%</p>
+                   <p class="desc">Ja-Anschluss</p>
+               </div>
+           </div>
+           <div class="graph">
+               <google-chart class="googleChart" [title]="areaChart.title" [type]="areaChart.type" [columns]="areaChart.columns" [data]="areaChart.values" [options]="areaChart.options"></google-chart>
+           </div>
+       </div>
+       <div class="chart">
+          <div class="info">
+              <mat-icon class="graphIcon"> local_parking</mat-icon>
+              <div class="statistics">
+                  <p class="value">16,3%</p>
+                  <p class="desc">Ja-Anschluss</p>
+              </div>
+          </div>
+          <div class="graph">
+              <google-chart class="googleChart" [title]="bubbleChart.title" [type]="bubbleChart.type" [columns]="bubbleChart.columns" [data]="bubbleChart.values" [options]="bubbleChart.options"></google-chart>
+          </div>
+      </div>
+    </div>
 
-<!--<google-chart [title]="barChart.title" [type]="barChart.type" [columns]="barChart.columns" [data]="barChart.values"></google-chart>-->
-
-<google-chart [title]="comboChart.title" [type]="comboChart.type" [columns]="comboChart.columns" [data]="comboChart.values" [options]="comboChart.options" style="width: 900px; height: 500px;"></google-chart>
-
-<google-chart [title]="steppedAreaChart.title" [type]="steppedAreaChart.type" [columns]="steppedAreaChart.columns" [data]="steppedAreaChart.values" [options]="steppedAreaChart.options" style="width: 900px; height: 500px;"></google-chart>
-
-<google-chart [title]="areaChart.title" [type]="areaChart.type" [columns]="areaChart.columns" [data]="areaChart.values" [options]="areaChart.options" style="width: 900px; height: 500px;"></google-chart>
-
-<google-chart [title]="bubbleChart.title" [type]="bubbleChart.type" [columns]="bubbleChart.columns" [data]="bubbleChart.values" [options]="bubbleChart.options" style="width: 900px; height: 500px;"></google-chart>
+-->
