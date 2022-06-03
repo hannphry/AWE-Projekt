@@ -19,7 +19,15 @@ $accentColour4: #ace0002e;
 
 */
 
-body #layout .row #information {
+body #layout .row {
+    #graphs{
+        #stationList{
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+    }
+#information {
     #info1{
         background-color: #ffa20040;
         .graphIcon{
@@ -44,4 +52,6 @@ body #layout .row #information {
             background: #ace0002e;
         }
     }
+}
+
 }

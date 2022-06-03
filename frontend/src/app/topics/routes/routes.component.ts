@@ -10,12 +10,18 @@ import { RouteService } from 'src/app/services/route.service';
 })
 export class RoutesComponent implements OnInit {
 
+  stations :any[] = [];
+
   constructor( private routeService: RouteService ) { }
 
   ngOnInit(): void {
     this.routeService.getRoutes('8000001').subscribe(data=>{
-      console.log(data);
+      this.stations = data;
     })
+  }
+
+  test(input: string){
+    //console.log(input);
   }
 
 }

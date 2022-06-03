@@ -22,9 +22,12 @@
                 <div class="graph">
                     <google-chart class="googleChart"></google-chart>
                 </div>
-                <div class="graph">
-                    <google-chart class="googleChart"></google-chart>
-                </div>
+                <!--
+                        <google-chart class="googleChart"></google-chart>
+                    -->
+                <mat-list class="graph" id="stationList">
+                    <mat-list-item *ngFor="let item of this.stations" (click)="this.test(item.detailsId)">{{item.origin}}</mat-list-item>
+                </mat-list>
             </div>
 
         </div>
