@@ -44,15 +44,25 @@ export class RouteService {
 
     getTrackByDetailsId(id: string){
         var subject = new ReplaySubject(1);
-        this.httpService.get(`https://api.deutschebahn.com/freeplan/v1/journeyDetails/${id}`,{headers: {
+        id = encodeURIComponent(encodeURIComponent(id));
+        /*
+        let a = new Date();
+        let b = new Date();
+        a.setHours(15);
+        a.setMinutes(30);
+        b.setHours(16);
+        b.setMinutes(30);
+
+        console.log(b.getTime()-a.getTime());
+        */
+
+        this.httpService.get(`https://api.deutschebahn.com/fahrplan-plus/v1/journeyDetails/${id}`,{headers: {
             Authorization: 'Bearer 112d350cb8cb41770e1abf08d88b7ab4',
             Accept: 'application/json'
         }}).subscribe(obj =>{
 
             let arr: {stopId: string, stopName: string, lat: number, lon: number, depTime:  string, train: string, type: string, operator: string }[]= [];
             console.log(obj);
-            //let data = obj.data;
-
 /*
 if(data){
                 data.forEach(route => {
