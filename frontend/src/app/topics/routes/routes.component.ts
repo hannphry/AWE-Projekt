@@ -11,17 +11,26 @@ import { RouteService } from 'src/app/services/route.service';
 export class RoutesComponent implements OnInit {
 
   stations :any[] = [];
+  track :any[] = [];
 
   constructor( private routeService: RouteService ) { }
 
   ngOnInit(): void {
     this.routeService.getRoutes('8000001').subscribe(data=>{
       this.stations = data;
+      
     })
   }
 
-  test(input: string){
-    //console.log(input);
+  getWithDetailsId(input: string){
+    console.log("DetailsId: " + input);
+
+    this.routeService.getDetailsId(input).subscribe(data=>{
+      this.track = data;
+      console.log("Obj: " + data)
+    })
+
+    
   }
 
 }

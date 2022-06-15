@@ -15,4 +15,10 @@ export class RouteController{
         console.log(id);
         return this.routeService.getArrivalBoardById(id);
     }
+
+    @Get('/details/:id')
+    getSelectedDetailsId( @Param('id') id: string ){
+        console.log(id);
+        this.routeService.getTrackByDetailsId(id);
+    }
 }

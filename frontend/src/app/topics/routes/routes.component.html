@@ -1,6 +1,15 @@
 <body>
     <div id="layout">
-        <p>Strecken</p>
+        <div id="topRow" class="row">
+            <p>Strecken</p>
+            <mat-form-field appearance="fill">
+                <mat-label>Zugverbindung</mat-label>
+                <mat-select>
+                  <mat-option>None</mat-option>
+                  <mat-option *ngFor="let item of this.stations"  (click)="this.getWithDetailsId(item.detailsId)">{{item.origin}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
         <div id="row1" class="row">
             <div id="information">
                 <div class="info" id="info1">
@@ -22,12 +31,10 @@
                 <div class="graph">
                     <google-chart class="googleChart"></google-chart>
                 </div>
-                <!--
-                        <google-chart class="googleChart"></google-chart>
-                    -->
-                <mat-list class="graph" id="stationList">
-                    <mat-list-item *ngFor="let item of this.stations" (click)="this.test(item.detailsId)">{{item.origin}}</mat-list-item>
-                </mat-list>
+                
+                <div class="graph">
+                    <google-chart class="googleChart"></google-chart>
+                </div>
             </div>
 
         </div>

@@ -5,7 +5,7 @@ import { AppService } from './app.service';
 
 import { StationModule } from './bahnhof/station.module';
 import { TimetableModule } from './timetable/timetable.module';
-import { XMLParser } from 'fast-xml-parser';
+//import { XMLParser } from 'fast-xml-parser';
 import { RouteModule } from './route/route.module';
 //import { Bahnhof } from './bahnhof/bahnhof';
 

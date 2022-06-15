@@ -14,4 +14,8 @@ export class RouteService{
         return this.httpClient.get<any[]>(`${environment.apiUrl}/routes/${id}`);
     }
 
+    getDetailsId(id: string){
+        return this.httpClient.get<any[]>(`${environment.apiUrl}/routes/details/${id}`);
+    }
+
 }

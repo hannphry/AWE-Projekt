@@ -18,7 +18,7 @@ import { MatToolbarModule} from '@angular/material/toolbar'
 
 import { MatSidenavModule} from '@angular/material/sidenav';
 import { MatListModule} from '@angular/material/list';
-
+import { MatSelectModule} from '@angular/material/select';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { OurDataComponent } from './our-data/our-data.component';
@@ -51,6 +51,7 @@ import { MarkdownModule } from 'ngx-markdown';
     MatToolbarModule,
     MatListModule,
     MatButtonModule,
+    MatSelectModule,
     MarkdownModule.forRoot()
   ],
   providers: [],

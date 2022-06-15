@@ -39,4 +39,51 @@ export class RouteService {
         });
         return subject;
     }
+
+
+
+    getTrackByDetailsId(id: string){
+        var subject = new ReplaySubject(1);
+        this.httpService.get(`https://api.deutschebahn.com/freeplan/v1/journeyDetails/${id}`,{headers: {
+            Authorization: 'Bearer 112d350cb8cb41770e1abf08d88b7ab4',
+            Accept: 'application/json'
+        }}).subscribe(obj =>{
+
+            let arr: {stopId: string, stopName: string, lat: number, lon: number, depTime:  string, train: string, type: string, operator: string }[]= [];
+            console.log(obj);
+            //let data = obj.data;
+
+/*
+if(data){
+                data.forEach(route => {
+                    if(route.stopName ){
+                        route.stopName = route.stopName.replace('&#x0028;',' (');
+                        route.stopName = route.stopName.replace('&#x0029;',') ');
+                        let routeObject: {stopId: string, stopName: string, lat: number, lon: number, depTime:  string, train: string, type: string, operator: string } = {
+                            stopId: route.stopId,
+                            stopName: route.stopName,
+                            lat: route.lat,
+                            lon: route.lon,
+                            depTime: route.depTime,
+                            train: route.train,
+                            type: route.type,
+                            operator: route.operator
+                        };
+                        
+                        arr.push(routeObject);
+                        
+                    }
+                });
+            }
+            subject.next(arr);
+            subject.complete();
+*/
+            
+    });
+    return subject;
+}
+
+
+
+
 }
