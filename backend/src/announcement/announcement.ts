@@ -10,7 +10,7 @@ import * as mongoose from 'mongoose';
 
 /*Priorität, Beeinflusst Fahrplan, welche Meldung (Bauarbeiten, Verspätungen, usw.), Subtitle und Subject ganz interessant, concerned Lines vielleicht */
 
-export const StoerungSchema  = new mongoose.Schema({
+export const AnnouncementSchema  = new mongoose.Schema({
     id: String,
     type: String,
     priority: String,
@@ -25,7 +25,7 @@ export const StoerungSchema  = new mongoose.Schema({
     concernedLines: String
 });
 
-export interface Stoerung extends mongoose.Document{
+export interface Announcement extends mongoose.Document{
     id: String,
     type: String,
     priority ?: String,
@@ -40,7 +40,7 @@ export interface Stoerung extends mongoose.Document{
     concernedLines ?: String
 }
 
-export interface StoerungModel{
+export interface AnnouncementModel{
     id: String,
     type: String,
     priority ?: String,
