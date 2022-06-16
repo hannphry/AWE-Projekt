@@ -15,7 +15,9 @@ $accentColour3: #dfd0003b;
 $colour4: #c3ff0037;
 $accentColour4: #ace0002e;
 
-//$mainColour: #ffc60069;
+//$mainColour: #fddf70;
+
+background-color: #fddf70;
 
 */
 
@@ -29,31 +31,62 @@ body #layout .row {
     }
 #information {
     #info1{
-        background-color: #ffa20040;
+        background-color: rgb(253, 223, 112);
         .graphIcon{
-            background: #e692004e;
+            background: rgb(245, 215, 104);
         }
     }
     #info2{
-        background-color: #ffc80054;
+        background-color: rgb(243, 233, 102);
         .graphIcon{
-            background: #cda30d54;
+            background: rgb(235, 225, 94);
         }
     }
     #info3{
-        background-color: #ffee0044;
+        background-color: rgb(233, 243, 92);
         .graphIcon{
-            background: #dfd0003b;
+            background: rgb(225, 235, 84);
         }
     }
     #info4{
-        background-color: #c3ff0037;
+        background-color: rgb(223, 253, 82);
         .graphIcon{
-            background: #ace0002e;
+            background: rgb(215, 245, 74);
         }
     }
 }
 
 } #topRow{
-    height: 50px;
+    //height: 50px;
+    #topicName{
+        background-color: #fddf70;
+        border: 1px solid #f5d768;
+        .topicIcon{ 
+            background-color: #f5d768;
+        }
+    }
+    #dropDowns{
+        #connectionForm{
+            //background-color: beige;
+            width: 100%;
+            height: 100%;
+            padding-left: 5px;
+            ::ng-deep .mat-form-field-wrapper{
+                padding: 0;
+                height: 100%;
+                width: calc(100% - 5px);
+                background-color: white;
+                .mat-form-field-flex { 
+                    padding: 0 0px !important;
+                    height: 100%;
+                    background-color: white;
+                }
+                .mat-form-field-underline{
+                    top: 100%;
+                    left: -5px;
+                    width: calc(100% + 5px);
+                }
+            } 
+        }
+    }
 }

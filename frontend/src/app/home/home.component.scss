@@ -30,6 +30,7 @@
         
         h1{
             font-size: 30px;
+            text-align: center;
         }
 
         .upperElem{
@@ -50,6 +51,10 @@
                 padding: 40px;
             }
 
+            h2{
+                font-size: 40px;
+            }
+
         }
     }
     .topic:hover{
@@ -62,38 +67,38 @@
     }
 
     #topic_stations{
-        background-color: #aaecdc;
-        border: 1px solid #96cfc1;
+        background-color: #9ddecd;
+        border: 1px solid #96d6c5;
         .upperElem{
             #storeIcon{
-                background: #96cfc1;
+                background: #96d6c5;
             }
         }
     }
     #topic_routes{
-        background-color: #ffc80054;
-        border: 1px solid #d8aa0354;
+        background-color: #fddf70;
+        border: 1px solid #f5d768;
         .upperElem{
             #mapIcon{
-                background: #d8aa0354;
+                background: #f5d768;
             }
         }
     }
     #topic_delays{
-        background-color: #8db8f497;
-        border: 1px solid #7398cb97;
+        background-color: #abcefe;
+        border: 1px solid #a3c6f6;
         .upperElem{
             #timerIcon{
-                background: #7398cb97;
+                background: #a3c6f6;
             }
         }
     }
     #topic_announcements{
-        background-color: #f662809a;
-        border: 1px solid #c5596fd9;
+        background-color: #f68ea2;
+        border: 1px solid #ee869a;
         .upperElem{
             #announcementIcon{
-                background: #c5596fd9;
+                background: #ee869a;
             }
         }
     }

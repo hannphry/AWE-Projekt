@@ -1,14 +1,27 @@
 <body>
     <div id="layout">
-        <div id="topRow" class="row">
-            <p>Strecken</p>
-            <mat-form-field appearance="fill">
-                <mat-label>Zugverbindung</mat-label>
-                <mat-select>
-                  <mat-option>None</mat-option>
-                  <mat-option *ngFor="let item of this.stations"  (click)="this.getWithDetailsId(item.detailsId)">{{item.origin}}</mat-option>
-                </mat-select>
-            </mat-form-field>
+        <div id="topRow">
+            <div id="topicName">
+                <div id="elem">
+                    <h2>
+                        Abteil: Strecken
+                    </h2>
+                    <mat-icon id="storeIcon" class="topicIcon">store</mat-icon>
+                </div>
+            </div>
+            <div id="dropDowns">
+                <div class="topRowElem">
+                    <mat-form-field appearance="fill" id="connectionForm">
+                        <mat-label>Zugverbindung</mat-label>
+                        <mat-select>
+                          <mat-option>None</mat-option>
+                          <mat-option *ngFor="let item of this.stations"  (click)="this.getWithDetailsId(item.detailsId)">{{item.origin}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="topRowElem"></div>
+                <div class="topRowElem"></div>
+            </div>
         </div>
         <div id="row1" class="row">
             <div id="information">

@@ -102,7 +102,26 @@ body{
             }
         }
     }
-
+    #topRow{
+        height: 50px;
+        width: 100%;
+        display: flex;
+        #topicName{
+            width: 20%;
+            #elem{
+                width: 100%;
+            }
+        }
+        #dropDowns{
+            width: 80%;
+            display: flex;
+            justify-content: space-around;
+            .topRowElem{
+                width: calc((100% - 15%)/3);
+                background-color: white;
+            }
+        }
+    }
       .row{
           display: flex;
           height: 380px;

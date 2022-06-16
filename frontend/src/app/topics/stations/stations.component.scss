@@ -1,10 +1,12 @@
 body #layout {
-    #topicName{
-        #elem{
-            background-color: #aaecdc;
-            border: 1px solid #96cfc1;
-            .topicIcon{ 
-                background-color: #96cfc1;
+    #topRow{
+        #topicName{
+            #elem{
+                background-color: #aaecdc;
+                border: 1px solid #96cfc1;
+                .topicIcon{ 
+                    background-color: #96cfc1;
+                }
             }
         }
     }
