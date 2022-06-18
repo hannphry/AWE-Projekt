@@ -66,6 +66,9 @@ body #layout .row {
         }
     }
     #dropDowns{
+        .topRowElem{
+            border-radius: 5px;
+        }
         #connectionForm{
             //background-color: beige;
             width: 100%;

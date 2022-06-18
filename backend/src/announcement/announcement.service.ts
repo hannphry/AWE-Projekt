@@ -52,52 +52,50 @@ export class AnnouncementService {
                     data.forEach(elem => {
                         //console.log(elem)
                         if(elem){
-                            if(counter == 0){
-                                console.log("0")
-                                try{
-                                    let id = elem.infoID;
+                            console.log(counter);
+                            try{
+                                let id = elem.infoID;
+                                
+                                let announcement = this.announcementModel.findOne({id: id});
+                                if(announcement != undefined){
+                                    let type = elem.type;
+                                    let priority = elem.priority;
+                                    let affectTimetable = elem.affectTimetable;
+                                    let from = `${elem.publicationDuration.itdDateTime_From.itdDate.year}-${elem.publicationDuration.itdDateTime_From.itdDate.month}-${elem.publicationDuration.itdDateTime_From.itdDate.day} ${elem.publicationDuration.itdDateTime_From.itdTime.hour}:${elem.publicationDuration.itdDateTime_From.itdTime.minute}:${elem.publicationDuration.itdDateTime_From.itdTime.second}`;
+                                    let to = `${elem.publicationDuration.itdDateTime_To.itdDate.year}-${elem.publicationDuration.itdDateTime_To.itdDate.month}-${elem.publicationDuration.itdDateTime_To.itdDate.day} ${elem.publicationDuration.itdDateTime_To.itdTime.hour}:${elem.publicationDuration.itdDateTime_To.itdTime.minute}:${elem.publicationDuration.itdDateTime_To.itdTime.second}`
+                                    let infoLinkUrl = elem.infoLink.infoLinkURL;
+                                    let infoLinkText = elem.infoLink.infoLinkText;
+                                    let content  =  elem.infoLink.content;
+                                    let subtitle = elem.infoLink.subtitle;
+                                    let subject = elem.infoLink.subject;
+                                    let concernedLines  = "";
+                                    elem.concernedLines.forEach(obj=> concernedLines += `${obj.name};`);
                                     
-                                    let announcement = this.announcementModel.findOne({id: id});
-                                    if(announcement != undefined){
-                                        let type = elem.type;
-                                        let priority = elem.priority;
-                                        let affectTimetable = elem.affectTimetable;
-                                        let from = `${elem.publicationDuration.itdDateTime_From.itdDate.year}-${elem.publicationDuration.itdDateTime_From.itdDate.month}-${elem.publicationDuration.itdDateTime_From.itdDate.day} ${elem.publicationDuration.itdDateTime_From.itdTime.hour}:${elem.publicationDuration.itdDateTime_From.itdTime.minute}:${elem.publicationDuration.itdDateTime_From.itdTime.second}`;
-                                        let to = `${elem.publicationDuration.itdDateTime_To.itdDate.year}-${elem.publicationDuration.itdDateTime_To.itdDate.month}-${elem.publicationDuration.itdDateTime_To.itdDate.day} ${elem.publicationDuration.itdDateTime_To.itdTime.hour}:${elem.publicationDuration.itdDateTime_To.itdTime.minute}:${elem.publicationDuration.itdDateTime_To.itdTime.second}`
-                                        let infoLinkUrl = elem.infoLink.infoLinkURL;
-                                        let infoLinkText = elem.infoLink.infoLinkText;
-                                        let content  =  elem.infoLink.content;
-                                        let subtitle = elem.infoLink.subtitle;
-                                        let subject = elem.infoLink.subject;
-                                        let concernedLines  = "";
-                                        elem.concernedLines.forEach(obj=> concernedLines += `${obj.name};`);
-                                        
-                                        var newAnnouncement = new this.announcementModel({
-                                            id: id,
-                                            type: type,
-                                            priority: priority,
-                                            affectTimetable: affectTimetable,
-                                            from: from,
-                                            to: to,
-                                            infoLinkUrl: infoLinkUrl,
-                                            infoLinkText : infoLinkText,
-                                            content: content,
-                                            subtitle: subtitle,
-                                            subject: subject,
-                                            concernedLines : concernedLines
-                                        });
-                                        console.log(newAnnouncement);
-                                        newAnnouncement.save();
-                                        console.log(`Save ${id}`);
-                                    }else{
-                                        console.log("Stoerung already in DB")
-                                    }
-                                        //console.log(`Saving stoerung ${newStoerung.id}`);
-                                }catch{
-                                    console.log(`Skipping announcement ${counter}`);
+                                    var newAnnouncement = new this.announcementModel({
+                                        id: id,
+                                        type: type,
+                                        priority: priority,
+                                        affectTimetable: affectTimetable,
+                                        from: from,
+                                        to: to,
+                                        infoLinkUrl: infoLinkUrl,
+                                        infoLinkText : infoLinkText,
+                                        content: content,
+                                        subtitle: subtitle,
+                                        subject: subject,
+                                        concernedLines : concernedLines
+                                    });
+                                    console.log(newAnnouncement);
+                                    newAnnouncement.save();
+                                    console.log(`Save ${id}`);
+                                }else{
+                                    console.log("Stoerung already in DB")
                                 }
-                                counter++;
+                                    //console.log(`Saving stoerung ${newStoerung.id}`);
+                            }catch{
+                                console.log(`Skipping announcement ${counter}`);
                             }
+                            counter++;
                             //console.log(elem.evaNumbers)
                         }
         
