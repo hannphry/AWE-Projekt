@@ -11,6 +11,13 @@
             </div>
             <div id="dropDowns">
                 <div class="topRowElem">
+                    <input  type="text" placeholder="Stationssuche">
+                    <div id="stationSearchResults" *ngIf="this.hasSearched == true"></div>
+                </div>
+                <div class="topRowElem">
+                    DatePicker
+                </div>
+                <div class="topRowElem">
                     <mat-form-field appearance="fill" id="connectionForm">
                         <mat-label>Zugverbindung</mat-label>
                         <mat-select>
@@ -19,8 +26,6 @@
                         </mat-select>
                     </mat-form-field>
                 </div>
-                <div class="topRowElem"></div>
-                <div class="topRowElem"></div>
             </div>
         </div>
         <div id="row1" class="row">

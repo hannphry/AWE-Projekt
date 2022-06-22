@@ -13,6 +13,8 @@ export class RoutesComponent implements OnInit {
   stations :any[] = [];
   track :any[] = [];
 
+  hasSearched: boolean = false;
+
   constructor( private routeService: RouteService ) { }
 
   ngOnInit(): void {
