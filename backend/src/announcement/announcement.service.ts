@@ -26,7 +26,7 @@ export class AnnouncementService {
     ];*/
     async getAnnouncements(): Promise<Announcement[]>{
         const announcements = await this.announcementModel.find();
-        //console.log(stoerungen.length);
+        console.log(announcements);
         return announcements as Announcement[];
     }
 

@@ -28,23 +28,23 @@
         <div id="row1" class="row">
             <div id="information">
                 <div class="info" id="info1">
-                    <mat-icon class="graphIcon"></mat-icon>
+                    <mat-icon class="graphIcon">report_problem</mat-icon>
                     <div class="statistics">
-                        <p class="value"></p>
-                        <p class="desc"></p>
+                        <p class="value">{{percentAffectTimetable}}%</p>
+                        <p class="desc">Fahrplan beeinflussend</p>
                     </div>
                 </div>
                 <div class="info" id="info2">
                     <mat-icon class="graphIcon"></mat-icon>
                     <div class="statistics">
-                        <p class="value"></p>
-                        <p class="desc"></p>
+                        <p class="value">{{percentConstruction}}%</p>
+                        <p class="desc">durch Bauarbeiten verursacht</p>
                     </div>
                 </div>
             </div>
             <div id="graphs">
                 <div class="graph">
-                    <google-chart class="googleChart"></google-chart>
+                    <google-chart class="googleChart" [title]="comboChart.title" [type]="comboChart.type" [columns]="comboChart.columns" [data]="comboChart.values" [options]="comboChart.options" ></google-chart>
                 </div>
                 <div class="graph">
                     <google-chart class="googleChart"></google-chart>
@@ -57,15 +57,15 @@
                 <div class="info" id="info3">
                     <mat-icon class="graphIcon"></mat-icon>
                     <div class="statistics">
-                        <p class="value"></p>
-                        <p class="desc"></p>
+                        <p class="value">{{percentAffectTimetable}}%</p>
+                        <p class="desc">Fahrplan beeinflussend</p>
                     </div>
                 </div>
                 <div class="info" id="info4">
                     <mat-icon class="graphIcon"></mat-icon>
                     <div class="statistics">
-                        <p class="value"></p>
-                        <p class="desc"></p>
+                        <p class="value">{{percentAffectTimetable}}%</p>
+                        <p class="desc">Fahrplan beeinflussend</p>
                     </div>
                 </div>
             </div>
