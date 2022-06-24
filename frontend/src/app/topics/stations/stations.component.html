@@ -15,6 +15,38 @@
                     <mat-icon id="storeIcon" class="topicIcon">store</mat-icon>
                 </div>
             </div>
+            <div id="dropDowns">
+                <div class="topRowElem">
+                    <!--Dann DropDown und Auswahl einer Preisklasse-->
+                    <mat-form-field appearance="fill" class="dropDownMenu">
+                        <mat-label>{{this.priceCategoryTitle}}</mat-label>
+                        <mat-select>
+                          <mat-option>None</mat-option>
+                          <mat-option *ngFor="let item of this.priceCategories" (click)="this.choosePriceCategory(item)">Preisklasse {{item}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="topRowElem">
+                    <!--Ein Bundesland auswählen-->
+                    <mat-form-field appearance="fill" class="dropDownMenu">
+                        <mat-label>{{this.federalStateTitle}}</mat-label>
+                        <mat-select>
+                          <mat-option>None</mat-option>
+                          <mat-option *ngFor="let item of this.federalStates" (click)="this.chooseFederalState(item)">{{item}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="topRowElem">
+                    <!--Station auswählen-->
+                    <mat-form-field appearance="fill" class="dropDownMenu">
+                        <mat-label>{{this.stationTitle}}</mat-label>
+                        <mat-select>
+                          <mat-option>Management auswählen</mat-option>
+                          <mat-option *ngFor="let item of this.chooseStations"  (click)="this.chooseStation(item.id)">{{item.name}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
         </div>
         <div id="row1" class="row">
             <div id="information">
@@ -35,10 +67,10 @@
             </div>
             <div id="graphs">
                 <div class="graph">
-                    <google-chart class="googleChart" [title]="comboChart.title" [type]="comboChart.type" [columns]="comboChart.columns" [data]="comboChart.values" [options]="comboChart.options"  ></google-chart>
+                    <google-chart class="googleChart" [title]="comboChart.title" [type]="comboChart.type" [columns]="comboChart.columns" [data]="comboChart.values" [options]="comboChart.options" (select)="this.selectPriceCategoryFromGraph($event.selection[0].row)" ></google-chart>
                 </div>
                 <div class="graph">
-                    <google-chart class="googleChart" [title]="steppedAreaChart.title" [type]="steppedAreaChart.type" [columns]="steppedAreaChart.columns" [data]="steppedAreaChart.values" [options]="steppedAreaChart.options"></google-chart>
+                    <google-chart class="googleChart" [title]="steppedAreaChart.title" [type]="steppedAreaChart.type" [columns]="steppedAreaChart.columns" [data]="steppedAreaChart.values" [options]="steppedAreaChart.options" (select)="this.selectFederalStateFromGraph($event.selection[0])"></google-chart>
                 </div>
             </div>
         </div>
@@ -61,10 +93,10 @@
             </div>
             <div id="graphs">
                 <div class="graph">
-                    <google-chart class="googleChart" [title]="areaChart.title" [type]="areaChart.type" [columns]="areaChart.columns" [data]="areaChart.values" [options]="areaChart.options"></google-chart>
+                    <google-chart class="googleChart" [title]="comboChart2.title" [type]="comboChart2.type" [columns]="comboChart2.columns" [data]="comboChart2.values" [options]="comboChart2.options" (select)="this.selectStationManagement($event.selection[0])"></google-chart>
                 </div>
                 <div class="graph">
-                    <google-chart class="googleChart" [title]="bubbleChart.title" [type]="bubbleChart.type" [columns]="bubbleChart.columns" [data]="bubbleChart.values" [options]="bubbleChart.options"></google-chart>
+                    <google-chart class="googleChart" [title]="barChart.title" [type]="barChart.type" [columns]="barChart.columns" [data]="barChart.values" [options]="barChart.options"></google-chart>
                 </div>
             </div>
         </div>

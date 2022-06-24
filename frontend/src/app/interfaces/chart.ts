@@ -5,6 +5,5 @@ export interface Chart{
     type: ChartType,
     columns: string[];
     values: any[],
-    options:{
-    }
+    options: any
 };

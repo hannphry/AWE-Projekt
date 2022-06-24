@@ -9,6 +9,28 @@ body #layout {
                 }
             }
         }
+        #dropDowns{
+            .topRowElem{
+                .dropDownMenu{
+                    ::ng-deep .mat-form-field-wrapper{
+                        padding: 0;
+                        height: 100%;
+                        width: calc(100% - 5px);
+                        background-color: white;
+                        .mat-form-field-flex { 
+                            padding: 0 0px !important;
+                            height: 100%;
+                            background-color: white;
+                        }
+                        .mat-form-field-underline{
+                            top: 100%;
+                            left: -5px;
+                            width: calc(100% + 5px);
+                        }
+                    } 
+                }
+            }
+        }
     }
     .row #information{
         #info1{ 

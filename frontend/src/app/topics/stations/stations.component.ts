@@ -16,7 +16,27 @@ export class StationsComponent implements OnInit {
     2. Preisklassen und Taxi-Ranks und 24/7 Service
     3. Taxi Ranks vs Mietautos Klassierung nach type (z.B. Knotenbahnhof) (vielleicht nach Fotos von Typen suchen, dann Schnee finden und überleitung zu Klimaschutz und Fahrradfahren)
     4. Parkplätze und Fahrradparkplätze (im Zusammenhang mit stationManagement, oder anderen Attributen) 
+
     5. Behindertengerechte Stationen, lässt sich ein Muster erkennen? Vielleicht Statistiken mit Bundesland vergleichen, Anzahl Personen, die was benötigen vs. was es gibt
+
+    - Übersicht über alle Bahnhöfe mit Preisklassen
+    - Dann DropDown und Auswahl einer Preisklasse (Hover über Info i was sind Preisklassen?)
+
+    - Dann für eine Preisklasse Verteilung auf Bundesländer anzeigen
+    - Ein Bundesland auswählen
+
+    - Dann in letzter Suchfunktion über alle Bahnhöfe
+    - Station auswählen
+    - nach StationManagement gehen
+    
+    - anhand von 4 Klassen Menge an Stationen im Umfeld der ausgewählten Station
+
+    - Infos einer Station anzeigen Eine Station
+      - Hier kann ich parken, wieviel % der Stationen kann ich Fahrrad und Auto parken
+      - Hier ist 24h Service
+      - Hier kriege ich ein Taxi
+      - Dies gehört zu dieser Preiskategorie (wieviele sind's insgesamt)
+
   */
 
   stations: Station[] = [];
@@ -108,11 +128,15 @@ export class StationsComponent implements OnInit {
     "Würzburg"
   ]
 
+  chooseStations: Station[] = [];
+
+  chosenStationManagement: string[] = [];
+
   comboChart: Chart = {
-    title: 'Bundesländer',
+    title: 'Preisklassen',
     type: ChartType.ComboChart,
     options: {
-      title : 'Anzahl Stationen mit ÖPNV-Anschluss',
+      title : 'Anzahl Stationen der Preisklassen',
       //vAxis: {title: 'Anzahl'},
       //hAxis: {title: 'Bundesländer'},
       seriesType: 'bars',
@@ -135,12 +159,12 @@ export class StationsComponent implements OnInit {
     }
       
     },
-    columns: ['Bundesland','Stationen','ÖPNV' ],//, 'Differenz'],
+    columns: ['Preisklasse','Stationen'],//, 'Differenz'],
     values: []
   }
 
   steppedAreaChart: Chart= {
-    title: 'Anzahl Stationen mit Taxi und 24/7 Service nach Preisklasse',
+    title: 'Preisklassen in Bundesländern',
     type: ChartType.SteppedAreaChart,
     options: {
       colors: [
@@ -163,41 +187,85 @@ export class StationsComponent implements OnInit {
       }
       }
     },
-    columns: ['Preisklasse','Anzahl Stationen','Mit Taxi','24/7-Service'],
-    values: []
+    columns: ['Bundesland','Anzahl Stationen', 'Rest'],
+    values: [
+      ['', 0 , 0],
+    ]
   }
 
-  areaChart: Chart = {
-    title: 'Mit Taxi und Mietwagen nach Bahnhofstypen',
-    type: ChartType.AreaChart,
+  comboChart2: Chart = {
+    title: 'Stationsmanagement',
+    type: ChartType.ComboChart,
     options: {
-      //isStacked: true,
+      title : 'Management der Stationen',
+      //vAxis: {title: 'Anzahl'},
+      //hAxis: {title: 'Bundesländer'},
+      seriesType: 'bars',
+      series: {
+        1: {type: 'line'}
+      },
       colors: [
-        '#aecbfc',
         //'#aedcfc',
         //'#aeeafc',
-        '#aef2fc',
         //'#aefcf4',
-        //'#aefce1',
-        '#aefcc3'
+        '#aefce1',
+        '#9dc1eb'
+      ],
+      vAxis: {
+        gridlines: {
+            color: 'transparent'
+        }
+    }
+      
+    },
+    columns: ['Management','Stationen','Wichtige Stationen'],//, 'Differenz'],
+    values: [
+      ['',0,0]
+    ]
+  }
+
+  barChart: Chart = {
+    title: 'Preisklassen',
+    type: ChartType.BarChart,
+    options: {
+      title : 'Stationsübersicht im Umkreis',
+      //vAxis: {title: 'Anzahl'},
+      //hAxis: {title: 'Bundesländer'},
+      seriesType: 'bars',
+      series: {
+        //1: {type: 'line'}
+      },
+      colors: [
+        //'#aedcfc',
+        //'#aeeafc',
+        //'#aefcf4',
+        '#aefce1',
+        '#9dc1eb'
       ],
       vAxis: {
         gridlines: {
             color: 'transparent'
         }
       },
+      hAxis: {
+        viewWindow: {
+        },
+        gridlines: {
+          color: 'transparent'
+      }
+      }
     },
-    columns: ['Anzahl','Typ', 'Anzahl Mit Taxi','Anzahl mit Mietwagen'],
-    values: [] //Blöcke aufeinander addieren
+    columns: ['Eigenschaft','Menge','Gegenteil'], //,'Preiskategorie','Parkplatz','ÖPNV-Anschluss','Taxistand','Autovermietung','WLAN'],//, 'Differenz'],
+    values: [
+      ['',0,0]
+    ]
   }
 
-  bubbleChart: Chart = {
-    title: '(Fahrrad-)Parkplätze', //X = 0 - 45 Gruppen,Y = Stationen mit P / Anzahl Stationen,Bubble Size = Anzahl Stationen ,Bubble Color = 0-25% 25-50 usw.
-    type: ChartType.BubbleChart,
-    options: {},
-    columns: ['Klasse', 'Prozentanteil', 'Prozentgruppe', 'Anzahl Stationen'],
-    values: []
-  };
+  priceCategoryTitle: string = "Preisklasse";
+  federalStateTitle: string = "Bundesland";
+  stationTitle: string = "Station";
+
+
 
   constructor(
     private stationService: StationService
@@ -214,67 +282,178 @@ export class StationsComponent implements OnInit {
 
       //console.log(this.stations);
 
-      this.federalStates.forEach(state=>{ //Jedes Bundesland im Bundesland-Array durchgehen
-        let tmpStations = this.stations.filter(obj=> obj.federalState == state ); //Die Stationen rausfiltern, die im richtigen Bundesland liegen
-        this.stationsByFederalState.push({ // Zu dem Objekt hinzufügen
-          federalState: state,
-          stations : tmpStations
-        });
-        
-        //Wieviele davon haben ÖPNV-Anschluss?
-        
-        let publicTransportStations = tmpStations.filter(obj => obj.hasLocalPublicTransport == true);
-        
-        stateStations.push([state, tmpStations.length, publicTransportStations.length]); // , (tmpStations.length - publicTransportStations.length)]);
-        
-
-      });
-      this.comboChart.values = stateStations;
-
-      //console.log(this.comboChart);
-
       let priceCategoryStations: any[] = [];
 
       this.priceCategories.forEach(category =>{
+        let tmpStations = this.stations.filter(station => station.priceCategory == category);
+        
+        priceCategoryStations.push([category, tmpStations.length]);
+      })
+
+      this.comboChart.values = priceCategoryStations;
+
+      //console.log(this.comboChart);
+/*
+      priceCategoryStations = [];
+
+      this.priceCategories.forEach(category =>{
+
         let tmpStations = this.stations.filter(station => station.priceCategory == category);
         let taxiRankStations = tmpStations.filter(station => station.hasTaxiRank == true);
         let stations247 = tmpStations.filter(station => station.has247service == true);
         
         priceCategoryStations.push([category, tmpStations.length, taxiRankStations.length, stations247.length]);
       })
-      this.steppedAreaChart.values = priceCategoryStations;
-
-      let stationTypeStations: any[] = [];
-
-      this.stationTypes.forEach(type =>{
-        let tmpStations = this.stations.filter(obj => obj.type == type);
-        let taxiRankStations = tmpStations.filter(station => station.hasTaxiRank == true);
-        let carRentalStations = tmpStations.filter(station => station.hasCarRental == true);
-
-        stationTypeStations.push([type, tmpStations.length, taxiRankStations.length, carRentalStations.length])
-      });
-      this.areaChart.values = stationTypeStations
-    
-      let stationsByStationManagement: any[] = [];
-      let counter = 0;
-      this.stationManagement.forEach(type => {
-        let tmpStations = this.stations.filter(obj=> obj.stationManagement == type);
-        let tmpStationsWithP = tmpStations.filter(obj => obj.hasParking == true && obj.hasBicycleParking == true)
-
-        let bubbleColour = (tmpStationsWithP.length/tmpStations.length);
-        /*let cmp = (tmpStationsWithP.length/tmpStations.length)
-        if(cmp > 0 && cmp < 0.25) bubbleColour = 0;
-        if(cmp >= 0.25 && cmp < 0.5) bubbleColour = 0.25;
-        if(cmp >= 0.5 && cmp < 0.75) bubbleColour = 0.5;
-        if(cmp >= 0.75) bubbleColour = 0.75;*/
-        
-        //console.log('Klasse, Stationen Mit Parkplätzen / Anzahl Stationen,Prozentgruppe, Anzahl Stationen')
-        stationsByStationManagement.push([type,(tmpStationsWithP.length/tmpStations.length),bubbleColour,tmpStations.length])
-        counter++;
-      });
-      this.bubbleChart.values = stationsByStationManagement
-      //console.log(this.bubbleChart)
+      this.steppedAreaChart.values = priceCategoryStations;*/
     });
   }
+
+  selectPriceCategoryFromGraph(input: number | undefined){
+    if(input){
+      //console.log(input +1);
+      this.choosePriceCategory(input +1);
+    }
+  }
+
+  choosePriceCategory(num: number){
+    //console.log(num);
+
+    this.priceCategoryTitle = `Preisklasse ${num}`;
+
+    let federalStateStations: any[] = [];
+
+      this.federalStates.forEach(state=>{
+        let tmpStations = this.stations.filter(station => station.federalState == state);
+        //console.log(tmpStations);
+        
+        let tmpStationsInCategory = tmpStations.filter(station => station.priceCategory == num);
+        
+        let length = 0;
+
+        if(tmpStationsInCategory) length = tmpStationsInCategory.length
+        
+        federalStateStations.push([state, length, tmpStations.length])
+
+      })
+      //console.log(federalStateStations)
+      this.steppedAreaChart.values = federalStateStations;
+  }
+
+  selectFederalStateFromGraph(input: any){
+    //console.log(input);
+    if(input.row){
+      //console.log(this.federalStates[input.row])
+      this.chooseFederalState(this.federalStates[input.row]);
+    }
+  }
+
+
+  chooseFederalState(state: string){
+    this.federalStateTitle = state;
+    let managementStations: any[] = [];
+
+    this.stationManagement.forEach(management=>{
+      let tmpStations = this.stations.filter(station => station.federalState == state);
+      let stationsFromManagement = tmpStations.filter(station => station.stationManagement == management);
+
+      if(stationsFromManagement.length > 0){
+        let importantStationsFromManagement = stationsFromManagement.filter(station => station.type == "Knotenbahnhof" || station.type == "Metropolbahnhof");
+        managementStations.push([management, stationsFromManagement.length, importantStationsFromManagement.length]);
+        this.chosenStationManagement.push(management);
+      }
+
+    });
+    this.comboChart2.values = managementStations;
+    
+  }
+
+  selectStationManagement(input: any){
+    //console.log(input);
+    if(input.row && this.chosenStationManagement){
+      this.filterStations(this.chosenStationManagement[input.row]);
+    }
+    //this.chosenStationManagement[input.selection[0].row]
+  }
+
+  filterStations(management: string){
+    this.chooseStations = this.stations.filter(station => station.stationManagement == management && (station.type == "Knotenbahnhof" || station.type == "Metropolbahnhof"));
+  }
+
+  chooseStation(id: string){
+    this.barChart.values = [];
+    let tmpStation: Station = this.stations.filter(station => station.id == id)[0];
+    this.stationTitle = tmpStation.name;
+    console.log(tmpStation);
+    //ca. 65 km
+    let filterStations = this.stations.filter(station => (station.lon <= (tmpStation.lon +0.1)) && (station.lon >= (tmpStation.lat -0.1)) && (station.lat <= (tmpStation.lat +0.1)) && (station.lat >= (tmpStation.lat -0.1)));
+    
+    this.barChart.options.hAxis.viewWindow.max = (Math.round(filterStations.length/10)*10);
+
+    let priceCategory = `Preiskategorie ${tmpStation.priceCategory}`
+    let amount = filterStations.filter(station => station.priceCategory == tmpStation.priceCategory).length;
+    let negAmount = filterStations.filter(station => station.priceCategory != tmpStation.priceCategory).length;
+    this.barChart.values.push([priceCategory, amount, negAmount]);
+
+    if(tmpStation.hasBicycleParking == true && tmpStation.hasParking == true){
+      let parkingLot = 'Parkplätze'
+      amount = filterStations.filter(station => station.hasBicycleParking == true && station.hasParking == true).length;
+      negAmount = filterStations.filter(station => station.hasBicycleParking != true && station.hasParking != true).length;
+      this.barChart.values.push([parkingLot, amount, negAmount]);
+    }else{
+      let parkingLot = 'Keine Parkplätze'
+      amount = filterStations.filter(station => station.hasBicycleParking != true && station.hasParking != true).length;
+      negAmount = filterStations.filter(station => station.hasBicycleParking == true && station.hasParking == true).length;
+      this.barChart.values.push([parkingLot, amount, negAmount]);
+    }
+
+    if(tmpStation.hasLocalPublicTransport == true){
+      let localPublicTransport = 'ÖPNV';
+      amount = filterStations.filter(station => station.hasLocalPublicTransport == true).length;
+      negAmount = filterStations.filter(station => station.hasLocalPublicTransport != true).length;
+      this.barChart.values.push([localPublicTransport, amount, negAmount]);
+    }else{
+      let localPublicTransport = 'Kein ÖPNV';
+      amount = filterStations.filter(station => station.hasLocalPublicTransport != true).length;
+      negAmount = filterStations.filter(station => station.hasLocalPublicTransport == true).length;
+      this.barChart.values.push([localPublicTransport, amount, negAmount]);
+    }
+
+    if(tmpStation.hasTaxiRank == true){
+      let taxiRank = 'Taxistand';
+      amount = filterStations.filter(station => station.hasTaxiRank == true).length;
+      negAmount = filterStations.filter(station => station.hasTaxiRank != true).length;
+      this.barChart.values.push([taxiRank, amount, negAmount]);
+    }else{
+      let taxiRank = 'Kein Taxistand';
+      amount = filterStations.filter(station => station.hasTaxiRank != true).length;
+      negAmount = filterStations.filter(station => station.hasTaxiRank == true).length;
+      this.barChart.values.push([taxiRank, amount, negAmount]);
+    }
+
+    if(tmpStation.hasCarRental == true){
+      let carRental = 'Autovermietung';
+      amount = filterStations.filter(station => station.hasCarRental == true).length;
+      negAmount = filterStations.filter(station => station.hasCarRental != true).length;
+      this.barChart.values.push([carRental, amount, negAmount]);
+    }else{
+      let carRental = 'Keine Vermietung';
+      amount = filterStations.filter(station => station.hasCarRental != true).length;
+      negAmount = filterStations.filter(station => station.hasCarRental == true).length;
+      this.barChart.values.push([carRental, amount, negAmount]);
+    }
+
+    if(tmpStation.hasWiFi == true){
+      let hasWiFi = 'WLAN';
+      amount = filterStations.filter(station => station.hasWiFi == true).length;
+      negAmount = filterStations.filter(station => station.hasWiFi != true).length;
+      this.barChart.values.push([hasWiFi, amount, negAmount]);
+    }else{
+      let hasWiFi = 'Kein WLAN';
+      amount = filterStations.filter(station => station.hasWiFi != true).length;
+      negAmount = filterStations.filter(station => station.hasWiFi == true).length;
+      this.barChart.values.push([hasWiFi, amount, negAmount]);
+    }
+  }
+
 
 }
