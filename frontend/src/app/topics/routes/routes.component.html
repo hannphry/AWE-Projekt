@@ -10,19 +10,32 @@
                 </div>
             </div>
             <div id="dropDowns">
-                <div class="topRowElem">
-                    <input  type="text" placeholder="Stationssuche">
-                    <div id="stationSearchResults" *ngIf="this.hasSearched == true"></div>
+                <div class="topRowElem" id="datePickerElem">
+                    <mat-datepicker-toggle [for]="basicDatepicker"></mat-datepicker-toggle>
+                    <mat-form-field id="date">
+                        <input matInput class="input" type="text" placeholder="Datumsauswahl" [matDatepicker]="basicDatepicker" [(ngModel)]="this.dateValue">
+                    </mat-form-field>
+                    <mat-datepicker #basicDatepicker></mat-datepicker>
                 </div>
-                <div class="topRowElem">
-                    DatePicker
+                <div class="topRowElem" id="searchBox">
+                    <div id="upperElem" >
+                        <button mat-icon-button (click)="this.searchForStation(this.searchValue)">
+                            <mat-icon>search</mat-icon>
+                        </button>
+                        <mat-form-field id="stationSearchBox">
+                            <input matInput class="input" type="text" placeholder="Stationssuche" [(ngModel)]="this.searchValue">
+                        </mat-form-field>
+                    </div>
+                    <div id="stationSearchResults" *ngIf="this.hasSearched == true" >
+                        <div class="searchResult" *ngFor="let station of this.searchStations" (click)="this.interactWithSearchStation(station.id, this.dateValue)">{{station.name}}</div>
+                    </div>
                 </div>
                 <div class="topRowElem">
                     <mat-form-field appearance="fill" class="dropDownMenu">
-                        <mat-label>Zugverbindung</mat-label>
+                        <mat-label>{{this.detailsIdLabel}}</mat-label>
                         <mat-select>
                           <mat-option>None</mat-option>
-                          <mat-option *ngFor="let item of this.stations"  (click)="this.getWithDetailsId(item.detailsId)">{{item.origin}}</mat-option>
+                          <mat-option *ngFor="let item of this.stations"  (click)="this.getWithDetailsId(item.detailsId, item.origin)">{{item.origin}}</mat-option>
                         </mat-select>
                     </mat-form-field>
                 </div>

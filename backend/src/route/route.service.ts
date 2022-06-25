@@ -11,9 +11,9 @@ export class RouteService {
         private httpService: HttpService
         ){}
         
-        getArrivalBoardById(id: string){
+    getArrivalBoardById(id: string, date: Date){
             var subject = new ReplaySubject(1);
-            this.httpService.get(`https://api.deutschebahn.com/freeplan/v1/arrivalBoard/${id}?date=2022-06-01T13%3A00`,{headers: {
+            this.httpService.get(`https://api.deutschebahn.com/freeplan/v1/arrivalBoard/${id}?date=${date}T13%3A00`,{headers: {
                 Authorization: 'Bearer 112d350cb8cb41770e1abf08d88b7ab4',
                 Accept: 'application/json'
             }}).subscribe(obj =>{
@@ -40,8 +40,6 @@ export class RouteService {
         return subject;
     }
 
-
-
     getTrackByDetailsId(id: string){
         var subject = new ReplaySubject(1);
         id = encodeURIComponent(encodeURIComponent(id));
@@ -55,17 +53,17 @@ export class RouteService {
 
         console.log(b.getTime()-a.getTime());
         */
-
+        //console.log(id);
         this.httpService.get(`https://api.deutschebahn.com/fahrplan-plus/v1/journeyDetails/${id}`,{headers: {
             Authorization: 'Bearer 112d350cb8cb41770e1abf08d88b7ab4',
             Accept: 'application/json'
-        }}).subscribe(obj =>{
+        }}).subscribe(data =>{
 
             let arr: {stopId: string, stopName: string, lat: number, lon: number, depTime:  string, train: string, type: string, operator: string }[]= [];
-            console.log(obj);
-/*
-if(data){
-                data.forEach(route => {
+            //console.log(data.data);
+
+            if(data.data){
+                data.data.forEach(route => {
                     if(route.stopName ){
                         route.stopName = route.stopName.replace('&#x0028;',' (');
                         route.stopName = route.stopName.replace('&#x0029;',') ');
@@ -87,13 +85,27 @@ if(data){
             }
             subject.next(arr);
             subject.complete();
-*/
-            
-    });
-    return subject;
-}
+            //console.log(arr);
+        });
+        return subject;
+    }
 
-
-
-
+    searchForStation(input: string){
+        //console.log("Backend Service with name "+input);
+        var subject = new ReplaySubject(1);
+        //https://api.deutschebahn.com/fahrplan-plus/v1/location/Berlin
+        this.httpService.get(`https://api.deutschebahn.com/fahrplan-plus/v1/location/${input}`,{headers: {
+            Authorization: 'Bearer 112d350cb8cb41770e1abf08d88b7ab4',
+            Accept: 'application/json'
+        }}).subscribe(obj=>{
+            if(obj.data.length > 0){
+                //console.log(obj.data);
+                let arr = [];
+                arr.push(obj.data.slice(0,5));
+                subject.next(arr);
+                subject.complete();
+            }
+        });
+        return subject;
+    }
 }

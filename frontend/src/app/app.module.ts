@@ -28,6 +28,14 @@ import { WikiComponent } from './wiki/wiki.component';
 
 import { MarkdownModule } from 'ngx-markdown';
 
+//Datepicker:
+import { MatDatepicker, MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { FormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -52,9 +60,19 @@ import { MarkdownModule } from 'ngx-markdown';
     MatListModule,
     MatButtonModule,
     MatSelectModule,
-    MarkdownModule.forRoot()
+    FormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    //DatePicker
+    MatDatepickerModule,
+    MatNativeDateModule,
+    //End DatePicker
+    MarkdownModule.forRoot(),
+
   ],
-  providers: [],
+  providers: [
+    MatDatepickerModule
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

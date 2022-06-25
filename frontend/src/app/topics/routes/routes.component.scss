@@ -66,9 +66,79 @@ body #layout .row {
         }
     }
     #dropDowns{
-        .topRowElem{
-            
+        .topRowElem{   
         }
+
+        #datePickerElem{
+            display: flex;
+            align-items: center;
+            #date{
+                //font-size: 18px;
+                width: calc(100% - 40px);
+                ::ng-deep .mat-form-field-wrapper{
+                    padding: 0;
+                    height: 50px;
+                    width: 100%;
+                    background-color: white;
+                    .mat-form-field-flex { 
+                        padding: 0 0px !important;
+                        height: 100%;
+                        background-color: white;
+                    }
+                    .mat-form-field-underline{
+                        top: 100%;
+                    }
+                }
+            } 
+        }
+
+        #searchBox{
+            display: flex;
+            flex-direction: column;
+
+            #upperElem{
+                display: flex;
+                align-items: center;
+                #stationSearchBox{
+                    width: calc(100% - 40px);
+                    ::ng-deep .mat-form-field-wrapper{
+                        padding: 0;
+                        height: 50px;
+                        width: 100%;
+                        background-color: white;
+                        .mat-form-field-flex { 
+                            padding: 0 0px !important;
+                            height: 100%;
+                            background-color: white;
+                        }
+                        .mat-form-field-underline{
+                            top: 100%;
+                        }
+                    } 
+                }
+            }
+            
+            #stationSearchResults{
+                margin-top: 1rem;
+                //padding: 1rem;
+                position: relative;
+                background-color: white;
+                border-radius: 5px;
+                box-shadow: 0px 10px 60px -40px black;
+                
+                .searchResult{
+                    padding: 1rem;
+                }.searchResult:hover{
+                    background-color: rgb(248, 248, 248);
+                }
+                .searchResult:active{
+                    background-color: rgb(245, 243, 243);
+                    font-weight: bold;
+                }
+            }
+        }
+
+
         .dropDownMenu{
             //background-color: beige;
             ::ng-deep .mat-form-field-wrapper{
