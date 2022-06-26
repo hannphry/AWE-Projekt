@@ -164,7 +164,7 @@ export class StationsComponent implements OnInit {
   }
 
   steppedAreaChart: Chart= {
-    title: 'Preisklassen in Bundesländern',
+    title: 'Bundesländern',
     type: ChartType.SteppedAreaChart,
     options: {
       colors: [
@@ -187,9 +187,9 @@ export class StationsComponent implements OnInit {
       }
       }
     },
-    columns: ['Bundesland','Anzahl Stationen', 'Rest'],
+    columns: ['Bundesland','Anzahl Stationen'],
     values: [
-      ['', 0 , 0],
+      ['', 0 ],
     ]
   }
 
@@ -277,8 +277,6 @@ export class StationsComponent implements OnInit {
       this.stations = data; //Unsere Bahnhofsstationen für die Komponente setzen
       
       this.stationsByFederalState.splice(0,1); //Das erste Element für die Bundesländer und Stationen leeren, weil das erste nicht gebraucht wird
-      
-      let stateStations: any[] = [];
 
       //console.log(this.stations);
 
@@ -292,19 +290,44 @@ export class StationsComponent implements OnInit {
 
       this.comboChart.values = priceCategoryStations;
 
-      //console.log(this.comboChart);
-/*
-      priceCategoryStations = [];
-
-      this.priceCategories.forEach(category =>{
-
-        let tmpStations = this.stations.filter(station => station.priceCategory == category);
-        let taxiRankStations = tmpStations.filter(station => station.hasTaxiRank == true);
-        let stations247 = tmpStations.filter(station => station.has247service == true);
-        
-        priceCategoryStations.push([category, tmpStations.length, taxiRankStations.length, stations247.length]);
+      let federalstateStations: any[] = [];
+      this.federalStates.forEach(state =>{
+        let filterStations = this.stations.filter(station=> station.federalState == state)
+        federalstateStations.push([state, filterStations.length])
       })
-      this.steppedAreaChart.values = priceCategoryStations;*/
+      this.steppedAreaChart.values = federalstateStations;
+      this.steppedAreaChart.columns = ['Bundesland','Anzahl Stationen'];
+
+      let managementStations: any[] = [];
+      this.stationManagement.forEach(management =>{
+        let filterStations = this.stations.filter(station => station.stationManagement == management);
+        if(filterStations.length > 0){
+          let importantStationsFromManagement = filterStations.filter(station => station.type == "Knotenbahnhof" || station.type == "Metropolbahnhof");
+          managementStations.push([management, filterStations.length, importantStationsFromManagement.length]);
+        }
+      })
+      this.comboChart2.values = managementStations;
+
+      // Parkplätze
+      // ÖPNV
+      // Taxistand
+      // Autovermietung
+      // WLAN
+
+      let barChartValues = [];
+
+      let stationsByParkingLot = this.stations.filter(station => station.hasParking == true && station.hasBicycleParking == true);
+      barChartValues.push(['Parkplätze',stationsByParkingLot.length, (this.stations.length - stationsByParkingLot.length)]);
+      let stationsByPublicTransport = this.stations.filter(station=> station.hasLocalPublicTransport == true);
+      barChartValues.push(['ÖPNV',stationsByPublicTransport.length, (this.stations.length - stationsByPublicTransport.length)]);
+      let stationsByTaxiRank = this.stations.filter(station => station.hasTaxiRank == true);
+      barChartValues.push(['Taxistand',stationsByTaxiRank.length, (this.stations.length - stationsByTaxiRank.length)]);
+      let stationsByCarRental = this.stations.filter(station => station.hasCarRental == true);
+      barChartValues.push(['Autovermietung',stationsByCarRental.length, (this.stations.length - stationsByCarRental.length)]);
+      let stationsByWifi = this.stations.filter(station => station.hasWiFi == true);
+      barChartValues.push(['WLAN',stationsByWifi.length, (this.stations.length - stationsByWifi.length)]);
+
+      this.barChart.values = barChartValues;
     });
   }
 
@@ -337,13 +360,17 @@ export class StationsComponent implements OnInit {
       })
       //console.log(federalStateStations)
       this.steppedAreaChart.values = federalStateStations;
+      this.steppedAreaChart.columns = ['Bundesland','Anzahl Stationen', 'Rest'];
   }
 
   selectFederalStateFromGraph(input: any){
-    //console.log(input);
+    //console.log(input.row);
     if(input.row){
       //console.log(this.federalStates[input.row])
       this.chooseFederalState(this.federalStates[input.row]);
+    }else if(input.row == 0){
+      //console.log(0);
+      this.chooseFederalState(this.federalStates[0]);
     }
   }
 
@@ -368,15 +395,19 @@ export class StationsComponent implements OnInit {
   }
 
   selectStationManagement(input: any){
-    //console.log(input);
-    if(input.row && this.chosenStationManagement){
-      this.filterStations(this.chosenStationManagement[input.row]);
+    if(input != undefined){
+      if(input.row != undefined && this.chosenStationManagement != undefined){
+        //console.log(input.row);
+        this.filterStations(this.chosenStationManagement[input.row]);
+      }
     }
     //this.chosenStationManagement[input.selection[0].row]
   }
 
   filterStations(management: string){
+    console.log(management);
     this.chooseStations = this.stations.filter(station => station.stationManagement == management && (station.type == "Knotenbahnhof" || station.type == "Metropolbahnhof"));
+    console.log(this.chooseStations)
   }
 
   chooseStation(id: string){
@@ -388,6 +419,8 @@ export class StationsComponent implements OnInit {
     let filterStations = this.stations.filter(station => (station.lon <= (tmpStation.lon +0.1)) && (station.lon >= (tmpStation.lat -0.1)) && (station.lat <= (tmpStation.lat +0.1)) && (station.lat >= (tmpStation.lat -0.1)));
     
     this.barChart.options.hAxis.viewWindow.max = (Math.round(filterStations.length/10)*10);
+
+    this.barChart.values = [];
 
     let priceCategory = `Preiskategorie ${tmpStation.priceCategory}`
     let amount = filterStations.filter(station => station.priceCategory == tmpStation.priceCategory).length;
