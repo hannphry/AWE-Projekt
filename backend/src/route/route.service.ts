@@ -53,26 +53,28 @@ export class RouteService {
 
         console.log(b.getTime()-a.getTime());
         */
-        //console.log(id);
+
         this.httpService.get(`https://api.deutschebahn.com/fahrplan-plus/v1/journeyDetails/${id}`,{headers: {
             Authorization: 'Bearer 112d350cb8cb41770e1abf08d88b7ab4',
             Accept: 'application/json'
-        }}).subscribe(data =>{
+        }}).subscribe(obj =>{
 
-            let arr: {stopId: string, stopName: string, lat: number, lon: number, depTime:  string, train: string, type: string, operator: string }[]= [];
-            //console.log(data.data);
+            let arr: {stopId: string, stopName: string, lat: number, lon: number, depTime:  string, arrTime: String, train: string, type: string, operator: string }[]= [];
+            let data = obj.data
+     
 
-            if(data.data){
-                data.data.forEach(route => {
+            if(data){
+                data.forEach(route => {
                     if(route.stopName ){
                         route.stopName = route.stopName.replace('&#x0028;',' (');
                         route.stopName = route.stopName.replace('&#x0029;',') ');
-                        let routeObject: {stopId: string, stopName: string, lat: number, lon: number, depTime:  string, train: string, type: string, operator: string } = {
+                        let routeObject: {stopId: string, stopName: string, lat: number, lon: number, depTime:  string, arrTime: string, train: string, type: string, operator: string } = {
                             stopId: route.stopId,
                             stopName: route.stopName,
                             lat: route.lat,
                             lon: route.lon,
                             depTime: route.depTime,
+                            arrTime: route.arrTime,
                             train: route.train,
                             type: route.type,
                             operator: route.operator
@@ -83,11 +85,12 @@ export class RouteService {
                     }
                 });
             }
+
             subject.next(arr);
             subject.complete();
-            //console.log(arr);
-        });
-        return subject;
+            
+    });
+    return subject;
     }
 
     searchForStation(input: string){

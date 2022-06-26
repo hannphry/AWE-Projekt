@@ -18,11 +18,7 @@ export class RouteController{
         return this.routeService.getArrivalBoardById(id,date);
     }
 
-    @Get('details/:id')
-    getSelectedDetailsId( @Param('id') id: string ){
-        //console.log(id);
-        return this.routeService.getTrackByDetailsId(id);
-    }
+    
 
     @Get('searchForStation/:input')
     searchForStation(
@@ -30,5 +26,12 @@ export class RouteController{
     ){
         //console.log(input);
         return this.routeService.searchForStation(input);
+    }
+
+    // GET /journeyDetails/{id}
+    @Get('details/:id')
+    getSelectedDetailsId( @Param('id') id: string ){
+        //console.log(id);
+        return this.routeService.getTrackByDetailsId(id);
     }
 }

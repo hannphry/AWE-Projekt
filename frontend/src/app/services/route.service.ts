@@ -14,12 +14,14 @@ export class RouteService{
         return this.httpClient.get<any[]>(`${environment.apiUrl}/routes/getRoutesFromStation/${id}/${date}`);
     }
 
-    getDetailsId(id: string){
-        return this.httpClient.get<any[]>(`${environment.apiUrl}/routes/details/${id}`);
-    }
-
+    
     searchForStation(input: string){
         return this.httpClient.get<any[]>(`${environment.apiUrl}/routes/searchForStation/${input}`);
+    }
+
+    // GET /journeyDetails/{id}
+    getDetailsId(id: string){
+        return this.httpClient.get<any[]>(`${environment.apiUrl}/routes/details/${id}`);
     }
 
 }
