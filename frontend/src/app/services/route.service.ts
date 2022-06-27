@@ -10,13 +10,19 @@ import { Observable} from "rxjs";
 export class RouteService{
     constructor(private httpClient: HttpClient){}
 
-    getRoutes(id: string, date: string){
-        return this.httpClient.get<any[]>(`${environment.apiUrl}/routes/getRoutesFromStation/${id}/${date}`);
-    }
-
-    
+    // GET /location/{name}
     searchForStation(input: string){
         return this.httpClient.get<any[]>(`${environment.apiUrl}/routes/searchForStation/${input}`);
+    }
+
+    // GET /arrivalBoard/{id}
+    getArrivalRoutes(id: string, date: string){
+        return this.httpClient.get<any[]>(`${environment.apiUrl}/routes/getArrivalRoutesFromStation/${id}/${date}`);
+    }
+
+    // GET /departureBoard/{id}
+    getDepartureRoutes(id: string, date: string){
+        return this.httpClient.get<any[]>(`${environment.apiUrl}/routes/getDepartureRoutesFromStation/${id}/${date}`);
     }
 
     // GET /journeyDetails/{id}

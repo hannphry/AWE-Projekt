@@ -10,7 +10,28 @@ export class RouteService {
     constructor(
         private httpService: HttpService
         ){}
-        
+
+    // GET /location/{name}
+    searchForStation(input: string){
+        //console.log("Backend Service with name "+input);
+        var subject = new ReplaySubject(1);
+        //https://api.deutschebahn.com/fahrplan-plus/v1/location/Berlin
+        this.httpService.get(`https://api.deutschebahn.com/fahrplan-plus/v1/location/${input}`,{headers: {
+            Authorization: 'Bearer 112d350cb8cb41770e1abf08d88b7ab4',
+            Accept: 'application/json'
+         }}).subscribe(obj=>{
+            if(obj.data.length > 0){
+                //console.log(obj.data);
+                let arr = [];
+                arr.push(obj.data.slice(0,5));
+                subject.next(arr);
+                subject.complete();
+            }
+        });
+        return subject;
+    }    
+    
+    // GET /arrivalBoard/{id}
     getArrivalBoardById(id: string, date: Date){
             var subject = new ReplaySubject(1);
             this.httpService.get(`https://api.deutschebahn.com/freeplan/v1/arrivalBoard/${id}?date=${date}T13%3A00`,{headers: {
@@ -40,6 +61,44 @@ export class RouteService {
         return subject;
     }
 
+    // GET /departureBoard/{id}
+    getDepartureBoardById(id: string, date: Date){
+        console.log("03Test");
+        var subject = new ReplaySubject(1);
+        this.httpService.get(`https://api.deutschebahn.com/freeplan/v1/departureBoard/${id}?date=${date}T13%3A00`,{headers: {
+            Authorization: 'Bearer 112d350cb8cb41770e1abf08d88b7ab4',
+            Accept: 'application/json'
+        }}).subscribe(obj =>{
+            let arr: {name: string, dateTime: string, track: string,detailsId: string}[]= [];
+            let data = obj.data
+            if(data){
+                data.forEach(route => {
+                    if(route.name && route.dateTime && route.track && route.detailsId){
+                        
+                        // hier möchte ich einmal die getArrivalBoardById aufrufen, um die letzte Station als Ziel zu bekommen
+                        let routeObject: {name: string, dateTime: string, track: string,detailsId: string} = {
+                            
+                            name: route.name,
+                            dateTime: route.dateTime,
+                            track: route.track,
+                            detailsId: route.detailsId
+                        };
+                        console.log("Obj.:")
+                        console.log(routeObject)
+                        arr.push(routeObject);
+                        
+                    }
+                });
+            }
+            
+            subject.next(arr);
+            subject.complete();
+        });
+
+        return subject;
+    }
+
+    // GET /journeyDetails/{id}
     getTrackByDetailsId(id: string){
         var subject = new ReplaySubject(1);
         id = encodeURIComponent(encodeURIComponent(id));
@@ -93,22 +152,5 @@ export class RouteService {
     return subject;
     }
 
-    searchForStation(input: string){
-        //console.log("Backend Service with name "+input);
-        var subject = new ReplaySubject(1);
-        //https://api.deutschebahn.com/fahrplan-plus/v1/location/Berlin
-        this.httpService.get(`https://api.deutschebahn.com/fahrplan-plus/v1/location/${input}`,{headers: {
-            Authorization: 'Bearer 112d350cb8cb41770e1abf08d88b7ab4',
-            Accept: 'application/json'
-        }}).subscribe(obj=>{
-            if(obj.data.length > 0){
-                //console.log(obj.data);
-                let arr = [];
-                arr.push(obj.data.slice(0,5));
-                subject.next(arr);
-                subject.complete();
-            }
-        });
-        return subject;
-    }
+    
 }

@@ -13,6 +13,7 @@ export class RoutesComponent implements OnInit {
 
   stations :any[] = [];
   track :any[] = [];
+  departure: any[] = [];
 
   searchValue: string = "";
   dateValue: Date = new Date();
@@ -240,13 +241,116 @@ export class RoutesComponent implements OnInit {
     //Dann hier die API mit der ID anfragen, oder?
     //this.getWithDetailsId(`${input}`);)
     let apiDate = date.toISOString().split('T')[0]
-    this.routeService.getRoutes(`${input}`, apiDate).subscribe(data=>{
+    this.routeService.getArrivalRoutes(`${input}`, apiDate).subscribe(data=>{
       this.stations = data;
       console.log("Data of interactWithSearchStation")
       console.log(data)
     });
     this.hasSearched = false;
+
+    
+    this.getDepartureBoardWithDetailsId(input, apiDate);
+  }
+
+  getDepartureBoardWithDetailsId(input:number, date: string){
+      let dateTime: any[] = [];
+      let name: any[] = [];
+      let nextStation: any[] = [];
+      let endStation: any[] = [];
+      let track: any[] = [];
+      let detailsId: any[] = [];
+
+      let rows: any[] = [];
+      this.routeService.getDepartureRoutes(`${input}`, date).subscribe(data=>{
+      this.departure = data;
+          
+
+      this.departure.forEach( train =>{
+        console.log(train.detailsId)
+        name.push( train.name)
+        let time = new Date(train.dateTime);
+        let hours = time.getHours();
+        let minutes = time.getMinutes();
+        dateTime.push( hours + ":" + minutes )
+        track.push( train.track)
+        detailsId.push( train.detailsId)
+      })
+
+    this.fillDepartureTable(input, dateTime, name, track, detailsId) 
+
+    });     
+    
+  }
+
+  fillDepartureTable(input: number, dateTime:any, name: any, track:any, detailsId:any ){
+      
+     
+      let nextStation: any[] = [];
+      let endStation: any[] = [];
+     
+      
+
+      let rows: any[] = [];
+      /*
+      this.routeService.getDepartureRoutes(`${input}`, date).subscribe(data=>{
+      this.departure = data;
+          
+
+      this.departure.forEach( train =>{
+        console.log(train.detailsId)
+        name.push( train.name)
+        let time = new Date(train.dateTime);
+        console.log("Time:")
+        console.log(time)
+        let hours = time.getHours();
+        let minutes = time.getMinutes();
+        console.log("TEST")
+        console.log( minutes )
+        dateTime.push( hours + ":" + minutes )
+        track.push( train.track)
+        detailsId.push( train.detailsId)
+      })
+      */
+      for (let i = 0; i < detailsId.length; i++){
+        
+          // die nächste und letzte Station der Route holen
+        this.routeService.getDetailsId(detailsId[i]).subscribe(data=>{
+      
+          let stopId: any[] = [];
+          let stopName: any[] = [];
+    
+          data.forEach( route=>{
+            stopId.push( route.stopId )
+            stopName.push( route.stopName )
+          })
+    
+          endStation.push(stopName[stopName.length]);
+    
+          for (let i = 0; i < stopId.length; i++){
+            if (stopId[i] == input ){
+              if ( i == stopId.length -1 ){
+                nextStation.push(stopName[stopName.length]);
+              }
+              nextStation.push(stopName[i+1]);
+            }
+          }
+    
+          
+          })
+      }
+
+      for (let j = 0; j < dateTime.length; j++){
+        rows.push([dateTime[j], name[j], nextStation[j], endStation[j], track[j]])
+      }
+  
+      this.departureTable.values = rows;
+      console.log( "values:")
+      console.log(this.departureTable.values)
+    
+    
   }
 
 
 }
+
+

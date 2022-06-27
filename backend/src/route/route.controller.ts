@@ -10,22 +10,32 @@ export class RouteController{
         private routeService: RouteService
     ){}
     
-    @Get('getRoutesFromStation/:id/:date')
-    getRoutesFromStation( 
-        @Param('id') id: string,
-        @Param('date') date: Date 
-        ){
-        return this.routeService.getArrivalBoardById(id,date);
-    }
 
-    
-
+    // GET /location/{name}
     @Get('searchForStation/:input')
     searchForStation(
         @Param('input') input: string
     ){
         //console.log(input);
         return this.routeService.searchForStation(input);
+    }
+
+    // GET /arrivalBoard/{id}
+    @Get('getArrivalRoutesFromStation/:id/:date')
+    getArrivalRoutesFromStation( 
+        @Param('id') id: string,
+        @Param('date') date: Date 
+        ){
+        return this.routeService.getArrivalBoardById(id,date);
+    }
+
+    // GET /arrivalBoard/{id}
+    @Get('getDepartureRoutesFromStation/:id/:date')
+    getDepartureRoutesFromStation( 
+        @Param('id') id: string,
+        @Param('date') date: Date 
+        ){
+        return this.routeService.getDepartureBoardById(id,date);
     }
 
     // GET /journeyDetails/{id}
