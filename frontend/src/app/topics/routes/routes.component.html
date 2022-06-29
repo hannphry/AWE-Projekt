@@ -32,8 +32,9 @@
                 </div>
                 <div class="topRowElem">
                     <mat-form-field appearance="fill" class="dropDownMenu">
-                        <mat-label>{{this.detailsIdLabel}}</mat-label>
-                        <mat-select>
+                        <mat-label>Streckenauswahl</mat-label>
+                        <mat-icon>train</mat-icon>
+                        <mat-select placeholder="{{this.detailsIdLabel}}">
                           <mat-option>None</mat-option>
                           <mat-option *ngFor="let item of this.stations"  (click)="this.getWithDetailsId(item.detailsId, item.origin)">{{item.origin}}</mat-option>
                         </mat-select>

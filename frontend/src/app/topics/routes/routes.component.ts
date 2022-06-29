@@ -106,20 +106,7 @@ export class RoutesComponent implements OnInit {
     
     columns: ["StationsReihenfolge", "Gefahrene Kilometer"],
     
-    values: [[1,  37.8],
-    [2,  30.9],
-    [3,  25.4],
-    [4,  11.7],
-    [5,  11.9],
-    [6,   8.8],
-    [7,   7.6],
-    [8,  12.3],
-    [9,  16.9],
-    [10, 12.8],
-    [11,  5.3],
-    [12,  6.6],
-    [13,  4.8],
-    [14,  4.2]]
+    values: []
 
   }
 
@@ -189,7 +176,7 @@ export class RoutesComponent implements OnInit {
     return deg * (Math.PI/180)
   }
 
-  calculateDistance(lon1: number, lat1: number, lon2: number, lat2: number){
+  calculateDistance(lat1: number,lon1: number,lat2: number,lon2: number){
     let R = 6371; // Radius of the earth in km
     let dLat = this.deg2rad(lat2-lat1);  // deg2rad below
     let dLon = this.deg2rad(lon2-lon1); 
@@ -225,12 +212,13 @@ export class RoutesComponent implements OnInit {
       this.track.forEach( stop =>{
         stops.push( stop.stopName)
         depTimes.push( stop.depTime)
+        arrTimes.push( stop.arrTime)
         lat.push( stop.lat)
         lon.push( stop.lon)
       })
 
       for (let i = 0; i < stops.length - 1; i++){
-
+        
         if ( i == 0){
           let tempHourDep = depTimes[i].substring(0,2)
           let tempMinDep = depTimes[i].substring(3,5)
@@ -255,6 +243,7 @@ export class RoutesComponent implements OnInit {
       }
 
       // Errechene die Gesamte Fahrtdauer
+      /*
       let tempHourDep = depTimes[0].substring(0,2)
       let tempMinDep = depTimes[0].substring(3,5)
       let tempHourArr = arrTimes[arrTimes.length-1].substring(0,2)
@@ -262,15 +251,22 @@ export class RoutesComponent implements OnInit {
 
       let startDate = new Date(2022, 6, 12, tempHourDep, tempMinDep);
       let endDate = new Date(2022, 6, 12, tempHourArr, tempMinArr);
-      
+      */
       this.timelineChart.values = rows;
 
       console.log( "values:")
       console.log(this.timelineChart.values)
 
-      for (let j = 0; j < stops.length - 1; j++){
-        
+      let rowslineChart: any[] = [];
+      let countKm = 0;
+      for (let j = 0; j < (lat.length - 1); j++){
+        console.log( stops[j] + " - " + countKm)
+        rowslineChart.push( [ stops[j], countKm ])
+        let tempKm = this.calculateDistance(lat[j], lon[j], lat[j+1], lon[j+1]);
+        countKm += tempKm;
       }
+      console.log(rowslineChart)
+      this.lineChart.values = rowslineChart;
     })
   }
 
