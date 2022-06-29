@@ -1,3 +1,4 @@
+import { coerceStringArray } from '@angular/cdk/coercion';
 import { formatDate, getLocaleDateFormat } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ChartType } from 'angular-google-charts';
@@ -39,7 +40,7 @@ export class RoutesComponent implements OnInit {
 
   nextStationsWordTree: Chart= {
     title: 'Naheliegende Stationen',
-    type: ChartType.LineChart,
+    type: ChartType.WordTree,
     options: {
       colors: [
         '#aecbfc',
@@ -62,14 +63,24 @@ export class RoutesComponent implements OnInit {
       }
     },
     
-    columns: [],
+    columns: ["id", "childLabel", "parent", "size", "role"],
     
-    values: []
+    values: [[0, 'Life', -1, 1, 'black'],
+    [1, 'Archaea', 0, 1, 'black'],
+    [2, 'Eukarya', 0, 5, 'black'],
+    [3, 'Bacteria', 0, 1, 'black'],
+
+    [4, 'Crenarchaeota', 1, 1, 'black'],
+    [5, 'Euryarchaeota', 1, 1, 'black'],
+    [6, 'Korarchaeota', 1, 1, 'black'],
+    [7, 'Nanoarchaeota', 1, 1, 'black'],
+    [8, 'Thaumarchaeota', 1, 1, 'black']]
 
   }
 
   lineChart: Chart= {
-    title: 'Zurückgelegte Streck der Verbindung',
+    title: 'Zurückgelegte Strecke der Verbindung',
+    //subtitle: 'in Km',
     type: ChartType.LineChart,
     options: {
       colors: [
@@ -93,9 +104,22 @@ export class RoutesComponent implements OnInit {
       }
     },
     
-    columns: [],
+    columns: ["StationsReihenfolge", "Gefahrene Kilometer"],
     
-    values: []
+    values: [[1,  37.8],
+    [2,  30.9],
+    [3,  25.4],
+    [4,  11.7],
+    [5,  11.9],
+    [6,   8.8],
+    [7,   7.6],
+    [8,  12.3],
+    [9,  16.9],
+    [10, 12.8],
+    [11,  5.3],
+    [12,  6.6],
+    [13,  4.8],
+    [14,  4.2]]
 
   }
 
@@ -126,7 +150,7 @@ export class RoutesComponent implements OnInit {
     
     columns: ["Uhrzeit","Zug","über Station", "Richtung", "Gleis"],
     
-    values: [["13:45", "ICE 14", "Weiter 01", "Nach 01", "1"], ["13:56", "RE 15", "Weiter 02", "Nach 02", "6"]]
+    values: []
 
   }
 
@@ -161,6 +185,26 @@ export class RoutesComponent implements OnInit {
 
   }
 
+  deg2rad(deg:number) {
+    return deg * (Math.PI/180)
+  }
+
+  calculateDistance(lon1: number, lat1: number, lon2: number, lat2: number){
+    let R = 6371; // Radius of the earth in km
+    let dLat = this.deg2rad(lat2-lat1);  // deg2rad below
+    let dLon = this.deg2rad(lon2-lon1); 
+    let a = 
+    Math.sin(dLat/2) * Math.sin(dLat/2) +
+    Math.cos(this.deg2rad(lat1)) * Math.cos(this.deg2rad(lat2)) * 
+    Math.sin(dLon/2) * Math.sin(dLon/2)
+    ; 
+    let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+    let d = R * c; // Distance in km
+    return d;
+  }
+
+  
+
   getWithDetailsId(input: string, name: string){
     console.log("DetailsId: " + input);
     this.detailsIdLabel = name;
@@ -173,12 +217,16 @@ export class RoutesComponent implements OnInit {
       let depTimes: any[] = [];
       let arrTimes: any[] = [];
       let rows: any[] = [];
+
+      let lat: any[] = [];
+      let lon: any[] = [];
       
   
       this.track.forEach( stop =>{
         stops.push( stop.stopName)
         depTimes.push( stop.depTime)
-        arrTimes.push( stop.arrTime)
+        lat.push( stop.lat)
+        lon.push( stop.lon)
       })
 
       for (let i = 0; i < stops.length - 1; i++){
@@ -219,6 +267,10 @@ export class RoutesComponent implements OnInit {
 
       console.log( "values:")
       console.log(this.timelineChart.values)
+
+      for (let j = 0; j < stops.length - 1; j++){
+        
+      }
     })
   }
 
@@ -324,14 +376,22 @@ export class RoutesComponent implements OnInit {
             stopName.push( route.stopName )
           })
     
-          endStation.push(stopName[stopName.length]);
+          endStation.push(stopName[stopName.length -1]);
+          console.log("Endstation: ")
+          console.log(stopName[stopName.length -1])
     
           for (let i = 0; i < stopId.length; i++){
             if (stopId[i] == input ){
               if ( i == stopId.length -1 ){
                 nextStation.push(stopName[stopName.length]);
+                console.log("NächsteStation: ")
+                console.log(stopName[stopName.length])
+              } else {
+                console.log("NächsteStation: ")
+                console.log(stopName[i+1])
+                nextStation.push(stopName[i+1]);
               }
-              nextStation.push(stopName[i+1]);
+              
             }
           }
     
@@ -339,12 +399,13 @@ export class RoutesComponent implements OnInit {
           })
       }
 
+      // Die Werte für nextStation und endStation sind hier noch nicht gefüllt
       for (let j = 0; j < dateTime.length; j++){
         rows.push([dateTime[j], name[j], nextStation[j], endStation[j], track[j]])
       }
   
       this.departureTable.values = rows;
-      console.log( "values:")
+      console.log("values:")
       console.log(this.departureTable.values)
     
     
