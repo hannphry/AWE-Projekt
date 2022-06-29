@@ -2,6 +2,7 @@ import { coerceStringArray } from '@angular/cdk/coercion';
 import { formatDate, getLocaleDateFormat } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ChartType } from 'angular-google-charts';
+import { ReplaySubject } from 'rxjs';
 import { Chart } from 'src/app/interfaces/chart';
 import { RouteService } from 'src/app/services/route.service';
 
@@ -16,6 +17,8 @@ export class RoutesComponent implements OnInit {
   track :any[] = [];
   departure: any[] = [];
 
+  departureTableValues: any[] = [];
+
   searchValue: string = "";
   dateValue: Date = new Date();
 
@@ -29,6 +32,8 @@ export class RoutesComponent implements OnInit {
   }[] = [];
 
   hasSearched: boolean = false;
+
+  tableRowValues: string[] = ["Uhrzeit","Zug","über Station", "Richtung", "Gleis"];
 
   constructor( private routeService: RouteService ) { }
 
@@ -387,12 +392,9 @@ export class RoutesComponent implements OnInit {
                 console.log(stopName[i+1])
                 nextStation.push(stopName[i+1]);
               }
-              
             }
           }
-    
-          
-          })
+          });
       }
 
       // Die Werte für nextStation und endStation sind hier noch nicht gefüllt
@@ -400,10 +402,38 @@ export class RoutesComponent implements OnInit {
         rows.push([dateTime[j], name[j], nextStation[j], endStation[j], track[j]])
       }
   
-      this.departureTable.values = rows;
-      console.log("values:")
-      console.log(this.departureTable.values)
+      //this.departureTable.values = rows;
+      //console.log("values:")
+      //console.log(this.departureTable.values)
     
+
+      let counter = 0;
+      var subject = new ReplaySubject(1);
+      let arr: any[] = [];
+      //detailsId.forEach((detailsId: string) =>{
+
+        this.routeService.getDetailsId(detailsId[0]).subscribe((data: {
+          depTime: string,
+          lat: string,
+          lon: string,
+          operator: string,
+          stopId: number,
+          stopName: string,
+          train: string,
+          type: string,
+        }[])=>{
+          //console.log(data);
+          //console.log(dateTime);
+          let tDateTime: string = dateTime[counter];
+          let tName: string = name[counter];
+          let nextStation: string = data[data.findIndex(obj=> obj.stopId == input)].stopName;
+          let lastStation: string = data[data.length -1].stopName;
+          let tTrack: string = track[counter];
+          
+          //console.log([tDateTime, tName, nextStation, lastStation, tTrack])
+          this.departureTable.values = [tDateTime, tName, nextStation, lastStation, tTrack];
+          console.log(this.departureTable.values);
+        })
     
   }
 

@@ -147,7 +147,6 @@ export class AnnouncementsComponent implements OnInit {
          }
         }
       });
-      
 
       //Dauer der Störungen
 

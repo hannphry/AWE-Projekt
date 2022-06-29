@@ -36,6 +36,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 
 
+import { MatTableModule } from '@angular/material/table';
+
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -68,7 +71,6 @@ import { MatInputModule } from '@angular/material/input';
     MatNativeDateModule,
     //End DatePicker
     MarkdownModule.forRoot(),
-
   ],
   providers: [
     MatDatepickerModule

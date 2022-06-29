@@ -63,7 +63,7 @@ export class RouteService {
 
     // GET /departureBoard/{id}
     getDepartureBoardById(id: string, date: Date){
-        console.log("03Test");
+        //console.log("03Test");
         var subject = new ReplaySubject(1);
         this.httpService.get(`https://api.deutschebahn.com/freeplan/v1/departureBoard/${id}?date=${date}T13%3A00`,{headers: {
             Authorization: 'Bearer 112d350cb8cb41770e1abf08d88b7ab4',
@@ -83,8 +83,8 @@ export class RouteService {
                             track: route.track,
                             detailsId: route.detailsId
                         };
-                        console.log("Obj.:")
-                        console.log(routeObject)
+                        //console.log("Obj.:")
+                        //console.log(routeObject)
                         arr.push(routeObject);
                         
                     }

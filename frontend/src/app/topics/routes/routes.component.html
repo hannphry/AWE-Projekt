@@ -64,7 +64,14 @@
                     <google-chart class="googleChart" [title]="timelineChart.title" [type]="timelineChart.type" [columns]="timelineChart.columns" [data]="timelineChart.values" [options]="timelineChart.options"></google-chart>
                 </div>
                 <div class="graph">
-                    <google-chart class="googleChart" [title]="departureTable.title" [type]="departureTable.type" [columns]="departureTable.columns" [data]="departureTable.values" [options]="departureTable.options"></google-chart>
+                    <!--<google-chart class="googleChart" [title]="departureTable.title" [type]="departureTable.type" [columns]="departureTable.columns" [data]="departureTable.values" [options]="departureTable.options"></google-chart>-->
+                    <table>
+                        <tr>
+                            <th *ngFor="let row of this.tableRowValues">{{row}}</th>
+                        <tr *ngFor="let row of this.departureTableValues">
+                            <td *ngFor="let item of this.row">{{item}}</td>
+                        </tr>
+                    </table>
                 </div>
             </div>
 

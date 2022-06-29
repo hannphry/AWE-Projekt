@@ -235,7 +235,7 @@ export class StationsComponent implements OnInit {
       }
       }
     },
-    columns: ['Eigenschaft','Menge','Gegenteil'], //,'Preiskategorie','Parkplatz','ÖPNV-Anschluss','Taxistand','Autovermietung','WLAN'],//, 'Differenz'],
+    columns: ['Eigenschaft','Gleich','Gegenteil'], //,'Preiskategorie','Parkplatz','ÖPNV-Anschluss','Taxistand','Autovermietung','WLAN'],//, 'Differenz'],
     values: [
       ['',0,0]
     ]
@@ -516,6 +516,7 @@ export class StationsComponent implements OnInit {
   clickOnInfo(index: number){
     console.log("Highlight graph" +index);
     let elem = document.getElementById(`graph${index}`);
+
     if(elem){
       elem.style.boxShadow = '0px 0px 61px -25px #caca03';
     }
