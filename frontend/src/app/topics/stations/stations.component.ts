@@ -137,20 +137,11 @@ export class StationsComponent implements OnInit {
     type: ChartType.ComboChart,
     options: {
       title : 'Anzahl Stationen der Preisklassen',
-      //vAxis: {title: 'Anzahl'},
-      //hAxis: {title: 'Bundesländer'},
       seriesType: 'bars',
       series: {
-        //2: {type: 'line'}
       },
       colors: [
-        '#aaecdc',
-        //'#aedcfc',
-        //'#aeeafc',
-        '#a7dde8',
-        //'#aefcf4',
-        //'#aefce1',
-        '#9dc1eb'
+        '#bfe8d2',
       ],
       vAxis: {
         gridlines: {
@@ -168,13 +159,8 @@ export class StationsComponent implements OnInit {
     type: ChartType.SteppedAreaChart,
     options: {
       colors: [
-        '#aecbfc',
-        //'#aedcfc',
-        //'#aeeafc',
-        '#aef2fc',
-        //'#aefcf4',
-        //'#aefce1',
-        '#aefcc3'
+        '#a4e2d3',
+        '#96cfc1',
       ],
       vAxis: {
         gridlines: {
@@ -205,11 +191,8 @@ export class StationsComponent implements OnInit {
         1: {type: 'line'}
       },
       colors: [
-        //'#aedcfc',
-        //'#aeeafc',
-        //'#aefcf4',
-        '#aefce1',
-        '#9dc1eb'
+        '#a4dce2',
+        '#94c6cb'
       ],
       vAxis: {
         gridlines: {
@@ -236,11 +219,8 @@ export class StationsComponent implements OnInit {
         //1: {type: 'line'}
       },
       colors: [
-        //'#aedcfc',
-        //'#aeeafc',
-        //'#aefcf4',
-        '#aefce1',
-        '#9dc1eb'
+        '#8bd7dd',
+        '#76bcc1'
       ],
       vAxis: {
         gridlines: {
@@ -264,6 +244,10 @@ export class StationsComponent implements OnInit {
   priceCategoryTitle: string = "Preisklasse";
   federalStateTitle: string = "Bundesland";
   stationTitle: string = "Station";
+
+  figFederalStates: number = 0;
+  figStationManagement: number = this.stationManagement.length;
+  figAmountStations: number = 0;
 
 
 
@@ -293,8 +277,14 @@ export class StationsComponent implements OnInit {
       let federalstateStations: any[] = [];
       this.federalStates.forEach(state =>{
         let filterStations = this.stations.filter(station=> station.federalState == state)
-        federalstateStations.push([state, filterStations.length])
-      })
+        federalstateStations.push([state, filterStations.length]);
+        if(state == 'Bayern'){
+          this.figFederalStates += Math.round((this.stations.length / filterStations.length));
+        }
+        else if(state == 'Nordrhein-Westfalen'){
+          this.figFederalStates += Math.round((this.stations.length / filterStations.length));
+        }
+      });
       this.steppedAreaChart.values = federalstateStations;
       this.steppedAreaChart.columns = ['Bundesland','Anzahl Stationen'];
 
@@ -328,6 +318,8 @@ export class StationsComponent implements OnInit {
       barChartValues.push(['WLAN',stationsByWifi.length, (this.stations.length - stationsByWifi.length)]);
 
       this.barChart.values = barChartValues;
+
+      this.figAmountStations = this.stations.length;
     });
   }
 
@@ -345,6 +337,12 @@ export class StationsComponent implements OnInit {
 
     let federalStateStations: any[] = [];
 
+    let countStationManagement : string[] = [];
+
+    this.figFederalStates = 0;
+    this.figAmountStations = 0;
+    this.figStationManagement = 0;
+
       this.federalStates.forEach(state=>{
         let tmpStations = this.stations.filter(station => station.federalState == state);
         //console.log(tmpStations);
@@ -355,12 +353,28 @@ export class StationsComponent implements OnInit {
 
         if(tmpStationsInCategory) length = tmpStationsInCategory.length
         
-        federalStateStations.push([state, length, tmpStations.length])
+        federalStateStations.push([state, length, tmpStations.length]);
 
+        if(state == 'Bayern'){
+          this.figFederalStates += Math.round((tmpStations.length / tmpStationsInCategory.length));
+        }
+        else if(state == 'Nordrhein-Westfalen'){
+          this.figFederalStates += Math.round((tmpStations.length / tmpStationsInCategory.length));
+        }
+        this.figAmountStations += tmpStationsInCategory.length;
+
+        tmpStations.forEach(station=>{
+          if(station.stationManagement){
+            if(countStationManagement.indexOf(station.stationManagement) < 0){
+              countStationManagement.push(station.stationManagement);
+            }
+          }
+        });
       })
       //console.log(federalStateStations)
       this.steppedAreaChart.values = federalStateStations;
       this.steppedAreaChart.columns = ['Bundesland','Anzahl Stationen', 'Rest'];
+      this.figStationManagement = countStationManagement.length;
   }
 
   selectFederalStateFromGraph(input: any){
@@ -378,20 +392,24 @@ export class StationsComponent implements OnInit {
   chooseFederalState(state: string){
     this.federalStateTitle = state;
     let managementStations: any[] = [];
+    this.figStationManagement = 0;
+    this.figAmountStations = 0;
 
     this.stationManagement.forEach(management=>{
       let tmpStations = this.stations.filter(station => station.federalState == state);
       let stationsFromManagement = tmpStations.filter(station => station.stationManagement == management);
-
+      
       if(stationsFromManagement.length > 0){
         let importantStationsFromManagement = stationsFromManagement.filter(station => station.type == "Knotenbahnhof" || station.type == "Metropolbahnhof");
         managementStations.push([management, stationsFromManagement.length, importantStationsFromManagement.length]);
         this.chosenStationManagement.push(management);
+        
+        this.figStationManagement++;
+        this.figAmountStations += importantStationsFromManagement.length;
       }
 
     });
     this.comboChart2.values = managementStations;
-    
   }
 
   selectStationManagement(input: any){
@@ -405,9 +423,16 @@ export class StationsComponent implements OnInit {
   }
 
   filterStations(management: string){
-    console.log(management);
+    //console.log(management);
     this.chooseStations = this.stations.filter(station => station.stationManagement == management && (station.type == "Knotenbahnhof" || station.type == "Metropolbahnhof"));
-    console.log(this.chooseStations)
+    //console.log(this.chooseStations)
+    
+    this.figAmountStations = this.chooseStations.length;
+
+    let elem = document.getElementById('stationDropDown');
+    if(elem){
+      elem.style.boxShadow = '0px 0px 61px -15px #caca03';
+    }
   }
 
   chooseStation(id: string){
@@ -488,5 +513,27 @@ export class StationsComponent implements OnInit {
     }
   }
 
+  clickOnInfo(index: number){
+    console.log("Highlight graph" +index);
+    let elem = document.getElementById(`graph${index}`);
+    if(elem){
+      elem.style.boxShadow = '0px 0px 61px -25px #caca03';
+    }
+  }
+
+  resetInfo(index: number){
+    let elem = document.getElementById(`graph${index}`);
+    if(elem){
+      elem.style.boxShadow = '0px 0px 61px -49px black';
+    }
+  }
+
+  clickOnStationsDropDown(){
+    //console.log("click");
+    let elem = document.getElementById('stationDropDown');
+    if(elem){
+      elem.style.boxShadow = '';
+    }
+  }
 
 }

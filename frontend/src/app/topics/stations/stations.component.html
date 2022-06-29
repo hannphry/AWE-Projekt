@@ -38,7 +38,7 @@
                 </div>
                 <div class="topRowElem">
                     <!--Station auswählen-->
-                    <mat-form-field appearance="fill" class="dropDownMenu">
+                    <mat-form-field appearance="fill" class="dropDownMenu" id="stationDropDown" (click)="this.clickOnStationsDropDown()">
                         <mat-label>{{this.stationTitle}}</mat-label>
                         <mat-select>
                           <mat-option>Management auswählen</mat-option>
@@ -50,52 +50,52 @@
         </div>
         <div id="row1" class="row">
             <div id="information">
-                <div class="info" id="info1">
-                    <mat-icon class="graphIcon"> tram</mat-icon>
-                    <div class="statistics">
-                        <p class="value">70,3%</p>
-                        <p class="desc">ÖPNV-Anschluss</p>
-                    </div>
-                </div>
-                <div class="info" id="info2">
+                <div class="info" id="info1" (mouseenter)="this.clickOnInfo(0)" (mouseleave)="this.resetInfo(0)">
                     <mat-icon class="graphIcon"> attach_money</mat-icon>
                     <div class="statistics">
-                        <p class="value">16,3%</p>
-                        <p class="desc">Ja-Anschluss</p>
+                        <p class="value">7</p>
+                        <p class="desc">Verschiedene Preisklassen</p> <!--Idee: Infobutton, mit Pop-Up Infos zu Preisklasse-->
+                    </div>
+                </div>
+                <div class="info" id="info2" (mouseenter)="this.clickOnInfo(1)" (mouseleave)="this.resetInfo(1)">
+                    <mat-icon class="graphIcon"> tram</mat-icon>
+                    <div class="statistics">
+                        <p class="value">{{figFederalStates}}%</p>
+                        <p class="desc">Bayern und NRW</p>
                     </div>
                 </div>
             </div>
             <div id="graphs">
-                <div class="graph">
+                <div class="graph" id="graph0">
                     <google-chart class="googleChart" [title]="comboChart.title" [type]="comboChart.type" [columns]="comboChart.columns" [data]="comboChart.values" [options]="comboChart.options" (select)="this.selectPriceCategoryFromGraph($event.selection[0].row)" ></google-chart>
                 </div>
-                <div class="graph">
+                <div class="graph" id="graph1">
                     <google-chart class="googleChart" [title]="steppedAreaChart.title" [type]="steppedAreaChart.type" [columns]="steppedAreaChart.columns" [data]="steppedAreaChart.values" [options]="steppedAreaChart.options" (select)="this.selectFederalStateFromGraph($event.selection[0])"></google-chart>
                 </div>
             </div>
         </div>
         <div id="row2" class="row">
             <div id="information">
-                <div class="info" id="info3">
+                <div class="info" id="info3" (mouseenter)="this.clickOnInfo(2)" (mouseleave)="this.resetInfo(2)">
                     <mat-icon class="graphIcon"> category</mat-icon>
                     <div class="statistics">
-                        <p class="value">16,3%</p>
-                        <p class="desc">Ja-Anschluss</p>
+                        <p class="value">{{this.figStationManagement}}</p>
+                        <p class="desc">Management der Stationen</p>
                     </div>
                 </div>
-                <div class="info" id="info4">
+                <div class="info" id="info4" (mouseenter)="this.clickOnInfo(3)" (mouseleave)="this.resetInfo(3)">
                     <mat-icon class="graphIcon"> local_parking</mat-icon>
                     <div class="statistics">
-                        <p class="value">16,3%</p>
-                        <p class="desc">Ja-Anschluss</p>
+                        <p class="value">{{this.figAmountStations}}</p>
+                        <p class="desc">Anzahl Stationen</p>
                     </div>
                 </div>
             </div>
             <div id="graphs">
-                <div class="graph">
+                <div class="graph" id="graph2">
                     <google-chart class="googleChart" [title]="comboChart2.title" [type]="comboChart2.type" [columns]="comboChart2.columns" [data]="comboChart2.values" [options]="comboChart2.options" (select)="this.selectStationManagement($event.selection[0])"></google-chart>
                 </div>
-                <div class="graph">
+                <div class="graph" id="graph3">
                     <google-chart class="googleChart" [title]="barChart.title" [type]="barChart.type" [columns]="barChart.columns" [data]="barChart.values" [options]="barChart.options"></google-chart>
                 </div>
             </div>
