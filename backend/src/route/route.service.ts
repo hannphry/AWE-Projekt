@@ -100,6 +100,7 @@ export class RouteService {
 
     // GET /journeyDetails/{id}
     getTrackByDetailsId(id: string){
+        //console.log("getTrackByDetailsId");
         var subject = new ReplaySubject(1);
         id = encodeURIComponent(encodeURIComponent(id));
         /*
@@ -116,39 +117,60 @@ export class RouteService {
         this.httpService.get(`https://api.deutschebahn.com/fahrplan-plus/v1/journeyDetails/${id}`,{headers: {
             Authorization: 'Bearer 112d350cb8cb41770e1abf08d88b7ab4',
             Accept: 'application/json'
-        }}).subscribe(obj =>{
-
-            let arr: {stopId: string, stopName: string, lat: number, lon: number, depTime:  string, arrTime: String, train: string, type: string, operator: string }[]= [];
-            let data = obj.data
-     
-
-            if(data){
-                data.forEach(route => {
-                    if(route.stopName ){
-                        route.stopName = route.stopName.replace('&#x0028;',' (');
-                        route.stopName = route.stopName.replace('&#x0029;',') ');
-                        let routeObject: {stopId: string, stopName: string, lat: number, lon: number, depTime:  string, arrTime: string, train: string, type: string, operator: string } = {
-                            stopId: route.stopId,
-                            stopName: route.stopName,
-                            lat: route.lat,
-                            lon: route.lon,
-                            depTime: route.depTime,
-                            arrTime: route.arrTime,
-                            train: route.train,
-                            type: route.type,
-                            operator: route.operator
-                        };
-                        
-                        arr.push(routeObject);
-                        
-                    }
-                });
-            }
-
-            subject.next(arr);
-            subject.complete();
+        }}).subscribe(
+            (obj: AxiosResponse<any, any>) => {
+                //console.log('HTTP response', value)
+                try{
+                    if(obj){
+                        //console.log("1")
+                        let arr: {stopId: string, stopName: string, lat: number, lon: number, depTime:  string, arrTime: String, train: string, type: string, operator: string }[]= [];
+                        let data = obj.data
+                        if(data){
+                            //console.log("2")
+                            try{
+                                data.forEach(route => {
+                                    //console.log("3");
+                                    try{
+                                        if(route.stopName ){
+                                            route.stopName = route.stopName.replace('&#x0028;',' (');
+                                            route.stopName = route.stopName.replace('&#x0029;',') ');
+                                            let routeObject: {stopId: string, stopName: string, lat: number, lon: number, depTime:  string, arrTime: string, train: string, type: string, operator: string } = {
+                                                stopId: route.stopId,
+                                                stopName: route.stopName,
+                                                lat: route.lat,
+                                                lon: route.lon,
+                                                depTime: route.depTime,
+                                                arrTime: route.arrTime,
+                                                train: route.train,
+                                                type: route.type,
+                                                operator: route.operator
+                                            };
+                                            
+                                            arr.push(routeObject);
+                                        }
+                                    }catch{
+                                        //console.log("Error 3");
+                                    }
+                                });
+                            }catch{
+                                //console.log("Error 2");
+                            }
+                        }
             
-    });
+                        subject.next(arr);
+                        subject.complete();
+                    }
+                }catch{
+                    console.log("Error?")
+                }
+            },
+            (value: AxiosResponse<any, any>) => console.log('HTTP Error, Id: '+id)
+
+                /*
+            }*/
+    
+                
+        );
     return subject;
     }
 

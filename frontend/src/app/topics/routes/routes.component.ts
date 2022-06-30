@@ -2,7 +2,7 @@ import { coerceStringArray } from '@angular/cdk/coercion';
 import { formatDate, getLocaleDateFormat } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ChartType } from 'angular-google-charts';
-import { ReplaySubject } from 'rxjs';
+import { map, ReplaySubject } from 'rxjs';
 import { Chart } from 'src/app/interfaces/chart';
 import { RouteService } from 'src/app/services/route.service';
 
@@ -38,48 +38,26 @@ export class RoutesComponent implements OnInit {
   constructor( private routeService: RouteService ) { }
 
   ngOnInit(): void {
-    
     //this.searchForStation("Berlin");
   }
 
-
   nextStationsWordTree: Chart= {
     title: 'Naheliegende Stationen',
-    type: ChartType.WordTree,
+    type:  "WordTree" as ChartType,
     options: {
-      colors: [
-        '#aecbfc',
-        //'#aedcfc',
-        //'#aeeafc',
-        '#aef2fc',
-        //'#aefcf4',
-        //'#aefce1',
-        '#aefcc3'
-      ],
-      vAxis: {
-        gridlines: {
-            color: 'transparent'
-        }
-      },
-      hAxis: {
-        gridlines: {
-          color: 'transparent'
-      }
-      }
+      colors: ['black', 'black', 'black'],
+          wordtree: {
+            format: 'explicit',
+            type: 'suffix'
+          }
     },
-    
-    columns: ["id", "childLabel", "parent", "size", "role"],
-    
-    values: [[0, 'Life', -1, 1, 'black'],
-    [1, 'Archaea', 0, 1, 'black'],
-    [2, 'Eukarya', 0, 5, 'black'],
-    [3, 'Bacteria', 0, 1, 'black'],
-
-    [4, 'Crenarchaeota', 1, 1, 'black'],
-    [5, 'Euryarchaeota', 1, 1, 'black'],
-    [6, 'Korarchaeota', 1, 1, 'black'],
-    [7, 'Nanoarchaeota', 1, 1, 'black'],
-    [8, 'Thaumarchaeota', 1, 1, 'black']]
+    columns: ['id', 'childLabel', 'parent', 'size'],
+    values: [
+      [0, 'Life', -1, 1],
+      [1, 'Archaea', 0, 1],
+      [2, 'Eukarya', 0, 5],
+      [3, 'Bacteria', 0, 1]
+  ]
 
   }
 
@@ -115,6 +93,8 @@ export class RoutesComponent implements OnInit {
 
   }
 
+  viewDepartureTable : boolean = true;
+
   departureTable: Chart= {
     title: 'Abfahrtsplan der ausgewählten Station',
     type: ChartType.Table,
@@ -140,8 +120,7 @@ export class RoutesComponent implements OnInit {
       }
     },
     
-    columns: ["Uhrzeit","Zug","über Station", "Richtung", "Gleis"],
-    
+    columns: [],
     values: []
 
   }
@@ -296,8 +275,8 @@ export class RoutesComponent implements OnInit {
     let apiDate = date.toISOString().split('T')[0]
     this.routeService.getArrivalRoutes(`${input}`, apiDate).subscribe(data=>{
       this.stations = data;
-      console.log("Data of interactWithSearchStation")
-      console.log(data)
+      //console.log("Data of interactWithSearchStation")
+      //console.log(data)
     });
     this.hasSearched = false;
 
@@ -319,7 +298,7 @@ export class RoutesComponent implements OnInit {
           
 
       this.departure.forEach( train =>{
-        console.log(train.detailsId)
+        //console.log(train.detailsId)
         name.push( train.name)
         let time = new Date(train.dateTime);
         let hours = time.getHours();
@@ -335,84 +314,18 @@ export class RoutesComponent implements OnInit {
     
   }
 
-  fillDepartureTable(input: number, dateTime:any, name: any, track:any, detailsId:any ){
-      
+  fillDepartureTable(input: number, dateTime:any, name: any, track:any, detailsIds:any ){
+      this.departureTable.values = [];
      
       let nextStation: any[] = [];
       let endStation: any[] = [];
-     
-      
-
       let rows: any[] = [];
-      /*
-      this.routeService.getDepartureRoutes(`${input}`, date).subscribe(data=>{
-      this.departure = data;
-          
-
-      this.departure.forEach( train =>{
-        console.log(train.detailsId)
-        name.push( train.name)
-        let time = new Date(train.dateTime);
-        console.log("Time:")
-        console.log(time)
-        let hours = time.getHours();
-        let minutes = time.getMinutes();
-        console.log("TEST")
-        console.log( minutes )
-        dateTime.push( hours + ":" + minutes )
-        track.push( train.track)
-        detailsId.push( train.detailsId)
-      })
-      */
-      for (let i = 0; i < detailsId.length; i++){
-        
-          // die nächste und letzte Station der Route holen
-        this.routeService.getDetailsId(detailsId[i]).subscribe(data=>{
-      
-          let stopId: any[] = [];
-          let stopName: any[] = [];
-    
-          data.forEach( route=>{
-            stopId.push( route.stopId )
-            stopName.push( route.stopName )
-          })
-    
-          endStation.push(stopName[stopName.length -1]);
-          console.log("Endstation: ")
-          console.log(stopName[stopName.length -1])
-    
-          for (let i = 0; i < stopId.length; i++){
-            if (stopId[i] == input ){
-              if ( i == stopId.length -1 ){
-                nextStation.push(stopName[stopName.length]);
-                console.log("NächsteStation: ")
-                console.log(stopName[stopName.length])
-              } else {
-                console.log("NächsteStation: ")
-                console.log(stopName[i+1])
-                nextStation.push(stopName[i+1]);
-              }
-            }
-          }
-          });
-      }
-
-      // Die Werte für nextStation und endStation sind hier noch nicht gefüllt
-      for (let j = 0; j < dateTime.length; j++){
-        rows.push([dateTime[j], name[j], nextStation[j], endStation[j], track[j]])
-      }
-  
-      //this.departureTable.values = rows;
-      //console.log("values:")
-      //console.log(this.departureTable.values)
-    
 
       let counter = 0;
       var subject = new ReplaySubject(1);
       let arr: any[] = [];
-      //detailsId.forEach((detailsId: string) =>{
-
-        this.routeService.getDetailsId(detailsId[0]).subscribe((data: {
+      detailsIds.forEach((detailsId: string) =>{
+        this.routeService.getDetailsId(detailsId).subscribe((data: {
           depTime: string,
           lat: string,
           lon: string,
@@ -422,19 +335,32 @@ export class RoutesComponent implements OnInit {
           train: string,
           type: string,
         }[])=>{
-          //console.log(data);
-          //console.log(dateTime);
           let tDateTime: string = dateTime[counter];
           let tName: string = name[counter];
-          let nextStation: string = data[data.findIndex(obj=> obj.stopId == input)].stopName;
+          let nextStation: string = data[data.findIndex(obj=> obj.stopId == input) +1].stopName;
           let lastStation: string = data[data.length -1].stopName;
           let tTrack: string = track[counter];
           
-          //console.log([tDateTime, tName, nextStation, lastStation, tTrack])
-          this.departureTable.values = [tDateTime, tName, nextStation, lastStation, tTrack];
-          console.log(this.departureTable.values);
+          this.departureTableValues.push([tDateTime, tName, nextStation, lastStation, tTrack]);
         })
-    
+        if((detailsIds.length -1) == detailsIds.findIndex((id: any) => id == detailsId)){
+          console.log("last id");
+          subject.next(this.departureTableValues);
+        }
+        //counter++
+      });
+      subject.subscribe((obj) =>{
+        //console.log(obj);
+        this.departureTable.values = [];
+        let helper: any[] = [];
+        helper.push(obj);
+        console.log(helper[0]);
+        this.departureTableValues = [];
+        this.departureTable.values = helper[0];
+        this.departureTable.columns = ["Uhrzeit","Zug","über Station", "Richtung", "Gleis"];
+        console.log(this.departureTable.values);
+        //this.viewDepartureTable = true;
+      })
   }
 
 
