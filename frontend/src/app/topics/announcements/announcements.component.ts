@@ -76,6 +76,7 @@ export class AnnouncementsComponent implements OnInit {
     type: ChartType.Table,
     options: {
       title : 'Art der Meldungen',
+      allowHtml : true,
     },
     columns: ['Meldungsart','Priorität','Beschreibung'],
     values: [
@@ -86,15 +87,17 @@ export class AnnouncementsComponent implements OnInit {
     title: 'Dauer der Meldungen',
     type: ChartType.PieChart,
     options: {
-      title : 'Dauer der Meldungen',
+      title : 'Dauer der Meldungen in Monaten',
       colors: [
-        //'#aaecdc',
-        //'#a7dde8',
-        //'#f68ea2',
-        '#ee869a'
+        '#ffb5c5',
+        '#ff6347',
+        '#ff4500',
+        '#ee2c2c',
+        '#ff0000',
+        '#8b0000'
       ]
     },
-    columns: ['Meldungsart','Anzahl'],//, 'Differenz'],
+    columns: ['Meldungsart','Anzahl'],
     values: []
   }
 
@@ -103,6 +106,8 @@ export class AnnouncementsComponent implements OnInit {
   public percentConstruction: number = 0;
 
   public percentHighPriority: number = 0;
+
+  public amountOfAnnouncements: number = 0;
 
   constructor(
     private announcementService: AnnouncementService,
@@ -150,7 +155,15 @@ export class AnnouncementsComponent implements OnInit {
 
       //Dauer der Störungen
 
+      let announcementDuration1: any[] = [];
+      let announcementDuration2: any[] = [];
+      let announcementDuration3: any[] = [];
+      let announcementDuration6: any[] = [];
+      let announcementDuration12: any[] = [];
+      let announcementDuration24: any[] = [];
+      let announcementDuration: any[] = [];
       let announcementDurations: any[] = [];
+
       let times: number[] = [];
 
       this.announcements.forEach(announcement => {
@@ -164,14 +177,30 @@ export class AnnouncementsComponent implements OnInit {
           //console.log(time);          
         }
       });
-      console.log(times)
+      //console.log(times)
       times.forEach(time => {
-        let tmpDuration = this.durations.filter(duration => duration == time);
-        let t = time.toString();
-        announcementDurations.push([t, tmpDuration.length]);
+        if(time <= 1){
+          announcementDuration1.push(time);
+        }else if(time <= 2){
+          announcementDuration2.push(time);
+        }else if(time <= 3){
+          announcementDuration3.push(time);
+        }else if(time <= 6){
+          announcementDuration6.push(time);
+        }else if(time <= 12){
+          announcementDuration12.push(time);
+        }else{
+          announcementDuration.push(time);
+        }
       });
 
-      console.log(announcementDurations);
+      announcementDurations.push(["< 1", announcementDuration1.length]);
+      announcementDurations.push(["1 - 2", announcementDuration2.length]);
+      announcementDurations.push(["2 - 3", announcementDuration3.length]);
+      announcementDurations.push(["3 - 6", announcementDuration6.length]);
+      announcementDurations.push(["6 - 12", announcementDuration12.length]);
+      announcementDurations.push(["> 12", announcementDuration.length]);
+      //console.log(announcementDurations);
 
       this.pieChart.values = announcementDurations;
 
@@ -196,6 +225,10 @@ export class AnnouncementsComponent implements OnInit {
 
       this.percentHighPriority = Math.round(this.percentHighPriority)
 
+      //Anzahl aller Meldungen
+      let tmpAmountOfAnnouncements = this.announcements.length;
+
+      this.amountOfAnnouncements = tmpAmountOfAnnouncements;
     });
   }
 }
