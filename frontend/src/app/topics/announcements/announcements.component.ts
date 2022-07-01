@@ -45,16 +45,17 @@ export class AnnouncementsComponent implements OnInit {
 
   comboChart: Chart = {
     title: 'Art der Meldungen',
-    type: ChartType.BarChart,
+    type: ChartType.ColumnChart,
     options: {
       title : 'Art der Meldungen',
       seriesType: 'bars',
       series: {
-        2: {type: 'line'}
+        3: {type: 'line'}
       },
       colors: [
         '#dba3d1',
-        '#ee869a'
+        '#ee869a',
+        '#8b0000'
       ],
       vAxis: {
         gridlines: {
@@ -65,7 +66,7 @@ export class AnnouncementsComponent implements OnInit {
       //hAxis: {title: 'Anzahl der Meldungen'},
       
     },
-    columns: ['Meldungsart','Anzahl','Linie betreffend'],//, 'Differenz'],
+    columns: ['Meldungsart','Anzahl','Linie betreffend','hohe Priorität'],//, 'Differenz'],
     values: []
   }
 
@@ -112,7 +113,7 @@ export class AnnouncementsComponent implements OnInit {
     options: {
       title : 'Betroffene Linien',
       backgoundColor: '#ddd',
-      legend: { position: 'bottom'},
+      legend: { position: 'right'},
       colors: [
         '#ffb5c5',
         '#ff6347',
@@ -161,22 +162,28 @@ export class AnnouncementsComponent implements OnInit {
         //console.log(tmpAnnouncements);
         if(type == "tripMessage"){
           let tmpAffected = this.announcements.filter(announcement => announcement.concernedLines != "undefined;" && announcement.type == type);
-          announcementTypes.push(["Durchsagen", tmpAnnouncements.length, tmpAffected.length]);
+          let tmpPrio = this.announcements.filter(announcement => announcement.priority == "veryHigh" && announcement.type == type);
+          announcementTypes.push(["Durchsagen", tmpAnnouncements.length, tmpAffected.length, tmpPrio.length]);
         }else if(type == "lineInfo"){
           let tmpAffected = this.announcements.filter(announcement => announcement.concernedLines != "undefined;" && announcement.type == type);
-          announcementTypes.push(["Linieninformation", tmpAnnouncements.length, tmpAffected.length]);
+          let tmpPrio = this.announcements.filter(announcement => announcement.priority == "veryHigh" && announcement.type == type);
+          announcementTypes.push(["Linieninformation", tmpAnnouncements.length, tmpAffected.length, tmpPrio.length]);
         }else if(type == "stopInfo"){
           let tmpAffected = this.announcements.filter(announcement => announcement.concernedLines != "undefined;" && announcement.type == type);
-          announcementTypes.push(["Haltestelleninformation", tmpAnnouncements.length, tmpAffected.length]);
+          let tmpPrio = this.announcements.filter(announcement => announcement.priority == "veryHigh" && announcement.type == type);
+          announcementTypes.push(["Haltestelleninformation", tmpAnnouncements.length, tmpAffected.length, tmpPrio.length]);
         }else if(type == "routeInfo"){
           let tmpAffected = this.announcements.filter(announcement => announcement.concernedLines != "undefined;" && announcement.type == type);
-          announcementTypes.push(["Streckeninformation", tmpAnnouncements.length, tmpAffected.length]);
+          let tmpPrio = this.announcements.filter(announcement => announcement.priority == "veryHigh" && announcement.type == type);
+          announcementTypes.push(["Streckeninformation", tmpAnnouncements.length, tmpAffected.length, tmpPrio.length]);
         }else if(type == "stopBlocking"){
           let tmpAffected = this.announcements.filter(announcement => announcement.concernedLines != "undefined;" && announcement.type == type);
-          announcementTypes.push(["Haltestellensperrung", tmpAnnouncements.length, tmpAffected.length]);
+          let tmpPrio = this.announcements.filter(announcement => announcement.priority == "veryHigh" && announcement.type == type);
+          announcementTypes.push(["Haltestellensperrung", tmpAnnouncements.length, tmpAffected.length, tmpPrio.length]);
         }else if(type == "routeBlocking"){
           let tmpAffected = this.announcements.filter(announcement => announcement.concernedLines != "undefined;" && announcement.type == type);
-          announcementTypes.push(["Streckensperrung", tmpAnnouncements.length, tmpAffected.length]);
+          let tmpPrio = this.announcements.filter(announcement => announcement.priority == "veryHigh" && announcement.type == type);
+          announcementTypes.push(["Streckensperrung", tmpAnnouncements.length, tmpAffected.length, tmpPrio.length]);
         }
       });
     
