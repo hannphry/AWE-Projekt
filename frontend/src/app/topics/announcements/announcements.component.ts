@@ -15,10 +15,10 @@ export class AnnouncementsComponent implements OnInit {
 
   types: string[] = [
     "tripMessage",
-    "lineInfo",
     "stopInfo",
-    "routeInfo",
+    "lineInfo",
     "stopBlocking",
+    "routeInfo",
     "routeBlocking"
   ]
 
@@ -53,9 +53,7 @@ export class AnnouncementsComponent implements OnInit {
         2: {type: 'line'}
       },
       colors: [
-        //'#aaecdc',
-        //'#a7dde8',
-        //'#f68ea2',
+        '#dba3d1',
         '#ee869a'
       ],
       vAxis: {
@@ -67,7 +65,7 @@ export class AnnouncementsComponent implements OnInit {
       //hAxis: {title: 'Anzahl der Meldungen'},
       
     },
-    columns: ['Meldungsart','Anzahl'],//, 'Differenz'],
+    columns: ['Meldungsart','Anzahl','Linie betreffend'],//, 'Differenz'],
     values: []
   }
 
@@ -103,7 +101,35 @@ export class AnnouncementsComponent implements OnInit {
       ]
     },
     columns: ['Meldungsart','Anzahl'],
-    values: []
+    values: [
+      
+    ]
+  }
+
+  steppedAreaChart: Chart = {
+    title: 'Betroffene Linien',
+    type: ChartType.SteppedAreaChart,
+    options: {
+      title : 'Betroffene Linien',
+      backgoundColor: '#ddd',
+      legend: { position: 'bottom'},
+      colors: [
+        '#ffb5c5',
+        '#ff6347',
+        '#ff4500',
+        '#ee2c2c',
+        '#ff0000',
+        '#8b0000'
+      ],
+      connectSteps: false,
+      isStacked:true
+      //hAxis: {title: 'Anzahl der Meldungen'},
+      
+    },
+    columns: ['Meldungsart',''],
+    values: [
+      ["Test",2]
+    ]
   }
 
   public percentAffectTimetable: number = 0;
@@ -132,10 +158,28 @@ export class AnnouncementsComponent implements OnInit {
 
       this.types.forEach(type =>{
         let tmpAnnouncements = this.announcements.filter(announcement => announcement.type == type);
-
-        announcementTypes.push([type, tmpAnnouncements.length]);
-      })
-      
+        //console.log(tmpAnnouncements);
+        if(type == "tripMessage"){
+          let tmpAffected = this.announcements.filter(announcement => announcement.concernedLines != "undefined;" && announcement.type == type);
+          announcementTypes.push(["Durchsagen", tmpAnnouncements.length, tmpAffected.length]);
+        }else if(type == "lineInfo"){
+          let tmpAffected = this.announcements.filter(announcement => announcement.concernedLines != "undefined;" && announcement.type == type);
+          announcementTypes.push(["Linieninformation", tmpAnnouncements.length, tmpAffected.length]);
+        }else if(type == "stopInfo"){
+          let tmpAffected = this.announcements.filter(announcement => announcement.concernedLines != "undefined;" && announcement.type == type);
+          announcementTypes.push(["Haltestelleninformation", tmpAnnouncements.length, tmpAffected.length]);
+        }else if(type == "routeInfo"){
+          let tmpAffected = this.announcements.filter(announcement => announcement.concernedLines != "undefined;" && announcement.type == type);
+          announcementTypes.push(["Streckeninformation", tmpAnnouncements.length, tmpAffected.length]);
+        }else if(type == "stopBlocking"){
+          let tmpAffected = this.announcements.filter(announcement => announcement.concernedLines != "undefined;" && announcement.type == type);
+          announcementTypes.push(["Haltestellensperrung", tmpAnnouncements.length, tmpAffected.length]);
+        }else if(type == "routeBlocking"){
+          let tmpAffected = this.announcements.filter(announcement => announcement.concernedLines != "undefined;" && announcement.type == type);
+          announcementTypes.push(["Streckensperrung", tmpAnnouncements.length, tmpAffected.length]);
+        }
+      });
+    
       this.comboChart.values = announcementTypes;
 
       //Tabelle der aktuellen Meldungen:
@@ -143,6 +187,9 @@ export class AnnouncementsComponent implements OnInit {
       let currentAnnouncements: any[] = [];
 
       let today = new Date();
+
+      let correctAnnouncement = "";
+      let correctPriority = "";
       
       this.announcements.forEach(announcement => {
         if(announcement.from != undefined && announcement.to != undefined){
@@ -152,7 +199,29 @@ export class AnnouncementsComponent implements OnInit {
           //console.log(today)
           //console.log(maxDate)
           if (today > minDate && today < maxDate){
-            currentAnnouncements.push([announcement.type, announcement.priority, announcement.content])
+            if(announcement.type == "tripMessage"){
+              correctAnnouncement = "Durchsagen";
+            }else if(announcement.type == "lineInfo"){
+              correctAnnouncement = "Linieninformation";
+            }else if(announcement.type == "stopInfo"){
+              correctAnnouncement = "Haltestelleninformation";
+            }else if(announcement.type == "routeInfo"){
+              correctAnnouncement = "Streckeninformation";
+            }else if(announcement.type == "stopBlocking"){
+              correctAnnouncement = "Haltestellensperrung";
+            }else if(announcement.type == "routeBlocking"){
+              correctAnnouncement = "Streckensperrung";
+            }
+
+            if(announcement.priority == "veryHigh"){
+              correctPriority = "hoch";
+            }else if(announcement.priority == "normal"){
+              correctPriority = "normal";
+            }else if(announcement.priority == "veryLow"){
+              correctPriority = "gering";
+            }
+
+            currentAnnouncements.push([correctAnnouncement, correctPriority, announcement.content])
             this.tableChart.values = currentAnnouncements;
          }
         }
@@ -165,7 +234,6 @@ export class AnnouncementsComponent implements OnInit {
       let announcementDuration3: any[] = [];
       let announcementDuration6: any[] = [];
       let announcementDuration12: any[] = [];
-      let announcementDuration24: any[] = [];
       let announcementDuration: any[] = [];
       let announcementDurations: any[] = [];
 
@@ -208,6 +276,46 @@ export class AnnouncementsComponent implements OnInit {
       //console.log(announcementDurations);
 
       this.pieChart.values = announcementDurations;
+
+      //Welche Linien sind am meisten betroffen
+
+      let allConcernedLines: any[] = [];
+      let graphConcernedLines: any[] = [];
+
+      this.announcements.forEach(announcement => {
+        if(announcement.concernedLines != undefined){
+          let concernedLines = ((announcement.concernedLines as unknown) as string).split(';');
+          concernedLines.forEach(concernedLine => {
+            if(concernedLine != "undefined" && concernedLine != ""){
+            allConcernedLines.push(concernedLine);
+            }
+          });
+        }
+      });
+
+      console.log(allConcernedLines);
+
+      let counts : any[] = [];
+      allConcernedLines.forEach(line => {
+        counts[line] = (counts[line] || 0) + 1;
+        graphConcernedLines.push([line,counts[line]])
+      });
+      
+      let tmpArray:  any[] = [];
+
+      graphConcernedLines.forEach(elem => {
+          if(tmpArray.findIndex(item => item[0] == elem[0] >= 0)){
+            tmpArray.push(elem)
+          }
+        })
+
+      console.log(counts);
+      console.log(tmpArray);
+
+      //console.log(allConcernedLines);
+
+      this.steppedAreaChart.values = graphConcernedLines;
+
 
       //Anteil der Meldungen, die die Abfahrpläne beeinflussen werden ermittelt
       let tmpAffects = this.announcements.filter(announcement => announcement.affectTimetable == true);

@@ -37,8 +37,8 @@
                 <div class="info" id="info2">
                     <mat-icon class="graphIcon">construction</mat-icon>
                     <div class="statistics">
-                        <p class="value">{{percentConstruction}}%</p>
-                        <p class="desc">durch Bauarbeiten verursacht</p>
+                        <p class="value">{{amountOfAnnouncements}}</p>
+                        <p class="desc">aktuelle Meldungen</p>
                     </div>
                 </div>
             </div>
@@ -60,14 +60,14 @@
                     <mat-icon class="graphIcon">report_problem</mat-icon>
                     <div class="statistics">
                         <p class="value">{{percentHighPriority}}%</p>
-                        <p class="desc">sehr hohe Priorität</p>
+                        <p class="desc">hohe Priorität</p>
                     </div>
                 </div>
                 <div class="info" id="info4">
                     <mat-icon class="graphIcon">announcement</mat-icon>
                     <div class="statistics">
-                        <p class="value">{{amountOfAnnouncements}}</p>
-                        <p class="desc">Meldungen heute</p>
+                        <p class="value">{{percentConstruction}}%</p>
+                        <p class="desc">Bauarbeiten</p>
                     </div>
                 </div>
             </div>
@@ -76,7 +76,7 @@
                     <google-chart class="googleChart" [title]="pieChart.title" [type]="pieChart.type" [columns]="pieChart.columns" [data]="pieChart.values" [options]="pieChart.options" ></google-chart>
                 </div>
                 <div class="graph">
-                    <google-chart class="googleChart"></google-chart>
+                    <google-chart class="googleChart" [title]="steppedAreaChart.title" [type]="steppedAreaChart.type" [columns]="steppedAreaChart.columns" [data]="steppedAreaChart.values" [options]="steppedAreaChart.options" ></google-chart>
                 </div>
             </div>
 
