@@ -75,8 +75,13 @@ export class AnnouncementsComponent implements OnInit {
     title: 'Meldungen',
     type: ChartType.Table,
     options: {
-      title : 'Art der Meldungen',
+      title: 'Art der Meldungen',
       allowHtml : true,
+      width: '100%',
+      page: 'enable',
+      pageSize: 5,
+      pagingButtons: 0,
+      cssClassNames: {headerRow:'columnTitle'}
     },
     columns: ['Meldungsart','Priorität','Beschreibung'],
     values: [
@@ -226,7 +231,7 @@ export class AnnouncementsComponent implements OnInit {
       this.percentHighPriority = Math.round(this.percentHighPriority)
 
       //Anzahl aller Meldungen
-      let tmpAmountOfAnnouncements = this.announcements.length;
+      let tmpAmountOfAnnouncements = currentAnnouncements.length;
 
       this.amountOfAnnouncements = tmpAmountOfAnnouncements;
     });

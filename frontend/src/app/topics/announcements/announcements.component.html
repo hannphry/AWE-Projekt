@@ -47,7 +47,9 @@
                     <google-chart class="googleChart" [title]="comboChart.title" [type]="comboChart.type" [columns]="comboChart.columns" [data]="comboChart.values" [options]="comboChart.options" ></google-chart>
                 </div>
                 <div class="graph">
+                    <div class="table">
                     <google-chart class="googleChart" [title]="tableChart.title" [type]="tableChart.type" [columns]="tableChart.columns" [data]="tableChart.values" [options]="tableChart.options" ></google-chart>
+                    </div>
                 </div>
             </div>
 
@@ -65,7 +67,7 @@
                     <mat-icon class="graphIcon">announcement</mat-icon>
                     <div class="statistics">
                         <p class="value">{{amountOfAnnouncements}}</p>
-                        <p class="desc">Meldungen insgesamt</p>
+                        <p class="desc">Meldungen heute</p>
                     </div>
                 </div>
             </div>

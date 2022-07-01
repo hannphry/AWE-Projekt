@@ -49,6 +49,7 @@ body #layout {
         }
 
     }
+
     #topRow{
         //height: 50px;
         #topicName{
@@ -71,4 +72,29 @@ body #layout {
             }
         }
     }
+    
+    //Table-chart styles
+    ::ng-deep .columnTitle {
+        color: white;
+        background-color: #f38bba96;
+    }
+    ::ng-deep .google-visualization-table .gradient {
+        background-image: none;
+    }
+    ::ng-deep .google-visualization-table-div-page {
+        background-image: none !important;
+        background-color: white !important;
+    }
+    ::ng-deep .goog-custom-button-outer-box{
+        border-color: #e1272783 !important;
+    }
+    ::ng-deep .goog-custom-button-inner-box{
+        color: white !important;
+        background-color: #f38bba96;
+    }
+}
+
+::ng-deep body #layout .row #graphs .graph google-chart {
+    width: 100% !important;
+    overflow-y: hidden;
 }
