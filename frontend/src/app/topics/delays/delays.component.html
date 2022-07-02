@@ -1,6 +1,52 @@
 <body>
     <div id="layout">
-        <p>Verzögerungen</p>
+        <div id="topRow">
+            <div id="topicName">
+                <div id="elem">
+                    <h2>
+                        Abteil: Verzögerungen
+                    </h2>
+                    <mat-icon id="timerIcon" class="topicIcon">av_timer</mat-icon>
+                </div>
+            </div>
+            <div id="dropDowns">
+                <div class="topRowElem" id="searchBox">
+                    <div id="upperElem" >
+                        <button mat-icon-button (click)="this.searchForStation(this.searchValue)">
+                            <mat-icon>search</mat-icon>
+                        </button>
+                        <mat-form-field id="stationSearchBox">
+                            <input matInput class="input" type="text" placeholder="Stationssuche" [(ngModel)]="this.searchValue">
+                        </mat-form-field>
+                    </div>
+                    <div id="stationSearchResults" *ngIf="this.hasSearched == true" >
+                        <div class="searchResult" (click)="this.compareStations(this.selectedStations)"><mat-icon>arrow_right_alt</mat-icon></div>
+                        <div *ngFor="let station of this.selectedStations">
+                            <div class="searchResult" *ngIf="this.isStationSelectedButNotInSearchStations(this.station.id) == true">
+                                <div class="searchResultName">{{station.name}} A</div>
+                                <mat-icon *ngIf="this.isStationSelectedButNotInSearchStations(this.station.id) == true">check</mat-icon>
+                            </div>
+                        </div>
+                        <div class="searchResult" *ngFor="let station of this.searchStations" (click)="this.selectStation(this.station)" >
+                            <div class="searchResultName">{{station.name}} B</div>
+                            <mat-icon *ngIf="this.isStationSelected(this.station.id) == true">check</mat-icon>
+                        </div>
+                    </div>
+                </div>
+                <div class="topRowElem">
+                </div>
+                <div class="topRowElem">
+                    <!--<mat-form-field appearance="fill" class="dropDownMenu">
+                        <mat-label>Streckenauswahl</mat-label>
+                        <mat-icon>train</mat-icon>
+                        <mat-select placeholder="{{this.detailsIdLabel}}">
+                          <mat-option>None</mat-option>
+                          <mat-option *ngFor="let item of this.stations"  (click)="this.getWithDetailsId(item.detailsId, item.origin)">{{item.origin}}</mat-option>
+                        </mat-select> 
+                    </mat-form-field>-->
+                </div>
+            </div>
+        </div>
         <div id="row1" class="row">
             <div id="information">
                 <div class="info" id="info1">
@@ -20,10 +66,10 @@
             </div>
             <div id="graphs">
                 <div class="graph">
-                    <google-chart class="googleChart"></google-chart>
+                    <google-chart class="googleChart" [title]="columnChart.title" [type]="columnChart.type" [columns]="columnChart.columns" [data]="columnChart.values" [options]="columnChart.options"></google-chart>
                 </div>
                 <div class="graph">
-                    <google-chart class="googleChart"></google-chart>
+                    <google-chart class="googleChart" ></google-chart>
                 </div>
             </div>
 
@@ -47,7 +93,7 @@
             </div>
             <div id="graphs">
                 <div class="graph">
-                    <google-chart class="googleChart"></google-chart>
+                    <google-chart class="googleChart"></google-chart>                     
                 </div>
                 <div class="graph">
                     <google-chart class="googleChart"></google-chart>

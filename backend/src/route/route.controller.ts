@@ -44,4 +44,13 @@ export class RouteController{
         //console.log(id);
         return this.routeService.getTrackByDetailsId(id);
     }
+
+    @Get('getDataWithDetailsIds/:input/:evaId')
+    getDataWithDetailsIds( 
+        @Param('input') input: string,
+        @Param('evaId') evaId: string
+        ){
+        //console.log(input.split(','));
+        return this.routeService.getDataWithDetailsIds(input.split(','), evaId);
+    }
 }

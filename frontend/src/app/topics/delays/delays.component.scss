@@ -19,29 +19,113 @@ $accentColour4: #8771c34b;
 */
 
 //$mainColour: #ffc60069;
-body #layout .row #information{
-    #info1{
-        background-color: #8dc6f47c;
-        .graphIcon{
-            background: #79abd57c;
+body #layout .row {
+    #information{
+        #info1{
+            background-color: #8dc6f47c;
+            .graphIcon{
+                background: #79abd57c;
+            }
+        }
+        #info2{
+            background-color: #8db8f497;
+            .graphIcon{
+                background: #7a9dcf83;
+            }
+        }
+        #info3{
+            background-color: #8d9bf458;
+            .graphIcon{
+                background: #7884d367;
+            }
+        }
+        #info4{
+            background-color: #a98df44b;
+            .graphIcon{
+                background: #8771c34b;
+            }
         }
     }
-    #info2{
-        background-color: #8db8f497;
-        .graphIcon{
-            background: #7a9dcf83;
+}#topRow{
+    //height: 50px;
+    #topicName{
+        background-color: #abcefe;
+        border: 1px solid #a3c6f6;
+        .topicIcon{ 
+            background-color: #a3c6f6;
         }
     }
-    #info3{
-        background-color: #8d9bf458;
-        .graphIcon{
-            background: #7884d367;
+    #dropDowns{
+        .topRowElem{   
         }
-    }
-    #info4{
-        background-color: #a98df44b;
-        .graphIcon{
-            background: #8771c34b;
+
+        #searchBox{
+            display: flex;
+            flex-direction: column;
+
+            #upperElem{
+                display: flex;
+                align-items: center;
+                #stationSearchBox{
+                    width: calc(100% - 40px);
+                    ::ng-deep .mat-form-field-wrapper{
+                        padding: 0;
+                        height: 50px;
+                        width: 100%;
+                        background-color: white;
+                        .mat-form-field-flex { 
+                            padding: 0 0px !important;
+                            height: 100%;
+                            background-color: white;
+                        }
+                        .mat-form-field-underline{
+                            top: 100%;
+                        }
+                    } 
+                }
+            }
+            
+            #stationSearchResults{
+                margin-top: 1rem;
+                //padding: 1rem;
+                position: relative;
+                background-color: white;
+                z-index: 2;
+                border-radius: 5px;
+                box-shadow: 0px 10px 60px -40px black;
+                
+                .searchResult{
+                    padding: 1rem;
+                    display: flex;
+                }.searchResult:hover{
+                    background-color: rgb(248, 248, 248);
+                }
+                .searchResult:active{
+                    background-color: rgb(245, 243, 243);
+                    font-weight: bold;
+                }
+            }
+        }
+
+
+        .dropDownMenu{
+            //background-color: beige;
+            ::ng-deep .mat-form-field-wrapper{
+                padding: 0;
+                height: 100%;
+                width: calc(100% - 5px);
+                background-color: white;
+                .mat-form-field-flex { 
+                    padding: 0 0px !important;
+                    height: 100%;
+                    background-color: white;
+                }
+                .mat-form-field-underline{
+                    top: 100%;
+                    left: -5px;
+                    width: calc(100% + 5px);
+                }
+            } 
         }
     }
 }

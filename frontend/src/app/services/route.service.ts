@@ -30,4 +30,8 @@ export class RouteService{
         return this.httpClient.get<any[]>(`${environment.apiUrl}/routes/details/${id}`);
     }
 
+    getDataWithDetailsIds(ids: string[], evaId: string){
+        return this.httpClient.get<any[]>(`${environment.apiUrl}/routes/getDataWithDetailsIds/${ids}/${evaId}`);
+    }
+
 }

@@ -281,10 +281,10 @@ export class RoutesComponent implements OnInit {
     this.hasSearched = false;
 
     
-    this.getDepartureBoardWithDetailsId(input, apiDate);
+    this.getDepartureBoardWithDetailsId(input, apiDate, `${input}`);
   }
 
-  getDepartureBoardWithDetailsId(input:number, date: string){
+  getDepartureBoardWithDetailsId(input:number, date: string, evaId: string){
       let dateTime: any[] = [];
       let name: any[] = [];
       let nextStation: any[] = [];
@@ -308,13 +308,13 @@ export class RoutesComponent implements OnInit {
         detailsId.push( train.detailsId)
       })
 
-    this.fillDepartureTable(input, dateTime, name, track, detailsId) 
+    this.fillDepartureTable(input, dateTime, name, track, detailsId, evaId) 
 
     });     
     
   }
 
-  fillDepartureTable(input: number, dateTime:any, name: any, track:any, detailsIds:any ){
+  fillDepartureTable(input: number, dateTime:any, name: any, track:any, detailsIds:any, evaId: string ){
       this.departureTable.values = [];
      
       let nextStation: any[] = [];
@@ -324,6 +324,11 @@ export class RoutesComponent implements OnInit {
       let counter = 0;
       var subject = new ReplaySubject(1);
       let arr: any[] = [];
+
+      this.routeService.getDataWithDetailsIds(detailsIds, `${evaId}`).subscribe(obj=>{
+        console.log(obj)
+      })
+      /*
       detailsIds.forEach((detailsId: string) =>{
         this.routeService.getDetailsId(detailsId).subscribe((data: {
           depTime: string,
@@ -361,6 +366,7 @@ export class RoutesComponent implements OnInit {
         console.log(this.departureTable.values);
         //this.viewDepartureTable = true;
       })
+      */
   }
 
 

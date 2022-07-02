@@ -3,7 +3,7 @@ import { HttpService } from '@nestjs/axios';
 
 import { Injectable } from '@nestjs/common';
 import { AxiosResponse } from 'axios';
-import { map, Observable, ReplaySubject, Subject } from 'rxjs';
+import { map, Observable, ReplaySubject, Subject, zip } from 'rxjs';
 
 @Injectable()
 export class RouteService {
@@ -174,5 +174,35 @@ export class RouteService {
     return subject;
     }
 
-    
+    getDataWithDetailsIds(input: string[], evaId: string){
+        return zip(
+            input.flatMap(
+              (id) => {
+                console.log(id);
+                id = encodeURIComponent(encodeURIComponent(id));
+                return this.httpService.get(`https://api.deutschebahn.com/fahrplan-plus/v1/journeyDetails/${id}`,{headers: {
+                    Authorization: 'Bearer 112d350cb8cb41770e1abf08d88b7ab4',
+                    Accept: 'application/json'
+                    }})
+              }
+            ),
+            (...results) => {
+                return results.map(result => {
+                    //console.log(result);
+                    let index = result.data.findIndex(obj =>{ `${obj.stopId}` == evaId})
+                    if(index >= 0){
+                        let res = {
+                            id : result.data[index].stopId,
+                            name : result.data[index].train,
+                            time : result.data[index].arrTime,
+                            nextStation: result.data[index+1].stopName,
+                            lastStation: result.data[result.data.length -1].stopName
+                        }
+                        return res;
+                    }
+                    else return result.data
+                });
+              }
+          )
+    }
 }
