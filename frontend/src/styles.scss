@@ -173,16 +173,18 @@ body{
                       padding: 30px;
                   }
                   .statistics{
-                      margin-right: 15px;
-                      display: flex;
-                      align-items: flex-end;
-                      flex-direction: column;
+                        display: flex;
+                        align-items: flex-start;
+                        flex-direction: column;
+                        padding-left: 1rem;
+                        line-height: 30px;
+                        padding-right: 15px;
                       .value{
                           font-size: 30px;
                           font-weight: bold;
                       }
                       .desc{
-                          font-size: 17px;
+                          font-size: 20px;
                       }
                   }
               }

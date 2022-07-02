@@ -10,31 +10,21 @@
                 </div>
             </div>
             <div id="dropDowns">
-                <div class="topRowElem">
-                    <!--
-                    <mat-form-field appearance="fill" id="connectionForm">
-                        <mat-label>Zugverbindung</mat-label>
-                        <mat-select>
-                          <mat-option>None</mat-option>
-                              <mat-option *ngFor="let item of this.stations"  (click)="this.getWithDetailsId(item.detailsId)">{{item.origin}}</mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    -->
-                </div>
-                <div class="topRowElem"></div>
-                <div class="topRowElem"></div>
+                <div class="topRowElem">Filter Meldungsart</div>
+                <div class="topRowElem">Filter Priorität</div>
+                <div class="topRowElem">Filter Stadt?</div>
             </div>
         </div>
         <div id="row1" class="row">
             <div id="information">
-                <div class="info" id="info1">
+                <div class="info" id="info1" (mouseenter)="this.clickOnInfo(0)" (mouseleave)="this.resetInfo(0)">
                     <mat-icon class="graphIcon">departure_board</mat-icon>
                     <div class="statistics">
                         <p class="value">{{percentAffectTimetable}}%</p>
                         <p class="desc">Fahrplan beeinflussend</p>
                     </div>
                 </div>
-                <div class="info" id="info2">
+                <div class="info" id="info2" (mouseenter)="this.clickOnInfo(1)" (mouseleave)="this.resetInfo(1)">
                     <mat-icon class="graphIcon">construction</mat-icon>
                     <div class="statistics">
                         <p class="value">{{amountOfAnnouncements}}</p>
@@ -43,10 +33,10 @@
                 </div>
             </div>
             <div id="graphs">
-                <div class="graph">
+                <div class="graph" id="graph0">
                     <google-chart class="googleChart" [title]="comboChart.title" [type]="comboChart.type" [columns]="comboChart.columns" [data]="comboChart.values" [options]="comboChart.options" ></google-chart>
                 </div>
-                <div class="graph">
+                <div class="graph" id="graph1">
                     <div class="table">
                     <google-chart class="googleChart" [title]="tableChart.title" [type]="tableChart.type" [columns]="tableChart.columns" [data]="tableChart.values" [options]="tableChart.options" ></google-chart>
                     </div>
@@ -56,14 +46,14 @@
         </div>
         <div id="row2" class="row">
             <div id="information">
-                <div class="info" id="info3">
+                <div class="info" id="info3" (mouseenter)="this.clickOnInfo(2)" (mouseleave)="this.resetInfo(2)">
                     <mat-icon class="graphIcon">report_problem</mat-icon>
                     <div class="statistics">
                         <p class="value">{{percentHighPriority}}%</p>
                         <p class="desc">hohe Priorität</p>
                     </div>
                 </div>
-                <div class="info" id="info4">
+                <div class="info" id="info4" (mouseenter)="this.clickOnInfo(3)" (mouseleave)="this.resetInfo(3)">
                     <mat-icon class="graphIcon">announcement</mat-icon>
                     <div class="statistics">
                         <p class="value">{{percentConstruction}}%</p>
@@ -72,10 +62,10 @@
                 </div>
             </div>
             <div id="graphs">
-                <div class="graph">
+                <div class="graph" id="graph2">
                     <google-chart class="googleChart" [title]="pieChart.title" [type]="pieChart.type" [columns]="pieChart.columns" [data]="pieChart.values" [options]="pieChart.options" ></google-chart>
                 </div>
-                <div class="graph">
+                <div class="graph" id="graph3">
                     <google-chart class="googleChart" [title]="steppedAreaChart.title" [type]="steppedAreaChart.type" [columns]="steppedAreaChart.columns" [data]="steppedAreaChart.values" [options]="steppedAreaChart.options" ></google-chart>
                 </div>
             </div>

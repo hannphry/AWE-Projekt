@@ -154,4 +154,22 @@ export class DelaysComponent implements OnInit {
       });
     }
   }
+
+  //(mouseenter)="this.clickOnInfo(0)" (mouseleave)="this.resetInfo(0)"
+
+  clickOnInfo(index: number){
+    console.log("Highlight graph" +index);
+    let elem = document.getElementById(`graph${index}`);
+
+    if(elem){
+      elem.style.boxShadow = '0px 0px 61px -25px #caca03';
+    }
+  }
+
+  resetInfo(index: number){
+    let elem = document.getElementById(`graph${index}`);
+    if(elem){
+      elem.style.boxShadow = '0px 0px 61px -49px black';
+    }
+  }
 }

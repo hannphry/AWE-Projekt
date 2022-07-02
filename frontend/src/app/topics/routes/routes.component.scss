@@ -23,6 +23,29 @@ background-color: #fddf70;
 
 body #layout .row {
     #graphs{
+
+        #timelineChart{
+            padding-top: 1rem;
+        }
+
+        #departureTable{
+            display: flex;
+            justify-content: center;
+
+            ::ng-deep .google-visualization-table-tr-head{
+                background-color: rgb(235, 225, 94);
+            }
+
+            ::ng-deep .google-visualization-table-tr-odd{
+                background-color: rgb(253, 223, 112);
+            }
+
+            ::ng-deep .google-visualization-table-div-page{
+                background-color: rgb(235, 225, 94);
+            }
+
+        }
+
         #stationList{
             display: flex;
             flex-direction: column;
@@ -138,25 +161,28 @@ body #layout .row {
             }
         }
 
-
-        .dropDownMenu{
-            //background-color: beige;
-            ::ng-deep .mat-form-field-wrapper{
-                padding: 0;
-                height: 100%;
-                width: calc(100% - 5px);
-                background-color: white;
-                .mat-form-field-flex { 
-                    padding: 0 0px !important;
+        #dropDownTopRowElem{
+            display: flex;
+            align-items: center;
+            .dropDownMenu{
+                //background-color: beige;
+                ::ng-deep .mat-form-field-wrapper{
+                    padding: 0;
                     height: 100%;
+                    width: calc(100% - 5px);
                     background-color: white;
-                }
-                .mat-form-field-underline{
-                    top: 100%;
-                    left: -5px;
-                    width: calc(100% + 5px);
-                }
-            } 
+                    .mat-form-field-flex { 
+                        padding: 0 0px !important;
+                        height: 100%;
+                        background-color: white;
+                    }
+                    .mat-form-field-underline{
+                        top: 100%;
+                        left: -5px;
+                        width: calc(100% + 5px);
+                    }
+                } 
+            }
         }
     }
 }

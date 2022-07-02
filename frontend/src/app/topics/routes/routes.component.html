@@ -30,13 +30,13 @@
                         <div class="searchResult" *ngFor="let station of this.searchStations" (click)="this.interactWithSearchStation(station.id, this.dateValue)">{{station.name}}</div>
                     </div>
                 </div>
-                <div class="topRowElem">
+                <div class="topRowElem" id="dropDownTopRowElem">
+                    <mat-icon>train</mat-icon>
                     <mat-form-field appearance="fill" class="dropDownMenu">
-                        <mat-label>Streckenauswahl</mat-label>
-                        <mat-icon>train</mat-icon>
-                        <mat-select placeholder="{{this.detailsIdLabel}}">
-                          <mat-option>None</mat-option>
-                          <mat-option *ngFor="let item of this.stations"  (click)="this.getWithDetailsId(item.detailsId, item.origin)">{{item.origin}}</mat-option>
+                        <mat-label>{{this.detailsIdLabel}}</mat-label>
+                        <mat-select placeholder="Zugverbindung">
+                            <mat-option>None</mat-option>
+                            <mat-option *ngFor="let item of this.stations"  (click)="this.getWithDetailsId(item.detailsId, item.origin)">{{item.origin}}</mat-option>
                         </mat-select>
                     </mat-form-field>
                 </div>
@@ -44,41 +44,43 @@
         </div>
         <div id="row1" class="row">
             <div id="information">
-                <div class="info" id="info1">
-                    <mat-icon class="graphIcon"></mat-icon>
+                <div class="info" id="info1" (mouseenter)="this.clickOnInfo(0)" (mouseleave)="this.resetInfo(0)">
+                    <mat-icon class="graphIcon">alarm</mat-icon>
                     <div class="statistics">
-                        <p class="value"></p>
-                        <p class="desc"></p>
+                        <p class="value">35min</p>
+                        <p class="desc">Durchschnittliche Fahrzeit</p>
                     </div>
                 </div>
-                <div class="info" id="info2">
-                    <mat-icon class="graphIcon"></mat-icon>
+                <div class="info" id="info2" (mouseenter)="this.clickOnInfo(1)" (mouseleave)="this.resetInfo(1)">
+                    <mat-icon class="graphIcon">train</mat-icon>
                     <div class="statistics">
-                        <p class="value"></p>
-                        <p class="desc"></p>
+                        <p class="value">7</p>
+                        <p class="desc">Verschiedene Strecken</p>
                     </div>
                 </div>
             </div>
             <div id="graphs">
-                <div class="graph">
-                    <google-chart class="googleChart" [title]="timelineChart.title" [type]="timelineChart.type" [columns]="timelineChart.columns" [data]="timelineChart.values" [options]="timelineChart.options"></google-chart>
+                <div class="graph" id="graph0">
+                    <google-chart *ngIf="this.viewTimelineChart == true" class="googleChart" id="timelineChart" [title]="timelineChart.title" [type]="timelineChart.type" [columns]="timelineChart.columns" [data]="timelineChart.values" [options]="timelineChart.options"></google-chart>
+                    <div *ngIf="this.viewTimelineChart == false">Station suchen und Strecke auswählen</div>
                 </div>
-                <div class="graph">
-                    <google-chart *ngIf="this.viewDepartureTable == true" class="googleChart" [title]="departureTable.title" [type]="departureTable.type" [columns]="departureTable.columns" [data]="departureTable.values" [options]="departureTable.options"></google-chart>
+                <div class="graph" id="graph1">
+                    <google-chart *ngIf="this.viewDepartureTable == true" class="googleChart" id="departureTable" [title]="departureTable.title" [type]="departureTable.type" [columns]="departureTable.columns" [data]="departureTable.values" [options]="departureTable.options"></google-chart>
+                    <div *ngIf="this.viewDepartureTable == false">Station suchen</div>
                 </div>
             </div>
 
         </div>
         <div id="row2" class="row">
             <div id="information">
-                <div class="info" id="info3">
-                    <mat-icon class="graphIcon"></mat-icon>
+                <div class="info" id="info3" (mouseenter)="this.clickOnInfo(2)" (mouseleave)="this.resetInfo(2)">
+                    <mat-icon class="graphIcon">place</mat-icon>
                     <div class="statistics">
                         <p class="value"></p>
-                        <p class="desc"></p>
+                        <p class="desc">Durchschnittliche Länge bei Deutscher Bahn</p>
                     </div>
                 </div>
-                <div class="info" id="info4">
+                <div class="info" id="info4" (mouseenter)="this.clickOnInfo(3)" (mouseleave)="this.resetInfo(3)">
                     <mat-icon class="graphIcon"></mat-icon>
                     <div class="statistics">
                         <p class="value"></p>
@@ -87,10 +89,11 @@
                 </div>
             </div>
             <div id="graphs">
-                <div class="graph">
-                    <google-chart class="googleChart" [title]="lineChart.title" [type]="lineChart.type" [columns]="lineChart.columns" [data]="lineChart.values" [options]="lineChart.options"></google-chart>                     
+                <div class="graph" id="graph2">
+                    <google-chart *ngIf="this.viewLineChart == true" class="googleChart" [title]="lineChart.title" [type]="lineChart.type" [columns]="lineChart.columns" [data]="lineChart.values" [options]="lineChart.options"></google-chart>                     
+                    <div *ngIf="this.viewLineChart == false">Station suchen und Strecke auswählen</div>
                 </div>
-                <div class="graph">
+                <div class="graph" id="graph3">
                     <google-chart class="googleChart" [title]="nextStationsWordTree.title" [type]="nextStationsWordTree.type" [columns]="nextStationsWordTree.columns" [data]="nextStationsWordTree.values" [options]="nextStationsWordTree.options"></google-chart>
                 </div>
             </div>

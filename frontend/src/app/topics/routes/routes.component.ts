@@ -22,7 +22,7 @@ export class RoutesComponent implements OnInit {
   searchValue: string = "";
   dateValue: Date = new Date();
 
-  detailsIdLabel: string = "Zugverbindung"
+  detailsIdLabel: string = "Streckenauswahl"
 
   searchStations: {
     name: string, 
@@ -61,19 +61,16 @@ export class RoutesComponent implements OnInit {
 
   }
 
+  viewLineChart: boolean = false;
+
   lineChart: Chart= {
     title: 'Zurückgelegte Strecke der Verbindung',
     //subtitle: 'in Km',
     type: ChartType.LineChart,
     options: {
       colors: [
-        '#aecbfc',
-        //'#aedcfc',
-        //'#aeeafc',
-        '#aef2fc',
-        //'#aefcf4',
-        //'#aefce1',
-        '#aefcc3'
+        '#e9f35c',
+        '#e1eb54'
       ],
       vAxis: {
         gridlines: {
@@ -92,51 +89,43 @@ export class RoutesComponent implements OnInit {
     values: []
 
   }
-
-  viewDepartureTable : boolean = true;
-
+  viewDepartureTable: boolean = false;
   departureTable: Chart= {
     title: 'Abfahrtsplan der ausgewählten Station',
     type: ChartType.Table,
     options: {
+      width: '100%',
+      page: 'enable',
+      pageSize: 10,
+      pagingButtons: 0,
       colors: [
-        '#aecbfc',
-        //'#aedcfc',
-        //'#aeeafc',
-        '#aef2fc',
-        //'#aefcf4',
-        //'#aefce1',
-        '#aefcc3'
+        '#f3e966',
       ],
       vAxis: {
-        gridlines: {
-            color: 'transparent'
-        }
       },
       hAxis: {
-        gridlines: {
-          color: 'transparent'
-      }
       }
     },
     
-    columns: [],
+    columns: ["Uhrzeit","Zug","über Station", "Richtung", "Gleis"],
     values: []
 
   }
 
+  viewTimelineChart: boolean = false;
   timelineChart: Chart= {
     title: 'Fahrplan der ausgewählten Verbindung',
     type: ChartType.Timeline,
     options: {
       colors: [
-        '#aecbfc',
-        //'#aedcfc',
-        //'#aeeafc',
-        '#aef2fc',
-        //'#aefcf4',
-        //'#aefce1',
-        '#aefcc3'
+        '#fddf70',
+        '#f5d768',
+        '#f3e966',
+        '#ebe15e',
+        '#e9f35c',
+        '#e1eb54',
+        '#dffd52',
+        '#d7f54a'
       ],
       vAxis: {
         gridlines: {
@@ -177,12 +166,12 @@ export class RoutesComponent implements OnInit {
   
 
   getWithDetailsId(input: string, name: string){
-    console.log("DetailsId: " + input);
+    //console.log("DetailsId: " + input);
     this.detailsIdLabel = name;
     this.routeService.getDetailsId(input).subscribe(data=>{
       this.track = data;
-      console.log("Data of getWithDetailsId:")
-      console.log(data);
+      //console.log("Data of getWithDetailsId:")
+      //console.log(data);
 
       let stops: any[] = [];
       let depTimes: any[] = [];
@@ -236,20 +225,23 @@ export class RoutesComponent implements OnInit {
       let startDate = new Date(2022, 6, 12, tempHourDep, tempMinDep);
       let endDate = new Date(2022, 6, 12, tempHourArr, tempMinArr);
       */
+     console.log(rows)
+     this.viewTimelineChart = true;
       this.timelineChart.values = rows;
 
-      console.log( "values:")
-      console.log(this.timelineChart.values)
+      //console.log( "values:")
+      //console.log(this.timelineChart.values)
 
       let rowslineChart: any[] = [];
       let countKm = 0;
       for (let j = 0; j < (lat.length - 1); j++){
-        console.log( stops[j] + " - " + countKm)
+        //console.log( stops[j] + " - " + countKm)
         rowslineChart.push( [ stops[j], countKm ])
         let tempKm = this.calculateDistance(lat[j], lon[j], lat[j+1], lon[j+1]);
         countKm += tempKm;
       }
-      console.log(rowslineChart)
+      //console.log(rowslineChart)
+      this.viewLineChart = true;
       this.lineChart.values = rowslineChart;
     })
   }
@@ -284,91 +276,66 @@ export class RoutesComponent implements OnInit {
     this.getDepartureBoardWithDetailsId(input, apiDate, `${input}`);
   }
 
-  getDepartureBoardWithDetailsId(input:number, date: string, evaId: string){
-      let dateTime: any[] = [];
-      let name: any[] = [];
-      let nextStation: any[] = [];
-      let endStation: any[] = [];
-      let track: any[] = [];
+  getDepartureBoardWithDetailsId(input:number, date: string, evaId: string){    
       let detailsId: any[] = [];
-
-      let rows: any[] = [];
       this.routeService.getDepartureRoutes(`${input}`, date).subscribe(data=>{
-      this.departure = data;
-          
+        this.departure = data;
+        
+        console.log("Got departure board")
+        console.log("input: "+input)
+        console.log(data);
 
-      this.departure.forEach( train =>{
-        //console.log(train.detailsId)
-        name.push( train.name)
-        let time = new Date(train.dateTime);
-        let hours = time.getHours();
-        let minutes = time.getMinutes();
-        dateTime.push( hours + ":" + minutes )
-        track.push( train.track)
-        detailsId.push( train.detailsId)
-      })
+        data.forEach(dep => detailsId.push(dep.detailsId))
 
-    this.fillDepartureTable(input, dateTime, name, track, detailsId, evaId) 
-
+        this.fillDepartureTable(detailsId, input) 
     });     
     
   }
 
-  fillDepartureTable(input: number, dateTime:any, name: any, track:any, detailsIds:any, evaId: string ){
-      this.departureTable.values = [];
-     
-      let nextStation: any[] = [];
-      let endStation: any[] = [];
-      let rows: any[] = [];
+  fillDepartureTable(detailsIds:any, evaId: number){
+    this.departureTable.values = [];
 
-      let counter = 0;
-      var subject = new ReplaySubject(1);
-      let arr: any[] = [];
+    this.routeService.getDataWithDetailsIds(detailsIds).subscribe(obj=>{
+      let departureCounter = 0;
+      let departureTableValues: any[] = [];
+      obj.forEach(departure=>{
+        let indexOfStationDeparture = departure.findIndex((dep: any) => dep.stopId == evaId);
+        departure[indexOfStationDeparture]
 
-      this.routeService.getDataWithDetailsIds(detailsIds, `${evaId}`).subscribe(obj=>{
-        console.log(obj)
+        let elem = [
+          departure[indexOfStationDeparture].depTime,
+          this.departure[departureCounter].name,
+          departure[indexOfStationDeparture+1].stopName.replace('&#x0028;',' (').replace('&#x0029;',') '),
+          departure[departure.length-1].stopName.replace('&#x0028;',' (').replace('&#x0029;',') '),
+          this.departure[departureCounter].track
+        ]
+      
+        departureTableValues.push(elem);
+        
+        departureCounter++;
       })
-      /*
-      detailsIds.forEach((detailsId: string) =>{
-        this.routeService.getDetailsId(detailsId).subscribe((data: {
-          depTime: string,
-          lat: string,
-          lon: string,
-          operator: string,
-          stopId: number,
-          stopName: string,
-          train: string,
-          type: string,
-        }[])=>{
-          let tDateTime: string = dateTime[counter];
-          let tName: string = name[counter];
-          let nextStation: string = data[data.findIndex(obj=> obj.stopId == input) +1].stopName;
-          let lastStation: string = data[data.length -1].stopName;
-          let tTrack: string = track[counter];
-          
-          this.departureTableValues.push([tDateTime, tName, nextStation, lastStation, tTrack]);
-        })
-        if((detailsIds.length -1) == detailsIds.findIndex((id: any) => id == detailsId)){
-          console.log("last id");
-          subject.next(this.departureTableValues);
-        }
-        //counter++
-      });
-      subject.subscribe((obj) =>{
-        //console.log(obj);
-        this.departureTable.values = [];
-        let helper: any[] = [];
-        helper.push(obj);
-        console.log(helper[0]);
-        this.departureTableValues = [];
-        this.departureTable.values = helper[0];
-        this.departureTable.columns = ["Uhrzeit","Zug","über Station", "Richtung", "Gleis"];
-        console.log(this.departureTable.values);
-        //this.viewDepartureTable = true;
-      })
-      */
+      this.viewDepartureTable = true;
+      this.departureTable.values = departureTableValues;
+    })
   }
 
+  //(mouseenter)="this.clickOnInfo(0)" (mouseleave)="this.resetInfo(0)"
+
+  clickOnInfo(index: number){
+    console.log("Highlight graph" +index);
+    let elem = document.getElementById(`graph${index}`);
+
+    if(elem){
+      elem.style.boxShadow = '0px 0px 61px -25px #caca03';
+    }
+  }
+
+  resetInfo(index: number){
+    let elem = document.getElementById(`graph${index}`);
+    if(elem){
+      elem.style.boxShadow = '0px 0px 61px -49px black';
+    }
+  }
 
 }
 

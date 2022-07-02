@@ -174,7 +174,7 @@ export class RouteService {
     return subject;
     }
 
-    getDataWithDetailsIds(input: string[], evaId: string){
+    getDataWithDetailsIds(input: string[]){
         return zip(
             input.flatMap(
               (id) => {
@@ -187,21 +187,7 @@ export class RouteService {
               }
             ),
             (...results) => {
-                return results.map(result => {
-                    //console.log(result);
-                    let index = result.data.findIndex(obj =>{ `${obj.stopId}` == evaId})
-                    if(index >= 0){
-                        let res = {
-                            id : result.data[index].stopId,
-                            name : result.data[index].train,
-                            time : result.data[index].arrTime,
-                            nextStation: result.data[index+1].stopName,
-                            lastStation: result.data[result.data.length -1].stopName
-                        }
-                        return res;
-                    }
-                    else return result.data
-                });
+                return results.map(result => result.data);
               }
           )
     }

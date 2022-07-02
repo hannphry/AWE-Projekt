@@ -300,7 +300,7 @@ export class AnnouncementsComponent implements OnInit {
         }
       });
 
-      console.log(allConcernedLines);
+      //console.log(allConcernedLines);
 
       let counts : any[] = [];
       allConcernedLines.forEach(line => {
@@ -310,14 +310,24 @@ export class AnnouncementsComponent implements OnInit {
       
       let tmpArray:  any[] = [];
 
-      graphConcernedLines.forEach(elem => {
-          if(tmpArray.findIndex(item => item[0] == elem[0] >= 0)){
-            tmpArray.push(elem)
-          }
-        })
+      console.log(graphConcernedLines);
 
-      console.log(counts);
-      console.log(tmpArray);
+      graphConcernedLines.forEach(elem => {
+          //console.log(elem[0].split(' ')[0]);
+          let string = elem[0].split(' ')[0]
+          let index = tmpArray.findIndex(item => item[0] == string )
+          if(index >= 0 ){
+            tmpArray[index][1] += elem[1];
+          }else{
+            tmpArray.push([string, elem[1]]);
+          }
+        });
+        console.log(tmpArray);
+
+      
+
+      //console.log(counts);
+      //console.log(tmpArray);
 
       //console.log(allConcernedLines);
 
@@ -350,5 +360,23 @@ export class AnnouncementsComponent implements OnInit {
 
       this.amountOfAnnouncements = tmpAmountOfAnnouncements;
     });
+  }
+
+  //(mouseenter)="this.clickOnInfo(0)" (mouseleave)="this.resetInfo(0)"
+
+  clickOnInfo(index: number){
+    console.log("Highlight graph" +index);
+    let elem = document.getElementById(`graph${index}`);
+
+    if(elem){
+      elem.style.boxShadow = '0px 0px 61px -25px #caca03';
+    }
+  }
+
+  resetInfo(index: number){
+    let elem = document.getElementById(`graph${index}`);
+    if(elem){
+      elem.style.boxShadow = '0px 0px 61px -49px black';
+    }
   }
 }

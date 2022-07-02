@@ -26,20 +26,20 @@ export class AnnouncementService {
     ];*/
     async getAnnouncements(): Promise<Announcement[]>{
         const announcements = await this.announcementModel.find();
-        console.log(announcements);
+        //console.log(announcements);
         return announcements as Announcement[];
     }
 
     addAnnouncement(pAnnouncement: AnnouncementModel){
         //console.log(pStoerung);
         const newAnnouncement = new this.announcementModel(pAnnouncement);
-        console.log(newAnnouncement);
+        //console.log(newAnnouncement);
         const result = newAnnouncement.save();
         return { id: pAnnouncement.id };
     }
 
     fillAnnouncementData(){
-        console.log("Here in fillAnnouncementData");
+        //console.log("Here in fillAnnouncementData");
         this.httpService.get('http://openservice-test.vrr.de/static03/XML_ADDINFO_REQUEST', {params: {
             outputFormat: 'JSON',
             fitlerPublicationStatus: 'current'
@@ -52,7 +52,7 @@ export class AnnouncementService {
                     data.forEach(elem => {
                         //console.log(elem)
                         if(elem){
-                            console.log(counter);
+                            //console.log(counter);
                             try{
                                 let id = elem.infoID;
                                 
@@ -85,9 +85,9 @@ export class AnnouncementService {
                                         subject: subject,
                                         concernedLines : concernedLines
                                     });
-                                    console.log(newAnnouncement);
+                                    //console.log(newAnnouncement);
                                     newAnnouncement.save();
-                                    console.log(`Save ${id}`);
+                                    //console.log(`Save ${id}`);
                                 }else{
                                     console.log("Stoerung already in DB")
                                 }
