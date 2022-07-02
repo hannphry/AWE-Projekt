@@ -15,11 +15,11 @@ export class AnnouncementsComponent implements OnInit {
 
   types: string[] = [
     "tripMessage",
-    "stopInfo",
     "lineInfo",
     "stopBlocking",
-    "routeInfo",
-    "routeBlocking"
+    "routeBlocking",
+    "stopInfo",
+    "routeInfo"
   ]
 
   affectsTimetable: boolean[] = [
@@ -107,27 +107,28 @@ export class AnnouncementsComponent implements OnInit {
     ]
   }
 
-  steppedAreaChart: Chart = {
+  barChart: Chart = {
     title: 'Betroffene Linien',
-    type: ChartType.SteppedAreaChart,
+    type: ChartType.BarChart,
     options: {
       title : 'Betroffene Linien',
-      backgoundColor: '#ddd',
-      legend: { position: 'right'},
+      seriesType: 'bars',
+      series: {
+        3: {type: 'line'}
+      },
       colors: [
-        '#ffb5c5',
-        '#ff6347',
-        '#ff4500',
-        '#ee2c2c',
-        '#ff0000',
-        '#8b0000'
+        '#ea6262'
       ],
-      connectSteps: false,
-      isStacked:true
+      vAxis: {
+        gridlines: {
+            color: 'light grey'
+        },
+        //title: 'Meldungsart'
+      },
       //hAxis: {title: 'Anzahl der Meldungen'},
       
     },
-    columns: ['Meldungsart',''],
+    columns: ['Linie','Anzahl'],
     values: [
       ["Test",2]
     ]
@@ -322,16 +323,17 @@ export class AnnouncementsComponent implements OnInit {
             tmpArray.push([string, elem[1]]);
           }
         });
+        tmpArray.splice(2, 1);
         console.log(tmpArray);
 
-      
+        
 
       //console.log(counts);
       //console.log(tmpArray);
 
       //console.log(allConcernedLines);
 
-      this.steppedAreaChart.values = graphConcernedLines;
+      this.barChart.values = tmpArray.slice(0, 10);
 
 
       //Anteil der Meldungen, die die Abfahrpläne beeinflussen werden ermittelt
