@@ -250,6 +250,7 @@ export class RoutesComponent implements OnInit {
     //Suche durch Eingabe
     //Suchbegriff an API übergeben
     //ersten 5 Ergebnisse der API anzeigen
+    input = this.formatUmlaut(input);
     if(input != ""){
       this.routeService.searchForStation(input).subscribe(data=>{
         if(data[0]){
@@ -322,7 +323,7 @@ export class RoutesComponent implements OnInit {
   //(mouseenter)="this.clickOnInfo(0)" (mouseleave)="this.resetInfo(0)"
 
   clickOnInfo(index: number){
-    console.log("Highlight graph" +index);
+    //console.log("Highlight graph" +index);
     let elem = document.getElementById(`graph${index}`);
 
     if(elem){
@@ -335,6 +336,12 @@ export class RoutesComponent implements OnInit {
     if(elem){
       elem.style.boxShadow = '0px 0px 61px -49px black';
     }
+  }
+
+  formatUmlaut(input: string): string{
+    input = input.toLowerCase()
+    input = input.replace('ä','ae').replace('ö','oe').replace('ü','ue').replace('ß','ss')
+    return input;
   }
 
 }

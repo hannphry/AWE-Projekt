@@ -159,7 +159,7 @@ body{
                   color: white;
                   display: flex;
                   align-items: center;
-                  justify-content: space-between;
+                  justify-content: flex-start;
       
                   .graphIcon{
                       margin-left: 15px;
@@ -179,6 +179,7 @@ body{
                         padding-left: 1rem;
                         line-height: 30px;
                         padding-right: 15px;
+                        width: calc(80% - 1rem - 70px);
                       .value{
                           font-size: 30px;
                           font-weight: bold;
