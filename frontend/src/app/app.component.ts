@@ -14,10 +14,7 @@ export class AppComponent implements OnInit{
     {path: 'stations', title: "Bahnhöfe"},
     {path: 'routes', title: "Strecken"},
     {path: 'delays', title: "Verzögerungen"},
-    {path: 'announcements', title: "Meldungen"},
-    {path: 'ourdata', title: 'Unsere Daten'},
-    {path: 'ourapis', title: 'Unsere APIs'},
-    {path: 'wiki', title: 'GitHub Wiki'}
+    {path: 'announcements', title: "Meldungen"}
   ]
   
   exRoutes = [

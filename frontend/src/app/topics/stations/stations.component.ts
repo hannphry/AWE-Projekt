@@ -249,7 +249,9 @@ export class StationsComponent implements OnInit {
   figStationManagement: number = this.stationManagement.length;
   figAmountStations: number = 0;
 
-
+  chosenPriceCategory: number = 0;
+  chosenFederalState: string = "";
+  chosenManagement: string = "";
 
   constructor(
     private stationService: StationService
@@ -343,38 +345,59 @@ export class StationsComponent implements OnInit {
     this.figAmountStations = 0;
     this.figStationManagement = 0;
 
-      this.federalStates.forEach(state=>{
-        let tmpStations = this.stations.filter(station => station.federalState == state);
-        //console.log(tmpStations);
-        
-        let tmpStationsInCategory = tmpStations.filter(station => station.priceCategory == num);
-        
-        let length = 0;
+    this.federalStates.forEach(state=>{
+      let tmpStations = this.stations.filter(station => station.federalState == state);
+      //console.log(tmpStations);
+      
+      let tmpStationsInCategory = tmpStations.filter(station => station.priceCategory == num);
+      
+      let length = 0;
 
-        if(tmpStationsInCategory) length = tmpStationsInCategory.length
-        
-        federalStateStations.push([state, length, tmpStations.length]);
+      if(tmpStationsInCategory) length = tmpStationsInCategory.length
+      
+      federalStateStations.push([state, length, tmpStations.length]);
 
-        if(state == 'Bayern'){
-          this.figFederalStates += Math.round((tmpStations.length / tmpStationsInCategory.length));
-        }
-        else if(state == 'Nordrhein-Westfalen'){
-          this.figFederalStates += Math.round((tmpStations.length / tmpStationsInCategory.length));
-        }
-        this.figAmountStations += tmpStationsInCategory.length;
+      if(state == 'Bayern'){
+        this.figFederalStates += Math.round((tmpStations.length / tmpStationsInCategory.length));
+      }
+      else if(state == 'Nordrhein-Westfalen'){
+        this.figFederalStates += Math.round((tmpStations.length / tmpStationsInCategory.length));
+      }
 
-        tmpStations.forEach(station=>{
-          if(station.stationManagement){
-            if(countStationManagement.indexOf(station.stationManagement) < 0){
-              countStationManagement.push(station.stationManagement);
-            }
+      tmpStations.forEach(station=>{
+        if(station.stationManagement){
+          if(countStationManagement.indexOf(station.stationManagement) < 0){
+            countStationManagement.push(station.stationManagement);
           }
-        });
-      })
-      //console.log(federalStateStations)
-      this.steppedAreaChart.values = federalStateStations;
-      this.steppedAreaChart.columns = ['Bundesland','Anzahl Stationen', 'Rest'];
-      this.figStationManagement = countStationManagement.length;
+        }
+      });
+    })
+    //console.log(federalStateStations)
+
+    this.figAmountStations = this.stations.filter(station => station.priceCategory == num).length
+
+    let tmpStationsInCategory = this.stations.filter(station => station.priceCategory == num);
+
+    let barChartValues = [];
+
+    let stationsByParkingLot = tmpStationsInCategory.filter(station => station.hasParking == true && station.hasBicycleParking == true);
+    barChartValues.push(['Parkplätze',stationsByParkingLot.length, (tmpStationsInCategory.length - stationsByParkingLot.length)]);
+    let stationsByPublicTransport = tmpStationsInCategory.filter(station=> station.hasLocalPublicTransport == true);
+    barChartValues.push(['ÖPNV',stationsByPublicTransport.length, (tmpStationsInCategory.length - stationsByPublicTransport.length)]);
+    let stationsByTaxiRank = tmpStationsInCategory.filter(station => station.hasTaxiRank == true);
+    barChartValues.push(['Taxistand',stationsByTaxiRank.length, (tmpStationsInCategory.length - stationsByTaxiRank.length)]);
+    let stationsByCarRental = tmpStationsInCategory.filter(station => station.hasCarRental == true);
+    barChartValues.push(['Autovermietung',stationsByCarRental.length, (tmpStationsInCategory.length - stationsByCarRental.length)]);
+    let stationsByWifi = tmpStationsInCategory.filter(station => station.hasWiFi == true);
+    barChartValues.push(['WLAN',stationsByWifi.length, (tmpStationsInCategory.length - stationsByWifi.length)]);
+
+    this.barChart.values = barChartValues;
+
+    this.steppedAreaChart.values = federalStateStations;
+    this.steppedAreaChart.columns = ['Bundesland','Anzahl Stationen', 'Rest'];
+    this.figStationManagement = countStationManagement.length;
+
+    this.chosenPriceCategory = num;
   }
 
   selectFederalStateFromGraph(input: any){
@@ -410,6 +433,28 @@ export class StationsComponent implements OnInit {
 
     });
     this.comboChart2.values = managementStations;
+
+    let tmpStationsInFederalState = this.stations.filter(station => station.federalState == state && station.priceCategory == this.chosenPriceCategory);
+
+    this.figAmountStations = tmpStationsInFederalState.length
+
+    this.chosenFederalState = state;
+
+    let barChartValues = [];
+
+    let stationsByParkingLot = tmpStationsInFederalState.filter(station => station.hasParking == true && station.hasBicycleParking == true);
+    barChartValues.push(['Parkplätze',stationsByParkingLot.length, (tmpStationsInFederalState.length - stationsByParkingLot.length)]);
+    let stationsByPublicTransport = tmpStationsInFederalState.filter(station=> station.hasLocalPublicTransport == true);
+    barChartValues.push(['ÖPNV',stationsByPublicTransport.length, (tmpStationsInFederalState.length - stationsByPublicTransport.length)]);
+    let stationsByTaxiRank = tmpStationsInFederalState.filter(station => station.hasTaxiRank == true);
+    barChartValues.push(['Taxistand',stationsByTaxiRank.length, (tmpStationsInFederalState.length - stationsByTaxiRank.length)]);
+    let stationsByCarRental = tmpStationsInFederalState.filter(station => station.hasCarRental == true);
+    barChartValues.push(['Autovermietung',stationsByCarRental.length, (tmpStationsInFederalState.length - stationsByCarRental.length)]);
+    let stationsByWifi = tmpStationsInFederalState.filter(station => station.hasWiFi == true);
+    barChartValues.push(['WLAN',stationsByWifi.length, (tmpStationsInFederalState.length - stationsByWifi.length)]);
+
+    this.barChart.values = barChartValues;
+
   }
 
   selectStationManagement(input: any){
@@ -426,6 +471,21 @@ export class StationsComponent implements OnInit {
     //console.log(management);
     this.chooseStations = this.stations.filter(station => station.stationManagement == management && (station.type == "Knotenbahnhof" || station.type == "Metropolbahnhof"));
     //console.log(this.chooseStations)
+
+    let barChartValues = [];
+
+    let stationsByParkingLot = this.chooseStations.filter(station => station.hasParking == true && station.hasBicycleParking == true);
+    barChartValues.push(['Parkplätze',stationsByParkingLot.length, (this.chooseStations.length - stationsByParkingLot.length)]);
+    let stationsByPublicTransport = this.chooseStations.filter(station=> station.hasLocalPublicTransport == true);
+    barChartValues.push(['ÖPNV',stationsByPublicTransport.length, (this.chooseStations.length - stationsByPublicTransport.length)]);
+    let stationsByTaxiRank = this.chooseStations.filter(station => station.hasTaxiRank == true);
+    barChartValues.push(['Taxistand',stationsByTaxiRank.length, (this.chooseStations.length - stationsByTaxiRank.length)]);
+    let stationsByCarRental = this.chooseStations.filter(station => station.hasCarRental == true);
+    barChartValues.push(['Autovermietung',stationsByCarRental.length, (this.chooseStations.length - stationsByCarRental.length)]);
+    let stationsByWifi = this.chooseStations.filter(station => station.hasWiFi == true);
+    barChartValues.push(['WLAN',stationsByWifi.length, (this.chooseStations.length - stationsByWifi.length)]);
+
+    this.barChart.values = barChartValues;
     
     this.figAmountStations = this.chooseStations.length;
 
@@ -433,15 +493,17 @@ export class StationsComponent implements OnInit {
     if(elem){
       elem.style.boxShadow = '0px 0px 61px -15px #caca03';
     }
+
+    this.chosenManagement = management;
   }
 
   chooseStation(id: string){
     this.barChart.values = [];
     let tmpStation: Station = this.stations.filter(station => station.id == id)[0];
     this.stationTitle = tmpStation.name;
-    console.log(tmpStation);
+    //console.log(tmpStation);
     //ca. 65 km
-    let filterStations = this.stations.filter(station => (station.lon <= (tmpStation.lon +0.1)) && (station.lon >= (tmpStation.lat -0.1)) && (station.lat <= (tmpStation.lat +0.1)) && (station.lat >= (tmpStation.lat -0.1)));
+    let filterStations = this.chooseStations;
     
     this.barChart.options.hAxis.viewWindow.max = (Math.round(filterStations.length/10)*10);
 
@@ -514,7 +576,7 @@ export class StationsComponent implements OnInit {
   }
 
   clickOnInfo(index: number){
-    console.log("Highlight graph" +index);
+    //console.log("Highlight graph" +index);
     let elem = document.getElementById(`graph${index}`);
 
     if(elem){

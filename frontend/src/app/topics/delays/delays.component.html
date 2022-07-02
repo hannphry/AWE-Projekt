@@ -50,10 +50,10 @@
         <div id="row1" class="row">
             <div id="information">
                 <div class="info" id="info1" (mouseenter)="this.clickOnInfo(0)" (mouseleave)="this.resetInfo(0)">
-                    <mat-icon class="graphIcon"></mat-icon>
+                    <mat-icon class="graphIcon">swap_horiz</mat-icon>
                     <div class="statistics">
-                        <p class="value"></p>
-                        <p class="desc"></p>
+                        <p class="value">{{this.differrenceDelays}}</p>
+                        <p class="desc">Verhältnis echte Meldungen</p>
                     </div>
                 </div>
                 <div class="info" id="info2" (mouseenter)="this.clickOnInfo(1)" (mouseleave)="this.resetInfo(1)">
@@ -66,7 +66,8 @@
             </div>
             <div id="graphs">
                 <div class="graph" id="graph0">
-                    <google-chart class="googleChart" [title]="columnChart.title" [type]="columnChart.type" [columns]="columnChart.columns" [data]="columnChart.values" [options]="columnChart.options"></google-chart>
+                    <google-chart class="googleChart" *ngIf="this.viewColumnChart == true" [title]="columnChart.title" [type]="columnChart.type" [columns]="columnChart.columns" [data]="columnChart.values" [options]="columnChart.options"></google-chart>
+                    <div *ngIf="this.viewColumnChart == false">Station(en) auswählen</div>
                 </div>
                 <div class="graph" id="graph1">
                     <google-chart class="googleChart" ></google-chart>

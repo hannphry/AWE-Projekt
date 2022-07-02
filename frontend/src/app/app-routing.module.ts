@@ -13,10 +13,7 @@ const routes: Routes = [
   {path: 'stations', component: StationsComponent},
   {path: 'routes', component: RoutesComponent},
   {path: 'delays', component: DelaysComponent},
-  {path: 'announcements', component: AnnouncementsComponent},
-  {path: 'ourdata', component: OurDataComponent},
-  {path: 'ourapis', component: OurAPIsComponent},
-  {path: 'wiki', component: WikiComponent}
+  {path: 'announcements', component: AnnouncementsComponent}
 ];
 
 @NgModule({

@@ -24,7 +24,7 @@
 <body>
     <mat-list id="sidenav">
         <a mat-list-item *ngFor="let item of this.routes" routerLink="{{item.path}}">{{item.title}}</a>
-        <!--<a mat-list-item *ngFor="let item of this.exRoutes" href="{{item.url}}">{{item.title}}</a>-->
+        <a mat-list-item *ngFor="let item of this.exRoutes" href="{{item.url}}" target="_blank">{{item.title}}</a>
     </mat-list>
     <div id="router-outlet">
         <router-outlet></router-outlet>
