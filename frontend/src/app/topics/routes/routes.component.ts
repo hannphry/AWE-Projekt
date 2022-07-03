@@ -61,6 +61,42 @@ export class RoutesComponent implements OnInit {
 
   }
 
+  viewScatterChart: boolean = false;
+  scatterChart: Chart= {
+    title: 'Angefahrene Stationen (GeoChart Alt.)',
+    //subtitle: 'in Km',
+    type: ChartType.ScatterChart,
+    options: {
+      colors: [
+        '#e9f35c',
+        '#e1eb54'
+      ],
+      vAxis: {
+        title: 'Längengrad',
+        minValue: 2915900,
+        maxValue: 17264044,
+        gridlines: {
+            color: 'transparent'
+        }
+      },
+      hAxis: {
+        title: 'Breitengrad',
+        minValue: 3335695,
+        maxValue: 17264044,
+        gridlines: {
+          color: 'transparent'
+      }
+      },
+      legend: 'none'
+    },
+    
+    columns: ["Breitengrad", "Längengrad"],
+    
+    values: []
+
+  }
+
+
   viewLineChart: boolean = false;
 
   lineChart: Chart= {
@@ -243,6 +279,52 @@ export class RoutesComponent implements OnInit {
       //console.log(rowslineChart)
       this.viewLineChart = true;
       this.lineChart.values = rowslineChart;
+
+
+      let rowsScatterChart: any[] = [];
+      let vAxisMinValue = 17264044; //Längengrad
+      let vAxisMaxValue = 0;
+      let hAxisMinValue = 55495709; //Breitengrad
+      let hAxisMaxValue = 0;
+
+      for (let s = 0; s < lat.length; s++){
+        let currentLon = lon[s] * 1000000;
+        let currentLat = lat[s] * 1000000;
+        rowsScatterChart.push( [  currentLon , currentLat  ])
+
+        if(currentLon < vAxisMinValue){
+          vAxisMinValue = currentLon;
+        }
+        if(currentLon > vAxisMaxValue ){
+          vAxisMaxValue = currentLon;
+        }
+        if(currentLat < hAxisMinValue){
+          hAxisMinValue = currentLat;
+        }
+        if(currentLat > hAxisMaxValue ){
+          hAxisMaxValue = currentLat;
+        }
+      }
+      console.log(vAxisMinValue);
+      console.log(vAxisMaxValue);
+      console.log(hAxisMinValue);
+      console.log(hAxisMaxValue);
+      this.scatterChart.options.vAxis.minValue = vAxisMinValue - 1000000; //Längengrad
+      this.scatterChart.options.vAxis.maxValue = vAxisMaxValue + 1000000;
+      this.scatterChart.options.hAxis.minValue = hAxisMinValue - 1000000; //Breitengrad
+      this.scatterChart.options.hAxis.minValue = hAxisMaxValue + 1000000;
+
+      
+
+      this.viewScatterChart = true;
+      console.log("Values: ScatterChart")
+      console.log(rowsScatterChart)
+      this.scatterChart.values = rowsScatterChart;
+
+      console.log(this.scatterChart.options.vAxis.minValue);
+      console.log(this.scatterChart.options.vAxis.maxValue);
+      console.log(this.scatterChart.options.hAxis.minValue);
+      console.log(this.scatterChart.options.hAxis.minValue);
     })
   }
 
