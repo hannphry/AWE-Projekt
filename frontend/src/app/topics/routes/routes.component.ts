@@ -284,7 +284,7 @@ export class RoutesComponent implements OnInit {
         
         console.log("Got departure board")
         console.log("input: "+input)
-        console.log(data);
+        //console.log(data);
 
         data.forEach(dep => detailsId.push(dep.detailsId))
 
@@ -300,18 +300,19 @@ export class RoutesComponent implements OnInit {
       let departureCounter = 0;
       let departureTableValues: any[] = [];
       obj.forEach(departure=>{
+        //console.log(departure);
         let indexOfStationDeparture = departure.findIndex((dep: any) => dep.stopId == evaId);
-        departure[indexOfStationDeparture]
-
-        let elem = [
-          departure[indexOfStationDeparture].depTime,
-          this.departure[departureCounter].name,
-          departure[indexOfStationDeparture+1].stopName.replace('&#x0028;',' (').replace('&#x0029;',') '),
-          departure[departure.length-1].stopName.replace('&#x0028;',' (').replace('&#x0029;',') '),
-          this.departure[departureCounter].track
-        ]
-      
-        departureTableValues.push(elem);
+        if(departure[indexOfStationDeparture] != undefined){
+          let elem = [
+            departure[indexOfStationDeparture].depTime,
+            this.departure[departureCounter].name,
+            departure[indexOfStationDeparture+1].stopName.replace('&#x0028;',' (').replace('&#x0029;',') '),
+            departure[departure.length-1].stopName.replace('&#x0028;',' (').replace('&#x0029;',') '),
+            this.departure[departureCounter].track
+          ]
+        
+          departureTableValues.push(elem);
+        }
         
         departureCounter++;
       })

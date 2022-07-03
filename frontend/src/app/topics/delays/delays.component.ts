@@ -113,6 +113,8 @@ export class DelaysComponent implements OnInit {
     }
   }
 
+  //Kennzahl passt noch nicht, die Verschiebung steht da noch nicht
+
   compareStations(stations: {name: string, id: number}[]){
     //console.log(stations);
     if(stations.length > 0){
