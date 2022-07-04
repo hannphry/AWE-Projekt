@@ -19,4 +19,23 @@ export class DelayService{
         return this.httpClient.get<any[]>(`${environment.apiUrl}/delays/getDelays/${input}`);
     }
 
+    getTimeTables(hours: string[], evaNo: string){
+        let tmpDate = new Date();
+        console.log(tmpDate);
+        let month = tmpDate.getMonth()+1
+        let tmpMonth = ""
+        if(month < 10) {
+            tmpMonth = '0'+month
+        }
+        let day = tmpDate.getDate()
+        let tmpDay = ""
+        if(day < 10){
+            tmpDay = '0'+day
+        }
+        let tmpYear = tmpDate.getFullYear().toString().substring(2,4)
+        let date = `${tmpYear}${tmpMonth}${tmpDay}`
+        //console.log(evaNo, date, hours);
+        return this.httpClient.get<any[]>(`${environment.apiUrl}/delays/getTimeTables/${evaNo}/${date}/${hours}`);
+    }
+
 }

@@ -23,4 +23,12 @@ export class DelayController{
         //console.log(input.split(","));
         return this.delayService.getDelaysOfStations(input.split(","));
     }
+    @Get('getTimeTables/:evaNo/:date/:hour')
+    getTimeTables(
+        @Param('evaNo') evaNo: string,
+        @Param('date') date: string,
+        @Param('hour') hours: string,
+    ){
+        return this.delayService.getTimeTables(hours.split(',') ,evaNo, date);
+    }
 }

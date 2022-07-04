@@ -167,4 +167,20 @@ export class DelayService {
           )
     }
 
+    getTimeTables(input: string[], evaNo: string, date: string): Observable<any[]>{
+        return zip(
+            input.flatMap(
+              (hour) => {
+                return this.httpService.get(`https://api.deutschebahn.com/timetables/v1/plan/${evaNo}/${date}/${hour}`,{headers: {
+                    Authorization: 'Bearer 112d350cb8cb41770e1abf08d88b7ab4',
+                    Accept: 'application/json'
+                    }})
+              }
+            ),
+            (...results) => {
+                return results.map(result => result.data);
+              }
+          )
+    }
+
 }

@@ -135,34 +135,375 @@ export class DelaysComponent implements OnInit {
 
         for(let objCounter = 0; objCounter < obj.length; objCounter++){
           const xml = parser.parseFromString(obj[objCounter], 'text/xml');
-  
+          
           let name: string = ""+xml.children[0].attributes.getNamedItem('station')?.value
           let amountDelays: number = xml.children[0].childElementCount
-          //console.log(xml.children[0].children[1]);
+          
+          console.log(xml);
+
+          //als erstes prüfen, ob trip gecancelt, in delaysObject schmeißen
+
+          let delaysObject : {
+            apiInformation: {
+              hour: string, //auslesen aus ct des ar
+              delays: {
+                stopId: string,
+                plannedArrival: string,
+                changedArrival: string,
+                plannedDeparture: string,
+                changedDeparture: string,
+                plannedPath: string, 
+                changedPath: string
+              }[]
+            }[],
+            stops: {
+              stopId: string,
+              messages: {
+                id: string,
+                from: string,
+                to: string,
+                category: string,
+                priority: string
+              }[],
+              arrival: {
+                planned: string,
+                changed: string,
+                plannedPath: string,
+                changedPath: string,
+                messages: {
+                  id: string,
+                  from: string,
+                  to: string
+                }[]
+              },
+              departure: {
+                planned: string,
+                changed: string,
+                plannedPath: string, 
+                changedPath: string,
+                messages: {
+                  id: string,
+                  from: string,
+                  to: string
+                }[]
+              }
+            }[],
+            evaId: string
+          } = {
+            apiInformation: [],
+            stops : [],
+            evaId: `${xml.children[0].getAttribute('eva')}`
+          };
+
+          
           
           let delayMessages : {id: string,category: string,priority: string,from: string,to: string}[] = []
   
           let elems = xml.children[0].children;
+
+          //console.log(elems)
           for(let i = 0; i < elems.length; i++){
             let childElem = elems[i].children
-            //console.log(childElem)
+            //console.log(childElem);
+
+            //messages nicht vergessen
+            
+            let tmpStop : {
+              stopId: string,
+              messages: {
+                id: string,
+                from: string,
+                to: string,
+                category: string,
+                priority: string
+              }[],
+              arrival : {
+                planned: string,
+                changed: string,
+                plannedPath: string,
+                changedPath: string,
+                messages: {
+                  id: string,
+                  from: string,
+                  to: string
+                }[]
+              },
+              departure : {
+                planned: string,
+                changed: string,
+                plannedPath: string, 
+                changedPath: string,
+                messages: {
+                  id: string,
+                  from: string,
+                  to: string
+                }[]
+              }
+            } = {
+              stopId: `${elems[i].getAttribute('id')}`,
+              messages : [],
+              arrival: {
+                changed: '',
+                changedPath: '',
+                planned: '',
+                plannedPath: '',
+                messages : []
+              },
+              departure: {
+                changed: '',
+                planned : '',
+                changedPath: '',
+                plannedPath: '',
+                messages : []
+              }
+            };
+
             for(let j = 0; j < childElem.length; j++){
-              if(childElem[j].tagName == "m" && `${childElem[j].getAttribute('id')}` != ""){
-                let delayMessage : {id: string,category: string,priority: string,from: string,to: string} = {
+              //console.log(childElem)
+
+              let tmpAPIInformation: {
+                stopId: string,
+                plannedArrival: string,
+                changedArrival: string,
+                plannedDeparture: string,
+                changedDeparture: string,
+                plannedPath: string, 
+                changedPath: string
+              } = {
+                stopId : tmpStop.stopId,
+                plannedArrival: '',
+                changedArrival: '',
+                plannedDeparture: '',
+                changedDeparture: '',
+                plannedPath: '',
+                changedPath: ''
+              }
+              if(childElem[j].tagName == "m"){
+                //console.log('Message:')
+                //console.log(childElem[j])
+                let tmpMessage : {
+                  id: string,
+                  from: string,
+                  to: string,
+                  category: string,
+                  priority: string
+                } = {
                   id : `${childElem[j].getAttribute('id')}`,
                   priority : `${childElem[j].getAttribute('pr')}`,
                   category : `${childElem[j].getAttribute('cat')}`,
                   from : `${childElem[j].getAttribute('from')}`,
                   to : `${childElem[j].getAttribute('to')}`
-                }
-                //console.log(childElem[j]);
-                //console.log(delayMessage);
-                delayMessages.push(delayMessage);
+                };
+                tmpStop.messages.push(tmpMessage);
               }
-              //
-            }
-          }
+              else if(childElem[j].tagName == "ar") {
+                //console.log('Arrival:')
+                //console.log(childElem[j])
+                let tmpArrival : {
+                  planned: string,
+                  changed: string,
+                  plannedPath: string,
+                  changedPath: string,
+                  messages: {
+                    id: string,
+                    from: string,
+                    to: string
+                }[]} = {
+                  planned : '',
+                  changed: '',
+                  plannedPath : '',
+                  changedPath : '',
+                  messages: []
+                };
+                //Nur API anfragen, wenn pt bei ar nicht angegeben ist
+
+                let arMessageElements = childElem[j].children;
+                // Alle Messages dazu
+                for(let k = 0; k < arMessageElements.length; k++){
+                  let tmpMessage : {
+                    id: string,
+                    from: string,
+                    to: string,
+                    category: string,
+                    priority: string
+                  } = {
+                    id : `${arMessageElements[k].getAttribute('id')}`,
+                    priority : `${arMessageElements[k].getAttribute('pr')}`,
+                    category : `${arMessageElements[k].getAttribute('cat')}`,
+                    from : `${arMessageElements[k].getAttribute('from')}`,
+                    to : `${arMessageElements[k].getAttribute('to')}`
+                  };
+                  tmpArrival.messages.push(tmpMessage);
+                }
+                // Wenn keine PlannedTime existiert (somit keine Verspätungsberechnung möglich)
+                if( !(childElem[j].getAttribute('pt')) || childElem[j].getAttribute('pt') == ""){
+                  //API anfragen
+                  //console.log("call API")
+                  if(childElem[j].getAttribute('ct') != "" && childElem[j].getAttribute('ct') != undefined){
+                    let tmpCT = childElem[j].getAttribute('ct')?.substring(6,8);
+                    tmpAPIInformation.changedArrival = `${childElem[j].getAttribute('ct')}`;
   
+                    let index = delaysObject.apiInformation.findIndex(info => info.hour == tmpCT);
+                    if(index >= 0){
+                      delaysObject.apiInformation[index].delays.push(tmpAPIInformation)
+                    }else{
+                      delaysObject.apiInformation.push({
+                        hour: `${tmpCT}`,
+                        delays : [tmpAPIInformation]
+                      });
+                    }
+                  }
+                }
+                //Wenn PlannedTime existiert (somit Verspätungsberechnung möglich)
+                else if (childElem[j].getAttribute('pt') != ""){
+                  //Infos direkt auslesen in tmpArrival schreiben und dann tmpStop hinzufügen
+                  //console.log("Don't call API")
+                  tmpArrival = {
+                    planned: `${childElem[j].getAttribute('pt')}`,
+                    changed: `${childElem[j].getAttribute('ct')}`,
+                    plannedPath: `${childElem[j].getAttribute('ppth')}`,
+                    changedPath: `${childElem[j].getAttribute('cpth')}`,
+                    messages: []
+                  };
+                  tmpStop.arrival = tmpArrival;
+                }
+
+                
+              }
+              else if(childElem[j].tagName == "dp") {
+                //console.log('Departure:')
+                //console.log(childElem[j])
+                let tmpDeparture : {
+                  planned: string,
+                  changed: string,
+                  plannedPath: string,
+                  changedPath: string,
+                  messages: {
+                    id: string,
+                    from: string,
+                    to: string
+                  }[]} = {
+                    planned : '',
+                    changed: '',
+                    plannedPath : '',
+                    changedPath : '',
+                    messages: []
+                  };
+                //Nur API anfragen, wenn pt bei ar nicht angegeben ist
+                if( !(childElem[j].getAttribute('pt')) || childElem[j].getAttribute('pt') == ""){
+                  //API anfragen
+                  //nach index mit hour suchen
+                  
+                  if(childElem[j].getAttribute('ct') != "" && childElem[j].getAttribute('ct') != undefined){
+                    let tmpCT = childElem[j].getAttribute('ct')?.substring(6,8);
+                    
+                    tmpAPIInformation.changedDeparture = `${childElem[j].getAttribute('ct')}`;
+                    
+                    let index = delaysObject.apiInformation.findIndex(info => info.hour == tmpCT);
+                    
+                    if(index >= 0){
+                      let stopIndex = delaysObject.apiInformation[index].delays.findIndex(delay => delay.stopId == tmpAPIInformation.stopId)
+                      if(stopIndex < 0){
+                        delaysObject.apiInformation[index].delays.push(tmpAPIInformation)
+                      }
+
+                    }else{
+                      delaysObject.apiInformation.push({
+                        hour: `${tmpCT}`,
+                        delays : [tmpAPIInformation]
+                      });
+                    }
+                    
+                  }
+                  //delaysObject.stops.push()
+                  /*
+                  hour: string, //auslesen aus ct des ar
+                  delays: {
+                    stopId: string,
+                    plannedArrival: string,
+                    changedArrival: string,
+                    plannedDeparture: string,
+                    changedDeparture: string,
+                    plannedPath: string, 
+                    changedPath: string
+                  }[]
+                  */
+                }else if (childElem[j].getAttribute('pt') != ""){
+                  //Infos direkt auslesen in tmpArrival schreiben und dann tmpStop hinzufügen
+                  tmpDeparture = {
+                    planned: `${childElem[j].getAttribute('pt')}`,
+                    changed: `${childElem[j].getAttribute('ct')}`,
+                    plannedPath: `${childElem[j].getAttribute('ppth')}`,
+                    changedPath: `${childElem[j].getAttribute('cpth')}`,
+                    messages: []
+                  };
+                }
+
+                let arMessageElements = childElem[j].children;
+
+                for(let k = 0; k < arMessageElements.length; k++){
+                  let tmpMessage : {
+                    id: string,
+                    from: string,
+                    to: string,
+                    category: string,
+                    priority: string
+                  } = {
+                    id : `${arMessageElements[k].getAttribute('id')}`,
+                    priority : `${arMessageElements[k].getAttribute('pr')}`,
+                    category : `${arMessageElements[k].getAttribute('cat')}`,
+                    from : `${arMessageElements[k].getAttribute('from')}`,
+                    to : `${arMessageElements[k].getAttribute('to')}`
+                  };
+                  tmpDeparture.messages.push(tmpMessage);
+                }
+
+                tmpStop.departure = tmpDeparture;
+              } 
+            }
+            delaysObject.stops.push(tmpStop);
+          }
+          console.log(delaysObject);
+
+          let hours: string[] = [];
+          delaysObject.apiInformation.forEach(apiInfo =>{
+            hours.push(apiInfo.hour)
+          })
+          
+          this.delayService.getTimeTables(['21','22'], delaysObject.evaId).subscribe(obj=>{
+            console.log(obj);
+
+            obj.forEach(elem=>{
+              const timetable = parser.parseFromString(elem, 'text/xml');
+              let stops = timetable.children[0].children;
+              //console.log(stops)
+              delaysObject.apiInformation.forEach(hourElem =>{
+                hourElem.delays.forEach(tDelay =>{
+                  let stopId = tDelay.stopId
+                  //console.log(stopId);
+                  for(let i = 0; i < stops.length; i++){//stop finden
+                    if(stops[i].getAttribute('id') == stopId){
+                      //console.log(stops[i]);
+                      let stopIndex = delaysObject.stops.findIndex(stop => stop.stopId == stopId);
+                      let childElems = stops[i].children
+                      for(let j = 0; j < childElems.length; j++){
+                        if(childElems[j].tagName == 'ar'){
+                          delaysObject.stops[stopIndex].arrival.planned = ''+childElems[j].getAttribute('pt');
+                          delaysObject.stops[stopIndex].arrival.plannedPath = ''+childElems[j].getAttribute('ppth');
+                        }
+                        if(childElems[j].tagName == 'dp'){
+                          delaysObject.stops[stopIndex].departure.planned = ''+childElems[j].getAttribute('pt');
+                          delaysObject.stops[stopIndex].departure.plannedPath = ''+childElems[j].getAttribute('ppth');
+                        }
+                      }
+                    }
+                  }
+                })
+              })
+            })
+            console.log(delaysObject);
+          })
+          
           let delay: Delay = {
             name: name,
             amount: amountDelays,
@@ -212,8 +553,8 @@ export class DelaysComponent implements OnInit {
             && (Number(delays.to.substring(4,6)) - Number(delays.from.substring(4,6)) == 0)
           );
           
-          console.log("One Day")
-          console.log(oneDayDelays)
+          //console.log("One Day")
+          //console.log(oneDayDelays)
 
           let weekDelays = station.delays.filter(delays =>
             //Year:
@@ -223,8 +564,8 @@ export class DelaysComponent implements OnInit {
             //Day:
             && (Number(delays.to.substring(4,6)) - Number(delays.from.substring(4,6)) <= 7)
           );
-          console.log("One Week")
-          console.log(weekDelays)
+          //console.log("One Week")
+          //console.log(weekDelays)
 
           let monthDelays = station.delays.filter(delays =>
             //Year:
@@ -233,8 +574,8 @@ export class DelaysComponent implements OnInit {
             && (Number(delays.to.substring(2,4)) - Number(delays.from.substring(2,4)) == 1)
           );
 
-          console.log("One Month")
-          console.log(monthDelays)
+          //console.log("One Month")
+          //console.log(monthDelays)
 
           let sixMonthDelays = station.delays.filter(delays =>
             //Year:
@@ -244,8 +585,8 @@ export class DelaysComponent implements OnInit {
             && (Number(delays.to.substring(2,4)) - Number(delays.from.substring(2,4)) > 1)
           );
 
-          console.log("Six Months")
-          console.log(sixMonthDelays)
+          //console.log("Six Months")
+          //console.log(sixMonthDelays)
 
           let elseDelays = station.delays.filter(delays =>
             //Year:
@@ -253,8 +594,8 @@ export class DelaysComponent implements OnInit {
             //Month:
             || (Number(delays.to.substring(2,4)) - Number(delays.from.substring(2,4)) > 6)
           );
-          console.log("Everything else")
-          console.log(elseDelays);
+          //console.log("Everything else")
+          //console.log(elseDelays);
 
             //Geringste Verzögerung der drei Stationen oben in DropDown
             //Längste Verzögerung der drei Stationen oben in DropDown
@@ -264,7 +605,7 @@ export class DelaysComponent implements OnInit {
         this.viewColumnChart = true; 
         this.columnChart.values = columnChartValues;
 
-        console.log(this.delaysPerStation);
+        //console.log(this.delaysPerStation);
 
       });
     }
