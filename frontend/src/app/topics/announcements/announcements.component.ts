@@ -323,7 +323,7 @@ export class AnnouncementsComponent implements OnInit {
             tmpArray.push([string, elem[1]]);
           }
         });
-        tmpArray.splice(2, 1);
+        tmpArray.splice(3, 1);
         console.log(tmpArray);
 
         
