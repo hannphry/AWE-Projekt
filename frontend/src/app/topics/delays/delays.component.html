@@ -23,54 +23,47 @@
                         <div class="searchResult" (click)="this.compareStations(this.selectedStations)"><mat-icon>arrow_right_alt</mat-icon></div>
                         <div *ngFor="let station of this.selectedStations">
                             <div class="searchResult" *ngIf="this.isStationSelectedButNotInSearchStations(this.station.id) == true">
-                                <div class="searchResultName">{{station.name}} A</div>
+                                <div class="searchResultName">{{station.name}}</div>
                                 <mat-icon *ngIf="this.isStationSelectedButNotInSearchStations(this.station.id) == true">check</mat-icon>
                             </div>
                         </div>
                         <div class="searchResult" *ngFor="let station of this.searchStations" (click)="this.selectStation(this.station)" >
-                            <div class="searchResultName">{{station.name}} B</div>
+                            <div class="searchResultName">{{station.name}}</div>
                             <mat-icon *ngIf="this.isStationSelected(this.station.id) == true">check</mat-icon>
                         </div>
                     </div>
                 </div>
-                <div class="topRowElem">
+                <div class="topRowElem" id="hiddenElem">
                 </div>
-                <div class="topRowElem">
-                    <!--<mat-form-field appearance="fill" class="dropDownMenu">
-                        <mat-label>Streckenauswahl</mat-label>
-                        <mat-icon>train</mat-icon>
-                        <mat-select placeholder="{{this.detailsIdLabel}}">
-                          <mat-option>None</mat-option>
-                          <mat-option *ngFor="let item of this.stations"  (click)="this.getWithDetailsId(item.detailsId, item.origin)">{{item.origin}}</mat-option>
-                        </mat-select> 
-                    </mat-form-field>-->
+                <div class="topRowElem" id="hiddenElem">
                 </div>
             </div>
         </div>
         <div id="row1" class="row">
             <div id="information">
                 <div class="info" id="info1" (mouseenter)="this.clickOnInfo(0)" (mouseleave)="this.resetInfo(0)">
-                    <mat-icon class="graphIcon">swap_horiz</mat-icon>
+                    <mat-icon class="graphIcon">map</mat-icon>
                     <div class="statistics">
-                        <p class="value">{{this.differrenceDelays}}</p>
-                        <p class="desc">Verhältnis echte Meldungen</p>
+                        <p class="value">{{amountChangedPaths}}</p>
+                        <p class="desc">Anzahl geänderter Strecken</p>
                     </div>
                 </div>
                 <div class="info" id="info2" (mouseenter)="this.clickOnInfo(1)" (mouseleave)="this.resetInfo(1)">
-                    <mat-icon class="graphIcon"></mat-icon>
+                    <mat-icon class="graphIcon">av_timer</mat-icon>
                     <div class="statistics">
-                        <p class="value"></p>
-                        <p class="desc"></p>
+                        <p class="value">{{this.delaysAbove30min}}</p>
+                        <p class="desc">Anzahl Verspätungen > 30 min</p>
                     </div>
                 </div>
             </div>
             <div id="graphs">
                 <div class="graph" id="graph0">
-                    <google-chart class="googleChart" *ngIf="this.viewColumnChart == true" [title]="columnChart.title" [type]="columnChart.type" [columns]="columnChart.columns" [data]="columnChart.values" [options]="columnChart.options"></google-chart>
-                    <div *ngIf="this.viewColumnChart == false">Station(en) auswählen</div>
+                    <google-chart class="googleChart" *ngIf="this.viewTable == true" [title]="table.title" [type]="table.type" [columns]="table.columns" [data]="table.values" [options]="table.options"></google-chart>
+                    <div *ngIf="this.viewTable == false">{{displayMessage}}</div>
                 </div>
                 <div class="graph" id="graph1">
-                    <google-chart class="googleChart" ></google-chart>
+                    <google-chart class="googleChart" *ngIf="this.viewSteppedAreaChart == true" [title]="steppedAreaChart.title" [type]="steppedAreaChart.type" [columns]="steppedAreaChart.columns" [data]="steppedAreaChart.values" [options]="steppedAreaChart.options"></google-chart>
+                    <div *ngIf="this.viewSteppedAreaChart == false">{{displayMessage}}</div>
                 </div>
             </div>
 
@@ -78,26 +71,29 @@
         <div id="row2" class="row">
             <div id="information">
                 <div class="info" id="info3" (mouseenter)="this.clickOnInfo(2)" (mouseleave)="this.resetInfo(2)">
-                    <mat-icon class="graphIcon"></mat-icon>
+                    <mat-icon class="graphIcon">announcement</mat-icon>
                     <div class="statistics">
-                        <p class="value"></p>
-                        <p class="desc"></p>
+                        <p class="value">{{this.announcementsPerDelay}}</p>
+                        <p class="desc">Meldungen pro Veränderung</p>
                     </div>
                 </div>
                 <div class="info" id="info4" (mouseenter)="this.clickOnInfo(3)" (mouseleave)="this.resetInfo(3)">
-                    <mat-icon class="graphIcon"></mat-icon>
+                    
+                    <mat-icon class="graphIcon">swap_horiz</mat-icon>
                     <div class="statistics">
-                        <p class="value"></p>
-                        <p class="desc"></p>
+                        <p class="value">{{this.differrenceDelays}}</p>
+                        <p class="desc">Verhältnis echte Verspätungen</p>
                     </div>
                 </div>
             </div>
             <div id="graphs">
                 <div class="graph" id="graph2">
-                    <google-chart class="googleChart"></google-chart>                     
+                    <google-chart class="googleChart" *ngIf="this.viewBarChart == true" [title]="barChart.title" [type]="barChart.type" [columns]="barChart.columns" [data]="barChart.values" [options]="barChart.options"></google-chart>
+                    <div *ngIf="this.viewBarChart == false">{{displayMessage}}</div>
                 </div>
                 <div class="graph" id="graph3">
-                    <google-chart class="googleChart"></google-chart>
+                    <google-chart class="googleChart" *ngIf="this.viewColumnChart == true" [title]="columnChart.title" [type]="columnChart.type" [columns]="columnChart.columns" [data]="columnChart.values" [options]="columnChart.options"></google-chart>
+                    <div *ngIf="this.viewColumnChart == false">{{displayMessage}}</div>
                 </div>
             </div>
 
