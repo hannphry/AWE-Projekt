@@ -183,7 +183,7 @@ export class StationsComponent implements OnInit {
     title: 'Stationsmanagement',
     type: ChartType.ComboChart,
     options: {
-      title : 'Management der Stationen',
+      title : 'Stationsmanagement',
       //vAxis: {title: 'Anzahl'},
       //hAxis: {title: 'Bundesländer'},
       seriesType: 'bars',
