@@ -34,7 +34,7 @@ export class RouteService {
     // GET /arrivalBoard/{id}
     getArrivalBoardById(id: string, date: Date){
             var subject = new ReplaySubject(1);
-            this.httpService.get(`https://api.deutschebahn.com/freeplan/v1/arrivalBoard/${id}?date=${date}T13%3A00`,{headers: {
+            this.httpService.get(`https://api.deutschebahn.com/freeplan/v1/arrivalBoard/${id}?date=${date}T09%3A00`,{headers: {
                 Authorization: 'Bearer 112d350cb8cb41770e1abf08d88b7ab4',
                 Accept: 'application/json'
             }}).subscribe(obj =>{
@@ -65,7 +65,7 @@ export class RouteService {
     getDepartureBoardById(id: string, date: Date){
         //console.log("03Test");
         var subject = new ReplaySubject(1);
-        this.httpService.get(`https://api.deutschebahn.com/freeplan/v1/departureBoard/${id}?date=${date}T13%3A00`,{headers: {
+        this.httpService.get(`https://api.deutschebahn.com/freeplan/v1/departureBoard/${id}?date=${date}T09%3A00`,{headers: {
             Authorization: 'Bearer 112d350cb8cb41770e1abf08d88b7ab4',
             Accept: 'application/json'
         }}).subscribe(obj =>{

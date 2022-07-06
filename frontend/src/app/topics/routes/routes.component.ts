@@ -13,6 +13,12 @@ import { RouteService } from 'src/app/services/route.service';
 })
 export class RoutesComponent implements OnInit {
 
+  //Kennzahlen
+  figNumberOfRoutes: number = 0;
+  figLongestWait: number = 0;
+  figAverageSpeed: number = 0;
+  figNumberOfStations: number = 0;
+
   stations :any[] = [];
   track :any[] = [];
   departure: any[] = [];
@@ -38,6 +44,8 @@ export class RoutesComponent implements OnInit {
   constructor( private routeService: RouteService ) { }
 
   ngOnInit(): void {
+    this.interactWithSearchStation( 8011160, new Date("2022-07-06T09:30"))
+    this.getWithDetailsId("782559%2F261990%2F227218%2F147244%2F80%3fstation_evaId%3D8098160", "München Hbf")
     //this.searchForStation("Berlin");
   }
 
@@ -66,23 +74,21 @@ export class RoutesComponent implements OnInit {
     title: 'Angefahrene Stationen (GeoChart Alt.)',
     //subtitle: 'in Km',
     type: ChartType.ScatterChart,
+    
     options: {
       colors: [
         '#e9f35c',
         '#e1eb54'
       ],
+      pointShape: 'triangle',
       vAxis: {
         title: 'Längengrad',
-        minValue: 2915900,
-        maxValue: 17264044,
         gridlines: {
             color: 'transparent'
         }
       },
       hAxis: {
         title: 'Breitengrad',
-        minValue: 3335695,
-        maxValue: 17264044,
         gridlines: {
           color: 'transparent'
       }
@@ -226,6 +232,9 @@ export class RoutesComponent implements OnInit {
         lon.push( stop.lon)
       })
 
+      this.figNumberOfStations = stops.length;
+
+      let longestWait = 0;
       for (let i = 0; i < stops.length - 1; i++){
         
         if ( i == 0){
@@ -247,12 +256,33 @@ export class RoutesComponent implements OnInit {
           let tempMinArr = arrTimes[i+1].substring(3,5)
           rows.push([stops[i], "nach " + stops[i+1], new Date(2022, 6, 1, tempHourDep, tempMinDep ), new Date(2022, 6, 1, tempHourArr, tempMinArr ) ])
         };
+
+
+        if ( arrTimes[i] != null && depTimes[i] != null){
+          let FigTempHourArr = arrTimes[i].substring(0,2)
+          let FigTempMinArr = arrTimes[i].substring(3,5)
+          let FigTempHourDep = depTimes[i].substring(0,2)
+          let FigTempMinDep = depTimes[i].substring(3,5)
+
+          let startDate = new Date(2022, 6, 12, FigTempHourDep, FigTempMinDep);
+          let endDate = new Date(2022, 6, 12, FigTempHourArr, FigTempMinArr);
+          let time = endDate.getTime() - startDate.getTime()
+          console.log( "Time: " + time )
+          if ( time < longestWait){
+            longestWait = time;
+          }
+        }
+        
+
+        
         
         //[ 'Aachen',  'nach Köln', new Date(2022, 6, 16, 12, 40), new Date(2022, 6, 16, 12, 50) ],
       }
+      console.log( "Längste Wartezeit: " + longestWait)
+      this.figLongestWait = ( longestWait / 60000 ) * -1;
 
       // Errechene die Gesamte Fahrtdauer
-      /*
+      
       let tempHourDep = depTimes[0].substring(0,2)
       let tempMinDep = depTimes[0].substring(3,5)
       let tempHourArr = arrTimes[arrTimes.length-1].substring(0,2)
@@ -260,9 +290,16 @@ export class RoutesComponent implements OnInit {
 
       let startDate = new Date(2022, 6, 12, tempHourDep, tempMinDep);
       let endDate = new Date(2022, 6, 12, tempHourArr, tempMinArr);
-      */
-     console.log(rows)
-     this.viewTimelineChart = true;
+      let time = endDate.getTime() - startDate.getTime();
+      time = Math.floor(time / 60000 );
+      console.log( startDate)
+      console.log( endDate )
+      console.log( time )
+
+      
+      
+      console.log(rows)
+      this.viewTimelineChart = true;
       this.timelineChart.values = rows;
 
       //console.log( "values:")
@@ -276,6 +313,9 @@ export class RoutesComponent implements OnInit {
         let tempKm = this.calculateDistance(lat[j], lon[j], lat[j+1], lon[j+1]);
         countKm += tempKm;
       }
+      console.log( "Km länge: " + countKm )
+      
+      this.figAverageSpeed =  Math.round( countKm / (time/60) );
       //console.log(rowslineChart)
       this.viewLineChart = true;
       this.lineChart.values = rowslineChart;
@@ -309,10 +349,10 @@ export class RoutesComponent implements OnInit {
       console.log(vAxisMaxValue);
       console.log(hAxisMinValue);
       console.log(hAxisMaxValue);
-      this.scatterChart.options.vAxis.minValue = vAxisMinValue - 1000000; //Längengrad
-      this.scatterChart.options.vAxis.maxValue = vAxisMaxValue + 1000000;
-      this.scatterChart.options.hAxis.minValue = hAxisMinValue - 1000000; //Breitengrad
-      this.scatterChart.options.hAxis.minValue = hAxisMaxValue + 1000000;
+      //this.scatterChart.options.vAxis.minValue = vAxisMinValue - 1000000; //Längengrad
+      //this.scatterChart.options.vAxis.maxValue = vAxisMaxValue + 1000000;
+      //this.scatterChart.options.hAxis.minValue = hAxisMinValue - 1000000; //Breitengrad
+      //this.scatterChart.options.hAxis.minValue = hAxisMaxValue + 1000000;
 
       
 
@@ -320,6 +360,9 @@ export class RoutesComponent implements OnInit {
       console.log("Values: ScatterChart")
       console.log(rowsScatterChart)
       this.scatterChart.values = rowsScatterChart;
+
+      
+      
 
       console.log(this.scatterChart.options.vAxis.minValue);
       console.log(this.scatterChart.options.vAxis.maxValue);
@@ -379,6 +422,7 @@ export class RoutesComponent implements OnInit {
     this.departureTable.values = [];
 
     this.routeService.getDataWithDetailsIds(detailsIds).subscribe(obj=>{
+      let countDifferentRoutes: any[] = [];
       let departureCounter = 0;
       let departureTableValues: any[] = [];
       obj.forEach(departure=>{
@@ -392,12 +436,16 @@ export class RoutesComponent implements OnInit {
             departure[departure.length-1].stopName.replace('&#x0028;',' (').replace('&#x0029;',') '),
             this.departure[departureCounter].track
           ]
+          if ( countDifferentRoutes == null || countDifferentRoutes.indexOf( departure[departure.length-1].stopName.replace('&#x0028;',' (').replace('&#x0029;',') ') ) == -1 ){
+            countDifferentRoutes.push( departure[departure.length-1].stopName.replace('&#x0028;',' (').replace('&#x0029;',') ' ) ); 
+          } 
         
           departureTableValues.push(elem);
         }
         
         departureCounter++;
       })
+      this.figNumberOfRoutes = countDifferentRoutes.length;
       this.viewDepartureTable = true;
       this.departureTable.values = departureTableValues;
     })
