@@ -47,15 +47,16 @@
                 <div class="info" id="info1" (mouseenter)="this.clickOnInfo(0)" (mouseleave)="this.resetInfo(0)">
                     <mat-icon class="graphIcon">alarm</mat-icon>
                     <div class="statistics">
-                        <p class="value">{{figLongestWait}}</p>
-                        <p class="desc">Längste Wartezeit an einer Station</p>
+                        <p class="value">{{figLongestWait}} min</p>
+                        <p class="desc">Längste Wartezeit</p>
                     </div>
                 </div>
                 <div class="info" id="info2" (mouseenter)="this.clickOnInfo(1)" (mouseleave)="this.resetInfo(1)">
                     <mat-icon class="graphIcon">train</mat-icon>
                     <div class="statistics">
+                        <p class="desc">Knotenpunkt für</p>
                         <p class="value">{{figNumberOfRoutes}}</p>
-                        <p class="desc">Knotenpunkt für {{figNumberOfRoutes}} verschiedene Strecken</p>
+                        <p class="desc">Strecken</p>
                     </div>
                 </div>
             </div>
@@ -77,14 +78,14 @@
                     <mat-icon class="graphIcon">shutter_speed</mat-icon>
                     <div class="statistics">
                         <p class="value">{{figAverageSpeed}}</p>
-                        <p class="desc">Durchschnittliche Geschwindigkeit auf der Strecke</p>
+                        <p class="desc"> Ø-Geschwindigkeit</p>
                     </div>
                 </div>
                 <div class="info" id="info4" (mouseenter)="this.clickOnInfo(3)" (mouseleave)="this.resetInfo(3)">
                     <mat-icon class="graphIcon">place</mat-icon>
                     <div class="statistics">
                         <p class="value">{{figNumberOfStations}}</p>
-                        <p class="desc">Anzahl an Stationen</p>
+                        <p class="desc">angefahrene Stationen</p>
                     </div>
                 </div>
             </div>
