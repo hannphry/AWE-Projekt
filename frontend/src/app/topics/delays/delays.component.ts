@@ -36,6 +36,8 @@ export class DelaysComponent implements OnInit {
 
   delaysPerStation: Delay[] = [];
 
+  sumDelays: number = 0;
+
   displayMessage: string = "Station auswählen";
 
   //CHARTS:
@@ -44,7 +46,7 @@ export class DelaysComponent implements OnInit {
   columnChart: Chart = {
     title: 'Anzahl Änderungen',
     type: ChartType.ColumnChart,
-    columns: ['Bahnhof', 'Änderungen', 'Verspätungen', 'Leere Menge'],
+    columns: ['Bahnhof', 'Änderungen', 'Verspätungen'],
     values: [
     ],
     options: {
@@ -100,7 +102,8 @@ export class DelaysComponent implements OnInit {
     values: [
       //['10.20','10.25', '10.30', '10.35', 'Düsseldorf, Düsseldorf Ost, West, Berlin', 'Düsseldorf, West, Berlin']
     ],
-    options: {}
+    options: {
+    }
   }
 
   constructor(
@@ -693,6 +696,7 @@ export class DelaysComponent implements OnInit {
     let amountDelaysBelow5 = 0;
     let amountDelaysBelow30 = 0;
     let amountDelaysOver30 = 0;
+    this.sumDelays = 0;
     delaysObject.stops.forEach(stop =>{
       amountDelays++;
       if(stop.arrival.changed != "" && stop.departure.changed != ""){
@@ -708,6 +712,10 @@ export class DelaysComponent implements OnInit {
       if((diffArr < 5|| diffDep < 5) && (diffArr > 0|| diffDep > 0)) amountDelaysBelow5++
       else if((diffArr < 30|| diffDep < 30) && (diffArr >= 5|| diffDep >= 5)) amountDelaysBelow30++
       else if(diffArr >= 30|| diffDep >= 30) amountDelaysOver30++
+      if(diffArr > 0) {
+        console.log(diffArr);
+        this.sumDelays += diffArr
+      }
     
       amountAnnouncements += stop.messages.length
       //amountDelays
@@ -755,7 +763,7 @@ export class DelaysComponent implements OnInit {
     })
     let name = this.selectedStations[this.selectedStations.findIndex(stat => ""+stat.id == delaysObject.evaId)].name;
     if(name != "" && name != undefined){
-      let values = [name, amountDelays, amountRealDelays, amountEmptyDelays]
+      let values = [name, amountDelays, amountRealDelays]
       
       this.columnChartValues.push(values);
       

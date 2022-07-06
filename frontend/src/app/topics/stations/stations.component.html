@@ -63,7 +63,7 @@
                 <div class="info" id="info2" (mouseenter)="this.clickOnInfo(1)" (mouseleave)="this.resetInfo(1)">
                     <mat-icon class="graphIcon"> tram</mat-icon>
                     <div class="statistics">
-                        <p class="value">{{figFederalStates}}</p>
+                        <p class="value">{{(figFederalStates * 100).toString().substring(0,4)}}%</p>
                         <p class="desc">Bayern und NRW</p>
                     </div>
                 </div>
@@ -83,7 +83,7 @@
                     <mat-icon class="graphIcon"> category</mat-icon>
                     <div class="statistics">
                         <p class="value">{{this.figStationManagement}}</p>
-                        <p class="desc">Management der Stationen</p>
+                        <p class="desc">Städte managen {{this.figAmountStations}} Stationen</p>
                     </div>
                 </div>
                 <div class="info" id="info4" (mouseenter)="this.clickOnInfo(3)" (mouseleave)="this.resetInfo(3)">
