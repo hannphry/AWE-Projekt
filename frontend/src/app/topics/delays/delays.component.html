@@ -45,14 +45,14 @@
                     <mat-icon class="graphIcon">map</mat-icon>
                     <div class="statistics">
                         <p class="value">{{amountChangedPaths}}</p>
-                        <p class="desc">Anzahl geänderter Strecken</p>
+                        <p class="desc">Geänderte Strecken</p>
                     </div>
                 </div>
                 <div class="info" id="info2" (mouseenter)="this.clickOnInfo(1)" (mouseleave)="this.resetInfo(1)">
                     <mat-icon class="graphIcon">av_timer</mat-icon>
                     <div class="statistics">
                         <p class="value">{{this.delaysAbove30min}}</p>
-                        <p class="desc">Anzahl Verspätungen > 30 min</p>
+                        <p class="desc">Verspätungen > 30 min</p>
                     </div>
                 </div>
             </div>
@@ -79,10 +79,10 @@
                 </div>
                 <div class="info" id="info4" (mouseenter)="this.clickOnInfo(3)" (mouseleave)="this.resetInfo(3)">
                     
-                    <mat-icon class="graphIcon">swap_horiz</mat-icon>
+                    <mat-icon class="graphIcon">timer</mat-icon>
                     <div class="statistics">
-                        <p class="value">{{this.differrenceDelays}}</p>
-                        <p class="desc">Verhältnis echte Verspätungen</p>
+                        <p class="desc">Verspätungszeit insgesamt:</p>
+                        <p class="value">{{this.sumDelays}} min</p>
                     </div>
                 </div>
             </div>
