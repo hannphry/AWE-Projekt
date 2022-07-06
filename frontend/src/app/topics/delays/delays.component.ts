@@ -28,22 +28,79 @@ export class DelaysComponent implements OnInit {
 
   differrenceDelays: number = 0;
 
+  announcementsPerDelay: number = 0;
+
+  delaysAbove30min: number = 0;
+
+  amountChangedPaths: number = 0;
+
   delaysPerStation: Delay[] = [];
+
+  displayMessage: string = "Station auswählen";
 
   //CHARTS:
   viewColumnChart: boolean = false;
+  columnChartValues: any[] = [];
   columnChart: Chart = {
-    title: 'Test',
+    title: 'Anzahl Änderungen',
     type: ChartType.ColumnChart,
-    columns: ['Bahnhof', 'Meldungen', 'Echte Menge'],
+    columns: ['Bahnhof', 'Änderungen', 'Verspätungen', 'Leere Menge'],
     values: [
     ],
     options: {
       colors: [
-        '#badcf7',
-        '#a6c8e3'
+        //'#badcf7',
+        //'#a6c8e3'
+        '#dbcffb',
+        '#c7bbe7',
+        '#b3a7d3'
       ]
     }
+  }
+
+  viewBarChart: boolean = false;
+  barChartValues: any[] = [];
+  barChart: Chart = {
+    title: 'Anzahl Meldungen',
+    type: ChartType.BarChart,
+    columns:['Attribut', 'Menge'],
+    values: [
+    ],
+    options: {
+      colors: [
+        '#c5ccf9',
+        '#b1b8e5',
+        '#9da4d1'
+      ]
+    }
+  }
+  viewSteppedAreaChart: boolean = false;
+  steppedAreaChartValues: any[] = [];
+  steppedAreaChart: Chart = {
+    title: 'Verspätungen',
+    type: ChartType.SteppedAreaChart,
+    columns: ['Station','> 30 min', '< 5 min', '< 30 min'],
+    values: [
+      //['Düsseldorf', 50, 20, 5]
+    ],
+    options: {
+      colors: [
+        '#c5ccf9',
+        '#b1b8e5',
+        '#9da4d1'
+      ]
+    }
+  }
+
+  viewTable: boolean = false;
+  table: Chart = {
+    title: 'Übersicht',
+    type: ChartType.Table,
+    columns: ['Ankunft','Abfahrt','Ankunft neu', 'Abfahrt neu', 'Geplanter Weg', 'Geänderter Weg'],
+    values: [
+      //['10.20','10.25', '10.30', '10.35', 'Düsseldorf, Düsseldorf Ost, West, Berlin', 'Düsseldorf, West, Berlin']
+    ],
+    options: {}
   }
 
   constructor(
@@ -82,9 +139,9 @@ export class DelaysComponent implements OnInit {
        this.selectedStations.splice(findIndex, 1);
       }
     }else{
-      if(this.selectedStations.length < 4){
+      if(this.selectedStations.length < 1){
         this.selectedStations.push(station);
-      }else if(this.selectedStations.length == 4){
+      }else if(this.selectedStations.length == 1){
         this.selectedStations.shift();
         this.selectedStations.push(station);
       }
@@ -118,6 +175,7 @@ export class DelaysComponent implements OnInit {
   compareStations(stations: {name: string, id: number}[]){
     //console.log(stations);
     if(stations.length > 0){
+      this.displayMessage = "Station wird ausgewählt...";
       this.hasSearched = false;
       let values: any[] = [];
       var subject = new ReplaySubject(1);
@@ -128,7 +186,7 @@ export class DelaysComponent implements OnInit {
 
       this.delayService.getDelays(ids).subscribe(
         obj =>{
-        
+        this.displayMessage = "Daten werden ausgewertet."
         //let delaysPerStation: any[] = [];
 
         const parser = new DOMParser();
@@ -139,7 +197,7 @@ export class DelaysComponent implements OnInit {
           let name: string = ""+xml.children[0].attributes.getNamedItem('station')?.value
           let amountDelays: number = xml.children[0].childElementCount
           
-          console.log(xml);
+          //console.log(xml);
 
           //als erstes prüfen, ob trip gecancelt, in delaysObject schmeißen
 
@@ -463,16 +521,29 @@ export class DelaysComponent implements OnInit {
             }
             delaysObject.stops.push(tmpStop);
           }
-          console.log(delaysObject);
+
+          this.displayMessage = "Daten werden ausgewertet.."
+          //console.log(delaysObject);
 
           let hours: string[] = [];
+          let tmpHour = new Date().getHours()
           delaysObject.apiInformation.forEach(apiInfo =>{
-            hours.push(apiInfo.hour)
+            if(Number(apiInfo.hour) >= tmpHour){
+              hours.push(apiInfo.hour)
+            }
           })
+          //console.log(hours);
+          /*
+          for(let hour = new Date().getHours(); hour < (new Date().getHours()+10); hour ++){
+            if(hour < 10){
+              hours.push("0"+hour);
+            }else hours.push(""+hour);
+          }
+          */
           
-          this.delayService.getTimeTables(['21','22'], delaysObject.evaId).subscribe(obj=>{
-            console.log(obj);
-
+          this.delayService.getTimeTables(hours, delaysObject.evaId).subscribe(obj=>{
+            //console.log(obj);
+            this.displayMessage = "Daten werden ausgewertet..."
             obj.forEach(elem=>{
               const timetable = parser.parseFromString(elem, 'text/xml');
               let stops = timetable.children[0].children;
@@ -490,10 +561,12 @@ export class DelaysComponent implements OnInit {
                         if(childElems[j].tagName == 'ar'){
                           delaysObject.stops[stopIndex].arrival.planned = ''+childElems[j].getAttribute('pt');
                           delaysObject.stops[stopIndex].arrival.plannedPath = ''+childElems[j].getAttribute('ppth');
+                          //console.log(childElems[j])
                         }
                         if(childElems[j].tagName == 'dp'){
                           delaysObject.stops[stopIndex].departure.planned = ''+childElems[j].getAttribute('pt');
                           delaysObject.stops[stopIndex].departure.plannedPath = ''+childElems[j].getAttribute('ppth');
+                          //console.log(childElems[j])
                         }
                       }
                     }
@@ -501,8 +574,20 @@ export class DelaysComponent implements OnInit {
                 })
               })
             })
-            console.log(delaysObject);
-          })
+            
+          },
+          (err) => {
+            console.log(err)
+            this.formatGraphData(delaysObject);
+          },
+          () => {
+            this.displayMessage = "Daten werden ausgewertet..."
+            //console.log(delaysObject);
+            this.formatGraphData(delaysObject)
+            this.columnChart.values = this.columnChartValues;
+            this.viewColumnChart = true;
+          }
+          )
           
           let delay: Delay = {
             name: name,
@@ -512,101 +597,15 @@ export class DelaysComponent implements OnInit {
   
           //console.log(delay);
 
-          this.delaysPerStation.push(delay);
+          //this.delaysPerStation.push(delay);
         }
 
         //console.log(this.delaysPerStation);
 
         //xml.children[0].childNodes
-
-        let columnChartValues : any[] = []
-
-        this.delaysPerStation.forEach(station =>{
-          columnChartValues.push([station.name, station.amount, station.delays.length])
-          let ratio = station.delays.length / station.amount;
-          if(this.differrenceDelays == 0){
-            this.differrenceDelays = Number((Math.round(ratio * 100) / 100).toFixed(2));
-          }else{
-            this.differrenceDelays = Number((Math.round((this.differrenceDelays + ratio) * 100) / 100).toFixed(2))/2;
-          }
-
-          /*
-          let tmpStations5Min = station.delays.filter(delays =>{
-            //Month:
-            (Number(delays.to.substring(2,4)) - Number(delays.from.substring(2,4)) == 0) &&
-            //Day:
-            (Number(delays.to.substring(4,6)) - Number(delays.from.substring(4,6)) == 0) &&
-            //Hour:
-            (Number(delays.to.substring(6,8)) - Number(delays.from.substring(6,8)) == 0) &&
-            //Minute:
-            (Number(delays.to.substring(8,10)) - Number(delays.from.substring(8,10)) <= 50)
-          })*/
-
-          //Wieviele sind unter 24h, 7t, 1M, 6M, Rest min? Kennzahl: Durchschnittsdauer? Immer aktualisieren
-          
-          let oneDayDelays = station.delays.filter(delays =>
-            //Year:
-            (Number(delays.to.substring(0,2)) - Number(delays.from.substring(0,2)) == 0)
-            //Month:
-            &&(Number(delays.to.substring(2,4)) - Number(delays.from.substring(2,4)) == 0)
-            //Day:
-            && (Number(delays.to.substring(4,6)) - Number(delays.from.substring(4,6)) == 0)
-          );
-          
-          //console.log("One Day")
-          //console.log(oneDayDelays)
-
-          let weekDelays = station.delays.filter(delays =>
-            //Year:
-            (Number(delays.to.substring(0,2)) - Number(delays.from.substring(0,2)) == 0)
-            //Month:
-            && (Number(delays.to.substring(2,4)) - Number(delays.from.substring(2,4)) == 0)
-            //Day:
-            && (Number(delays.to.substring(4,6)) - Number(delays.from.substring(4,6)) <= 7)
-          );
-          //console.log("One Week")
-          //console.log(weekDelays)
-
-          let monthDelays = station.delays.filter(delays =>
-            //Year:
-            (Number(delays.to.substring(0,2)) - Number(delays.from.substring(0,2)) == 0)
-            //Month:
-            && (Number(delays.to.substring(2,4)) - Number(delays.from.substring(2,4)) == 1)
-          );
-
-          //console.log("One Month")
-          //console.log(monthDelays)
-
-          let sixMonthDelays = station.delays.filter(delays =>
-            //Year:
-            (Number(delays.to.substring(0,2)) - Number(delays.from.substring(0,2)) == 0)
-            //Month:
-            && (Number(delays.to.substring(2,4)) - Number(delays.from.substring(2,4)) <= 6)
-            && (Number(delays.to.substring(2,4)) - Number(delays.from.substring(2,4)) > 1)
-          );
-
-          //console.log("Six Months")
-          //console.log(sixMonthDelays)
-
-          let elseDelays = station.delays.filter(delays =>
-            //Year:
-            (Number(delays.to.substring(0,2)) - Number(delays.from.substring(0,2)) != 0)
-            //Month:
-            || (Number(delays.to.substring(2,4)) - Number(delays.from.substring(2,4)) > 6)
-          );
-          //console.log("Everything else")
-          //console.log(elseDelays);
-
-            //Geringste Verzögerung der drei Stationen oben in DropDown
-            //Längste Verzögerung der drei Stationen oben in DropDown
-        })
-
-        //console.log(columnChartValues);
-        this.viewColumnChart = true; 
-        this.columnChart.values = columnChartValues;
-
+        
         //console.log(this.delaysPerStation);
-
+        
       });
     }
   }
@@ -614,7 +613,6 @@ export class DelaysComponent implements OnInit {
   //(mouseenter)="this.clickOnInfo(0)" (mouseleave)="this.resetInfo(0)"
 
   clickOnInfo(index: number){
-    console.log("Highlight graph" +index);
     let elem = document.getElementById(`graph${index}`);
 
     if(elem){
@@ -634,4 +632,162 @@ export class DelaysComponent implements OnInit {
     input = input.replace('ä','ae').replace('ö','oe').replace('ü','ue').replace('ß','ss')
     return input;
   }
+
+  formatGraphData(delaysObject: {
+    apiInformation: {
+      hour: string, //auslesen aus ct des ar
+      delays: {
+        stopId: string,
+        plannedArrival: string,
+        changedArrival: string,
+        plannedDeparture: string,
+        changedDeparture: string,
+        plannedPath: string, 
+        changedPath: string
+      }[]
+    }[],
+    stops: {
+      stopId: string,
+      messages: {
+        id: string,
+        from: string,
+        to: string,
+        category: string,
+        priority: string
+      }[],
+      arrival: {
+        planned: string,
+        changed: string,
+        plannedPath: string,
+        changedPath: string,
+        messages: {
+          id: string,
+          from: string,
+          to: string
+        }[]
+      },
+      departure: {
+        planned: string,
+        changed: string,
+        plannedPath: string, 
+        changedPath: string,
+        messages: {
+          id: string,
+          from: string,
+          to: string
+        }[]
+      }
+    }[],
+    evaId: string
+  }){
+    //console.log("Different function")
+    //console.log(delaysObject);
+    let amountDelays = 0;
+    let amountRealDelays = 0; //changed in Arrival und Departure gepflegt
+    let amountEmptyDelays = 0;
+
+    let amountAnnouncements = 0;
+    //AmountDelays
+    let amountAnnouncementsPerDelay = 0;
+
+    let amountDelaysBelow5 = 0;
+    let amountDelaysBelow30 = 0;
+    let amountDelaysOver30 = 0;
+    delaysObject.stops.forEach(stop =>{
+      amountDelays++;
+      if(stop.arrival.changed != "" && stop.departure.changed != ""){
+        amountRealDelays++
+      }else amountEmptyDelays++
+
+      amountAnnouncements += stop.messages.length;
+      amountAnnouncementsPerDelay += stop.messages.length + stop.arrival.messages.length + stop.departure.messages.length
+
+      let diffArr = Number(stop.arrival.changed) - Number(stop.arrival.planned)
+      let diffDep = Number(stop.departure.changed) - Number(stop.departure.planned)
+
+      if((diffArr < 5|| diffDep < 5) && (diffArr > 0|| diffDep > 0)) amountDelaysBelow5++
+      else if((diffArr < 30|| diffDep < 30) && (diffArr >= 5|| diffDep >= 5)) amountDelaysBelow30++
+      else if(diffArr >= 30|| diffDep >= 30) amountDelaysOver30++
+    
+      amountAnnouncements += stop.messages.length
+      //amountDelays
+      amountAnnouncementsPerDelay += (stop.arrival.messages.length + stop.departure.messages.length)
+
+
+      if(
+        stop.arrival.changed != "" && stop.arrival.planned != "" && stop.departure.planned != "" && stop.departure.changed != "" &&
+        stop.arrival.changed != "null" && stop.arrival.planned != "null" && stop.departure.planned != "null" && stop.departure.changed != "null"
+        
+      ){
+        //console.log(stop)
+        //['Ankunft','Abfahrt','Ankunft neu', 'Abfahrt neu', 'Geplanter Weg', 'Geänderter Weg'],
+        let plannedArrival = ""+stop.arrival.planned.substring(6,8)+":"+stop.arrival.planned.substring(8,10)
+        let plannedDeparture = ""+stop.departure.planned.substring(6,8)+":"+stop.departure.planned.substring(8,10)
+        let changedArrival = ""+stop.arrival.changed.substring(6,8)+":"+stop.arrival.changed.substring(8,10)
+        let changedDeparture = ""+stop.departure.changed.substring(6,8)+":"+stop.departure.changed.substring(8,10)
+
+        let plannedPath = ""
+        if(stop.arrival.plannedPath != "null" && stop.departure.plannedPath != "null") {
+          plannedPath = stop.arrival.plannedPath + stop.departure.plannedPath
+          plannedPath = plannedPath.substring(0,40)+"..."
+        }
+
+        let changedPath = ""
+        if(stop.arrival.changedPath != "null" && stop.departure.changedPath != "null") {
+          changedPath = stop.arrival.changedPath + stop.departure.changedPath
+          changedPath = changedPath.substring(0,40)+"..."
+          this.amountChangedPaths++
+        }
+        
+        let values = [
+          plannedArrival,
+          plannedDeparture,
+          changedArrival,
+          changedDeparture,
+          plannedPath,
+          changedPath
+        ]
+        this.table.values.push(values);
+        //console.log(values);
+    }
+    this.viewTable = true;
+
+    })
+    let name = this.selectedStations[this.selectedStations.findIndex(stat => ""+stat.id == delaysObject.evaId)].name;
+    if(name != "" && name != undefined){
+      let values = [name, amountDelays, amountRealDelays, amountEmptyDelays]
+      
+      this.columnChartValues.push(values);
+      
+      if(this.differrenceDelays == 0){
+        this.differrenceDelays = Math.round((amountRealDelays / amountDelays) * 100) / 100 
+      }else{
+        this.differrenceDelays = Math.round(((this.differrenceDelays + (amountRealDelays / amountDelays)) / 2) * 100) / 100 
+      }
+      this.steppedAreaChartValues = [name, amountDelaysOver30, amountDelaysBelow5, amountDelaysBelow30]
+      //console.log(this.steppedAreaChartValues)
+      this.steppedAreaChart.values.push(this.steppedAreaChartValues);
+      this.delaysAbove30min = amountDelaysOver30;
+      
+      this.viewSteppedAreaChart = true;
+
+    }
+    if(this.announcementsPerDelay == 0){
+      this.announcementsPerDelay = Math.round(((amountAnnouncementsPerDelay/ amountDelays)) * 100) / 100 
+    }else{
+      this.announcementsPerDelay = Math.round((((amountAnnouncementsPerDelay/ amountDelays) + (amountAnnouncementsPerDelay/ amountDelays))/2) * 100) / 100 
+    }
+
+    this.barChartValues = [
+      ['Meldungen', amountAnnouncements],
+      ['Verspätungen', amountDelays],
+      ['Meldungen pro Verspätung', amountAnnouncementsPerDelay]
+    ];
+    //console.log(this.barChartValues);
+    this.barChart.values = this.barChartValues;
+    this.viewBarChart = true
+
+    //console.log(values);
+  }
+
 }

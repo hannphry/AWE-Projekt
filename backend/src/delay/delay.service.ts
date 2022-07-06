@@ -171,6 +171,7 @@ export class DelayService {
         return zip(
             input.flatMap(
               (hour) => {
+                this.sleep(1500);
                 return this.httpService.get(`https://api.deutschebahn.com/timetables/v1/plan/${evaNo}/${date}/${hour}`,{headers: {
                     Authorization: 'Bearer 112d350cb8cb41770e1abf08d88b7ab4',
                     Accept: 'application/json'
@@ -182,5 +183,14 @@ export class DelayService {
               }
           )
     }
+
+    sleep(milliseconds: number) {
+        const date = Date.now();
+        let currentDate = null;
+        do {
+          currentDate = Date.now();
+        } while (currentDate - date < milliseconds);
+        //console.log("sleep");
+      }
 
 }

@@ -28,21 +28,46 @@ body #layout .row {
             }
         }
         #info2{
-            background-color: #8db8f497;
+            background-color: #bcd7fe;
             .graphIcon{
-                background: #7a9dcf83;
+                background: #a8c3ea;
             }
         }
         #info3{
-            background-color: #8d9bf458;
+            background-color: #c5ccf9;
             .graphIcon{
-                background: #7884d367;
+                background: #b1b8e5;
+                background: #9da4d1;
             }
         }
         #info4{
-            background-color: #a98df44b;
+            background-color: #dbcffb;
             .graphIcon{
-                background: #8771c34b;
+                background: #c7bbe7;
+            }
+        }
+    }
+    #graphs{
+        #graph0{
+            google-chart{
+                ::ng-deep .google-visualization-table-tr-head {
+                    color: white;
+                    background-color: #a6c8e3;
+                }
+                ::ng-deep .google-visualization-table .gradient {
+                    background-image: none;
+                }
+                ::ng-deep .google-visualization-table-div-page {
+                    background-image: none !important;
+                    background-color: white !important;
+                }
+                ::ng-deep .goog-custom-button-outer-box{
+                    border-color: #a6c8e3 !important;
+                }
+                ::ng-deep .goog-custom-button-inner-box{
+                    color: white !important;
+                    background-color: #badcf7;
+                }
             }
         }
     }
@@ -71,7 +96,7 @@ body #layout .row {
                     ::ng-deep .mat-form-field-wrapper{
                         padding: 0;
                         height: 50px;
-                        width: 100%;
+                        width: 90%;
                         background-color: white;
                         .mat-form-field-flex { 
                             padding: 0 0px !important;
