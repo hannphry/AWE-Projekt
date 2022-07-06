@@ -16,7 +16,7 @@ export class RoutesComponent implements OnInit {
   //Kennzahlen
   figNumberOfRoutes: number = 0;
   figLongestWait: number = 0;
-  figAverageSpeed: number = 0;
+  figAverageSpeed: string = "";
   figNumberOfStations: number = 0;
 
   stations :any[] = [];
@@ -77,8 +77,9 @@ export class RoutesComponent implements OnInit {
     
     options: {
       colors: [
-        '#e9f35c',
-        '#e1eb54'
+        //'#e9f35c',
+        //'#e1eb54'
+        "#000000"
       ],
       pointShape: 'triangle',
       vAxis: {
@@ -93,10 +94,11 @@ export class RoutesComponent implements OnInit {
           color: 'transparent'
       }
       },
+      pointSize: 14,
       legend: 'none'
     },
     
-    columns: ["Breitengrad", "Längengrad"],
+    columns: ["Breitengrad", "Längengrad", {role :'annotation'} ],
     
     values: []
 
@@ -267,7 +269,7 @@ export class RoutesComponent implements OnInit {
           let startDate = new Date(2022, 6, 12, FigTempHourDep, FigTempMinDep);
           let endDate = new Date(2022, 6, 12, FigTempHourArr, FigTempMinArr);
           let time = endDate.getTime() - startDate.getTime()
-          console.log( "Time: " + time )
+          //console.log( "Time: " + time )
           if ( time < longestWait){
             longestWait = time;
           }
@@ -278,7 +280,7 @@ export class RoutesComponent implements OnInit {
         
         //[ 'Aachen',  'nach Köln', new Date(2022, 6, 16, 12, 40), new Date(2022, 6, 16, 12, 50) ],
       }
-      console.log( "Längste Wartezeit: " + longestWait)
+      //console.log( "Längste Wartezeit: " + longestWait)
       this.figLongestWait = ( longestWait / 60000 ) * -1;
 
       // Errechene die Gesamte Fahrtdauer
@@ -292,13 +294,13 @@ export class RoutesComponent implements OnInit {
       let endDate = new Date(2022, 6, 12, tempHourArr, tempMinArr);
       let time = endDate.getTime() - startDate.getTime();
       time = Math.floor(time / 60000 );
-      console.log( startDate)
-      console.log( endDate )
-      console.log( time )
+      //console.log( startDate)
+      //console.log( endDate )
+      //console.log( time )
 
       
       
-      console.log(rows)
+      //console.log(rows)
       this.viewTimelineChart = true;
       this.timelineChart.values = rows;
 
@@ -313,9 +315,12 @@ export class RoutesComponent implements OnInit {
         let tempKm = this.calculateDistance(lat[j], lon[j], lat[j+1], lon[j+1]);
         countKm += tempKm;
       }
-      console.log( "Km länge: " + countKm )
+      //console.log( "Km länge: " + countKm )
       
-      this.figAverageSpeed =  Math.round( countKm / (time/60) );
+      let avgSpeed = countKm / (time/60);
+      let test = avgSpeed.toFixed(2);
+      this.figAverageSpeed =  test;
+	  
       //console.log(rowslineChart)
       this.viewLineChart = true;
       this.lineChart.values = rowslineChart;
@@ -330,7 +335,7 @@ export class RoutesComponent implements OnInit {
       for (let s = 0; s < lat.length; s++){
         let currentLon = lon[s] * 1000000;
         let currentLat = lat[s] * 1000000;
-        rowsScatterChart.push( [  currentLon , currentLat  ])
+        rowsScatterChart.push( [  currentLon , currentLat, stops[s]  ])
 
         if(currentLon < vAxisMinValue){
           vAxisMinValue = currentLon;
@@ -345,29 +350,17 @@ export class RoutesComponent implements OnInit {
           hAxisMaxValue = currentLat;
         }
       }
-      console.log(vAxisMinValue);
-      console.log(vAxisMaxValue);
-      console.log(hAxisMinValue);
-      console.log(hAxisMaxValue);
-      //this.scatterChart.options.vAxis.minValue = vAxisMinValue - 1000000; //Längengrad
-      //this.scatterChart.options.vAxis.maxValue = vAxisMaxValue + 1000000;
-      //this.scatterChart.options.hAxis.minValue = hAxisMinValue - 1000000; //Breitengrad
-      //this.scatterChart.options.hAxis.minValue = hAxisMaxValue + 1000000;
+   
 
       
 
       this.viewScatterChart = true;
-      console.log("Values: ScatterChart")
-      console.log(rowsScatterChart)
+      //console.log("Values: ScatterChart")
+      //console.log(rowsScatterChart)
       this.scatterChart.values = rowsScatterChart;
 
       
       
-
-      console.log(this.scatterChart.options.vAxis.minValue);
-      console.log(this.scatterChart.options.vAxis.maxValue);
-      console.log(this.scatterChart.options.hAxis.minValue);
-      console.log(this.scatterChart.options.hAxis.minValue);
     })
   }
 
@@ -407,8 +400,8 @@ export class RoutesComponent implements OnInit {
       this.routeService.getDepartureRoutes(`${input}`, date).subscribe(data=>{
         this.departure = data;
         
-        console.log("Got departure board")
-        console.log("input: "+input)
+        //console.log("Got departure board")
+        //console.log("input: "+input)
         //console.log(data);
 
         data.forEach(dep => detailsId.push(dep.detailsId))
@@ -425,8 +418,9 @@ export class RoutesComponent implements OnInit {
       let countDifferentRoutes: any[] = [];
       let departureCounter = 0;
       let departureTableValues: any[] = [];
+      console.log(this.departure)
       obj.forEach(departure=>{
-        //console.log(departure);
+        
         let indexOfStationDeparture = departure.findIndex((dep: any) => dep.stopId == evaId);
         if(departure[indexOfStationDeparture] != undefined){
           let elem = [
