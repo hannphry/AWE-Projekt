@@ -44,8 +44,8 @@ export class RoutesComponent implements OnInit {
   constructor( private routeService: RouteService ) { }
 
   ngOnInit(): void {
-    this.interactWithSearchStation( 8011160, new Date("2022-07-06T09:30"))
-    this.getWithDetailsId("782559%2F261990%2F227218%2F147244%2F80%3fstation_evaId%3D8098160", "München Hbf")
+    this.interactWithSearchStation( 8000085, new Date("2022-07-06T09:30"))
+    this.getWithDetailsId("813795%2F287331%2F180820%2F180855%2F80%3fstation_evaId%3D8000085", "Frankfurt (Main) Hbf")
     //this.searchForStation("Berlin");
   }
 
@@ -210,7 +210,7 @@ export class RoutesComponent implements OnInit {
   
 
   getWithDetailsId(input: string, name: string){
-    //console.log("DetailsId: " + input);
+    console.log("DetailsId: " + input);
     this.detailsIdLabel = name;
     this.routeService.getDetailsId(input).subscribe(data=>{
       this.track = data;
