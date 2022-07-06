@@ -47,14 +47,14 @@
                 <div class="info" id="info1" (mouseenter)="this.clickOnInfo(0)" (mouseleave)="this.resetInfo(0)">
                     <mat-icon class="graphIcon">alarm</mat-icon>
                     <div class="statistics">
-                        <p class="value">35min</p>
-                        <p class="desc">Durchschnittliche Fahrzeit</p>
+                        <p class="value">{{figLongestWait}}</p>
+                        <p class="desc">Längste Wartezeit an einer Station</p>
                     </div>
                 </div>
                 <div class="info" id="info2" (mouseenter)="this.clickOnInfo(1)" (mouseleave)="this.resetInfo(1)">
                     <mat-icon class="graphIcon">train</mat-icon>
                     <div class="statistics">
-                        <p class="value">7</p>
+                        <p class="value">{{figNumberOfRoutes}}</p>
                         <p class="desc">Verschiedene Strecken</p>
                     </div>
                 </div>
@@ -74,17 +74,17 @@
         <div id="row2" class="row">
             <div id="information">
                 <div class="info" id="info3" (mouseenter)="this.clickOnInfo(2)" (mouseleave)="this.resetInfo(2)">
-                    <mat-icon class="graphIcon">place</mat-icon>
+                    <mat-icon class="graphIcon">shutter_speed</mat-icon>
                     <div class="statistics">
-                        <p class="value"></p>
-                        <p class="desc">Durchschnittliche Länge bei Deutscher Bahn</p>
+                        <p class="value">{{figAverageSpeed}}</p>
+                        <p class="desc">Durchschnittliche Geschwindigkeit auf der Strecke</p>
                     </div>
                 </div>
                 <div class="info" id="info4" (mouseenter)="this.clickOnInfo(3)" (mouseleave)="this.resetInfo(3)">
-                    <mat-icon class="graphIcon"></mat-icon>
+                    <mat-icon class="graphIcon">place</mat-icon>
                     <div class="statistics">
-                        <p class="value"></p>
-                        <p class="desc">KENNZAHL</p>
+                        <p class="value">{{figNumberOfStations}}</p>
+                        <p class="desc">Anzahl an Stationen</p>
                     </div>
                 </div>
             </div>
