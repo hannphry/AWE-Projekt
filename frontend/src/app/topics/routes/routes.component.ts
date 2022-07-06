@@ -16,7 +16,7 @@ export class RoutesComponent implements OnInit {
   //Kennzahlen
   figNumberOfRoutes: number = 0;
   figLongestWait: number = 0;
-  figAverageSpeed: number = 0;
+  figAverageSpeed: string = "";
   figNumberOfStations: number = 0;
 
   stations :any[] = [];
@@ -315,7 +315,10 @@ export class RoutesComponent implements OnInit {
       }
       console.log( "Km länge: " + countKm )
       
-      this.figAverageSpeed =  Math.round( countKm / (time/60) );
+      let avgSpeed = countKm / (time/60);
+      let test = avgSpeed.toFixed(2);
+      this.figAverageSpeed =  test;
+	  
       //console.log(rowslineChart)
       this.viewLineChart = true;
       this.lineChart.values = rowslineChart;
