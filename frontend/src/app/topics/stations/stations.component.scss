@@ -2,10 +2,10 @@ body #layout {
     #topRow{
         #topicName{
             #elem{
-                background-color: #aaecdc;
-                border: 1px solid #96cfc1;
+                background-color: #9ddecd;
+                border: 1px solid #96d6c5;
                 .topicIcon{ 
-                    background-color: #96cfc1;
+                    background-color: #96d6c5;
                 }
             }
         }
@@ -33,10 +33,19 @@ body #layout {
         }
     }
     .row #information{
+        .info{
+            position: relative;
+        }
         #info1{ 
             background-color: #bfe8d2;
             .graphIcon{
                 background: #abcdbb;
+            }
+            #infoIcon{
+                color: white;
+                position: absolute;
+                top: 5px;
+                right: 5px;
             }
         }
         #info2{

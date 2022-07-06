@@ -56,11 +56,14 @@
                         <p class="value">7</p>
                         <p class="desc">Verschiedene Preisklassen</p> <!--Idee: Infobutton, mit Pop-Up Infos zu Preisklasse-->
                     </div>
+                    <a id ="infoIcon" href="https://de.wikipedia.org/wiki/Preisklasse#Ermittlung_der_Preisklasse" target="_blank">
+                        <mat-icon>info</mat-icon>
+                    </a>
                 </div>
                 <div class="info" id="info2" (mouseenter)="this.clickOnInfo(1)" (mouseleave)="this.resetInfo(1)">
                     <mat-icon class="graphIcon"> tram</mat-icon>
                     <div class="statistics">
-                        <p class="value">{{figFederalStates}}%</p>
+                        <p class="value">{{figFederalStates}}</p>
                         <p class="desc">Bayern und NRW</p>
                     </div>
                 </div>

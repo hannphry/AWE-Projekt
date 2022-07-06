@@ -84,7 +84,7 @@
                     <mat-icon class="graphIcon"></mat-icon>
                     <div class="statistics">
                         <p class="value"></p>
-                        <p class="desc"></p>
+                        <p class="desc">KENNZAHL</p>
                     </div>
                 </div>
             </div>
@@ -94,7 +94,8 @@
                     <div *ngIf="this.viewLineChart == false">Station suchen und Strecke auswählen</div>
                 </div>
                 <div class="graph" id="graph3">
-                    <google-chart class="googleChart" [title]="scatterChart.title" [type]="scatterChart.type" [columns]="scatterChart.columns" [data]="scatterChart.values" [options]="scatterChart.options"></google-chart>
+                    <google-chart *ngIf="this.viewScatterChart == true" class="googleChart" [title]="scatterChart.title" [type]="scatterChart.type" [columns]="scatterChart.columns" [data]="scatterChart.values" [options]="scatterChart.options"></google-chart>
+                    <div *ngIf="this.viewScatterChart == false">Station suchen und Strecke auswählen</div>
                 </div>
             </div>
 

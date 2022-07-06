@@ -136,7 +136,7 @@ export class StationsComponent implements OnInit {
     title: 'Preisklassen',
     type: ChartType.ComboChart,
     options: {
-      title : 'Anzahl Stationen der Preisklassen',
+      title : 'Preisklassen',
       seriesType: 'bars',
       series: {
       },
@@ -211,7 +211,7 @@ export class StationsComponent implements OnInit {
     title: 'Preisklassen',
     type: ChartType.BarChart,
     options: {
-      title : 'Stationsübersicht im Umkreis',
+      title : 'Stationsübersicht',
       //vAxis: {title: 'Anzahl'},
       //hAxis: {title: 'Bundesländer'},
       seriesType: 'bars',
@@ -277,14 +277,20 @@ export class StationsComponent implements OnInit {
       this.comboChart.values = priceCategoryStations;
 
       let federalstateStations: any[] = [];
+      this.figFederalStates = 0;
       this.federalStates.forEach(state =>{
         let filterStations = this.stations.filter(station=> station.federalState == state)
         federalstateStations.push([state, filterStations.length]);
         if(state == 'Bayern'){
-          this.figFederalStates += Math.round((this.stations.length / filterStations.length));
+          //Math.round((filterStations.length / this.stations.length)*1000) / 1000
+          //this.figFederalStates += Math.round((filterStations.length / this.stations.length));
+          //this.figFederalStates += (Math.round((filterStations.length / this.stations.length)*1000) / 1000);
+          this.figFederalStates = (Math.round((this.figFederalStates+(Math.round((filterStations.length / this.stations.length)*1000) / 1000)) * 1000)/1000)
         }
         else if(state == 'Nordrhein-Westfalen'){
-          this.figFederalStates += Math.round((this.stations.length / filterStations.length));
+          this.figFederalStates = (Math.round((this.figFederalStates+(Math.round((filterStations.length / this.stations.length)*1000) / 1000)) * 1000)/1000)
+
+          //Math.round((this.figFederalStates+(Math.round((filterStations.length / this.stations.length)*1000) / 1000)) * 1000)/1000
         }
       });
       this.steppedAreaChart.values = federalstateStations;
@@ -345,6 +351,8 @@ export class StationsComponent implements OnInit {
     this.figAmountStations = 0;
     this.figStationManagement = 0;
 
+    let compValueAmountStationsInPriceCategory : number = (this.stations.filter(station => station.priceCategory == num)).length;
+
     this.federalStates.forEach(state=>{
       let tmpStations = this.stations.filter(station => station.federalState == state);
       //console.log(tmpStations);
@@ -358,10 +366,12 @@ export class StationsComponent implements OnInit {
       federalStateStations.push([state, length, tmpStations.length]);
 
       if(state == 'Bayern'){
-        this.figFederalStates += Math.round((tmpStations.length / tmpStationsInCategory.length));
+        //this.figFederalStates += Math.round((tmpStations.length / tmpStationsInCategory.length));
+        this.figFederalStates = Math.round((this.figFederalStates+(Math.round((tmpStationsInCategory.length / compValueAmountStationsInPriceCategory)*1000) / 1000)) * 1000)/1000
       }
       else if(state == 'Nordrhein-Westfalen'){
-        this.figFederalStates += Math.round((tmpStations.length / tmpStationsInCategory.length));
+        // this.figFederalStates += Math.round((tmpStations.length / tmpStationsInCategory.length));
+        this.figFederalStates = Math.round((this.figFederalStates+(Math.round((tmpStationsInCategory.length / compValueAmountStationsInPriceCategory)*1000) / 1000)) * 1000)/1000
       }
 
       tmpStations.forEach(station=>{

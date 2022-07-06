@@ -311,7 +311,7 @@ export class AnnouncementsComponent implements OnInit {
       
       let tmpArray:  any[] = [];
 
-      console.log(graphConcernedLines);
+      //console.log(graphConcernedLines);
 
       graphConcernedLines.forEach(elem => {
           //console.log(elem[0].split(' ')[0]);
@@ -324,7 +324,7 @@ export class AnnouncementsComponent implements OnInit {
           }
         });
         tmpArray.splice(3, 1);
-        console.log(tmpArray);
+        //console.log(tmpArray);
 
         
 
@@ -367,7 +367,7 @@ export class AnnouncementsComponent implements OnInit {
   //(mouseenter)="this.clickOnInfo(0)" (mouseleave)="this.resetInfo(0)"
 
   clickOnInfo(index: number){
-    console.log("Highlight graph" +index);
+    //console.log("Highlight graph" +index);
     let elem = document.getElementById(`graph${index}`);
 
     if(elem){
