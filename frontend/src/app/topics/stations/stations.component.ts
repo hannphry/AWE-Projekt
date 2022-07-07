@@ -363,7 +363,7 @@ export class StationsComponent implements OnInit {
 
       if(tmpStationsInCategory) length = tmpStationsInCategory.length
       
-      federalStateStations.push([state, length, tmpStations.length]);
+      federalStateStations.push([state, tmpStations.length, length]);
 
       if(state == 'Bayern'){
         //this.figFederalStates += Math.round((tmpStations.length / tmpStationsInCategory.length));
@@ -404,7 +404,7 @@ export class StationsComponent implements OnInit {
     this.barChart.values = barChartValues;
 
     this.steppedAreaChart.values = federalStateStations;
-    this.steppedAreaChart.columns = ['Bundesland','Anzahl Stationen', 'Rest'];
+    this.steppedAreaChart.columns = ['Bundesland', 'Alle Stationen', 'Stationen in Klasse'];
     this.figStationManagement = countStationManagement.length;
 
     this.chosenPriceCategory = num;
@@ -519,7 +519,7 @@ export class StationsComponent implements OnInit {
 
     this.barChart.values = [];
 
-    let priceCategory = `Preiskategorie ${tmpStation.priceCategory}`
+    let priceCategory = `Preisklasse ${tmpStation.priceCategory}`
     let amount = filterStations.filter(station => station.priceCategory == tmpStation.priceCategory).length;
     let negAmount = filterStations.filter(station => station.priceCategory != tmpStation.priceCategory).length;
     this.barChart.values.push([priceCategory, amount, negAmount]);

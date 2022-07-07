@@ -706,15 +706,54 @@ export class DelaysComponent implements OnInit {
       amountAnnouncements += stop.messages.length;
       amountAnnouncementsPerDelay += stop.messages.length + stop.arrival.messages.length + stop.departure.messages.length
 
-      let diffArr = Number(stop.arrival.changed) - Number(stop.arrival.planned)
-      let diffDep = Number(stop.departure.changed) - Number(stop.departure.planned)
+      let diffHours = 0;
+      
+      let arrHoursChanged = Number(stop.arrival.changed.substring(6,8))
+      let arrHoursPlanned = Number(stop.arrival.planned.substring(6,8))
+      let arrMinChanged = Number(stop.arrival.changed.substring(8,10))
+      let arrMinPlanned = Number(stop.arrival.planned.substring(8,10))
+
+      let depHoursChanged = Number(stop.departure.changed.substring(6,8))
+      let depHoursPlanned = Number(stop.departure.changed.substring(6,8))
+      let depMinChanged = Number(stop.departure.changed.substring(8,10))
+      let depMinPlanned = Number(stop.arrival.changed.substring(8,10))
+
+      if(arrHoursChanged < arrHoursPlanned) /* => 01 < 23 */ {
+        arrHoursChanged+= 24;
+      }
+      if(depHoursChanged < depHoursPlanned){
+        depHoursChanged += 24;
+      }
+      let diffHoursArr = arrHoursChanged - arrHoursPlanned;
+      let diffHoursDep = depHoursChanged - depHoursPlanned;
+
+      if(arrMinChanged < arrMinPlanned){ // => :20 < :50
+        arrMinChanged += 60;
+      }
+      if(depMinChanged < depMinPlanned){ // => :20 < :50
+        depMinChanged += 60;
+      }
+
+      let diffMinArr = arrMinChanged - arrMinPlanned;
+      let diffMinDep = depMinChanged - depMinPlanned;
+
+      let diffArr = (diffHoursArr*60)+ diffMinArr  //Unterschied Stunden in Minuten + Minuten //Number(stop.arrival.changed) - Number(stop.arrival.planned)
+      let diffDep = (diffHoursDep*60)+ diffMinDep  // Number(stop.departure.changed) - Number(stop.departure.planned)
 
       if((diffArr < 5|| diffDep < 5) && (diffArr > 0|| diffDep > 0)) amountDelaysBelow5++
       else if((diffArr < 30|| diffDep < 30) && (diffArr >= 5|| diffDep >= 5)) amountDelaysBelow30++
       else if(diffArr >= 30|| diffDep >= 30) amountDelaysOver30++
       if(diffArr > 0) {
-        console.log(diffArr);
-        this.sumDelays += diffArr
+        if( 
+          stop.arrival.planned != "" && stop.arrival.planned != "null" &&
+          stop.arrival.changed != "" && stop.arrival.changed != "null" && 
+          stop.departure.planned != "" && stop.departure.planned != "null" &&
+          stop.departure.changed != "" && stop.departure.changed != "null"
+          ){
+            console.log(stop.arrival, stop.departure)
+            console.log(diffArr);
+            this.sumDelays += diffArr
+          }
       }
     
       amountAnnouncements += stop.messages.length
