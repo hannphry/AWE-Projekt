@@ -103,6 +103,9 @@ export class DelaysComponent implements OnInit {
       //['10.20','10.25', '10.30', '10.35', 'Düsseldorf, Düsseldorf Ost, West, Berlin', 'Düsseldorf, West, Berlin']
     ],
     options: {
+      page: 'enable',
+      pageSize: 10,
+      pagingButtons: 0,
     }
   }
 
@@ -706,39 +709,14 @@ export class DelaysComponent implements OnInit {
       amountAnnouncements += stop.messages.length;
       amountAnnouncementsPerDelay += stop.messages.length + stop.arrival.messages.length + stop.departure.messages.length
 
-      let diffHours = 0;
+      let arrDatePlanned = new Date(`20${stop.arrival.planned.substring(0,2)}-${stop.arrival.planned.substring(2,4)}-${stop.arrival.planned.substring(4,6)} ${stop.arrival.planned.substring(6,8)}:${stop.arrival.planned.substring(8,10)}`)
+      let arrDateChanged = new Date(`20${stop.arrival.changed.substring(0,2)}-${stop.arrival.changed.substring(2,4)}-${stop.arrival.changed.substring(4,6)} ${stop.arrival.changed.substring(6,8)}:${stop.arrival.changed.substring(8,10)}`)
       
-      let arrHoursChanged = Number(stop.arrival.changed.substring(6,8))
-      let arrHoursPlanned = Number(stop.arrival.planned.substring(6,8))
-      let arrMinChanged = Number(stop.arrival.changed.substring(8,10))
-      let arrMinPlanned = Number(stop.arrival.planned.substring(8,10))
-
-      let depHoursChanged = Number(stop.departure.changed.substring(6,8))
-      let depHoursPlanned = Number(stop.departure.changed.substring(6,8))
-      let depMinChanged = Number(stop.departure.changed.substring(8,10))
-      let depMinPlanned = Number(stop.arrival.changed.substring(8,10))
-
-      if(arrHoursChanged < arrHoursPlanned) /* => 01 < 23 */ {
-        arrHoursChanged+= 24;
-      }
-      if(depHoursChanged < depHoursPlanned){
-        depHoursChanged += 24;
-      }
-      let diffHoursArr = arrHoursChanged - arrHoursPlanned;
-      let diffHoursDep = depHoursChanged - depHoursPlanned;
-
-      if(arrMinChanged < arrMinPlanned){ // => :20 < :50
-        arrMinChanged += 60;
-      }
-      if(depMinChanged < depMinPlanned){ // => :20 < :50
-        depMinChanged += 60;
-      }
-
-      let diffMinArr = arrMinChanged - arrMinPlanned;
-      let diffMinDep = depMinChanged - depMinPlanned;
-
-      let diffArr = (diffHoursArr*60)+ diffMinArr  //Unterschied Stunden in Minuten + Minuten //Number(stop.arrival.changed) - Number(stop.arrival.planned)
-      let diffDep = (diffHoursDep*60)+ diffMinDep  // Number(stop.departure.changed) - Number(stop.departure.planned)
+      let depDatePlanned = new Date(`20${stop.departure.planned.substring(0,2)}-${stop.departure.planned.substring(2,4)}-${stop.departure.planned.substring(4,6)} ${stop.departure.planned.substring(6,8)}:${stop.departure.planned.substring(8,10)}`)
+      let depDateChanged = new Date(`20${stop.departure.changed.substring(0,2)}-${stop.departure.changed.substring(2,4)}-${stop.departure.changed.substring(4,6)} ${stop.departure.changed.substring(6,8)}:${stop.departure.changed.substring(8,10)}`)
+      
+      let diffArr = (arrDateChanged.getTime() - arrDatePlanned.getTime())/ 60 / 1000;
+      let diffDep = (depDateChanged.getTime() - depDatePlanned.getTime())/ 60 / 1000;
 
       if((diffArr < 5|| diffDep < 5) && (diffArr > 0|| diffDep > 0)) amountDelaysBelow5++
       else if((diffArr < 30|| diffDep < 30) && (diffArr >= 5|| diffDep >= 5)) amountDelaysBelow30++
@@ -750,8 +728,6 @@ export class DelaysComponent implements OnInit {
           stop.departure.planned != "" && stop.departure.planned != "null" &&
           stop.departure.changed != "" && stop.departure.changed != "null"
           ){
-            console.log(stop.arrival, stop.departure)
-            console.log(diffArr);
             this.sumDelays += diffArr
           }
       }
