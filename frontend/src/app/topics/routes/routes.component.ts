@@ -44,9 +44,12 @@ export class RoutesComponent implements OnInit {
   constructor( private routeService: RouteService ) { }
 
   ngOnInit(): void {
-    this.interactWithSearchStation( 8000085, new Date("2022-07-06T09:30"))
+    let date = new Date()
+    date.setHours(9,0,0,0)
+    this.interactWithSearchStation( 8000085, date)
+    this.searchValue = 'Düsseldorf Hbf'
     this.getWithDetailsId("813795%2F287331%2F180820%2F180855%2F80%3fstation_evaId%3D8000085", "Frankfurt (Main) Hbf")
-    //this.searchForStation("Berlin");
+    //this.searchForStation("Berlin");l
   }
 
   nextStationsWordTree: Chart= {
