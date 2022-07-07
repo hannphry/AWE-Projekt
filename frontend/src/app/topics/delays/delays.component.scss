@@ -68,6 +68,9 @@ body #layout .row {
                     color: white !important;
                     background-color: #badcf7;
                 }
+                ::ng-deep .google-visualization-table .gradient {
+                    background-image: none;
+                }
             width: 100%;
             }
         }

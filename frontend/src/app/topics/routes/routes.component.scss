@@ -31,16 +31,28 @@ body #layout .row {
         #departureTable{
             display: flex;
             justify-content: center;
-
+            width: 100%;
             ::ng-deep .google-visualization-table-tr-head{
                 background-color: rgb(235, 225, 94);
+                color: white;
             }
-
-            ::ng-deep .google-visualization-table-tr-odd{
-                background-color: rgb(253, 223, 112);
+            /*
+            ::ng-deep .columnTitle {
+                color: white;
+                background-color: rgb(235, 225, 94);
+            }*/
+            ::ng-deep .google-visualization-table .gradient {
+                background-image: none;
             }
-
-            ::ng-deep .google-visualization-table-div-page{
+            ::ng-deep .google-visualization-table-div-page {
+                background-image: none !important;
+                background-color: white !important;
+            }
+            ::ng-deep .goog-custom-button-outer-box{
+                border-color: #f5d768 !important;
+            }
+            ::ng-deep .goog-custom-button-inner-box{
+                color: white !important;
                 background-color: rgb(235, 225, 94);
             }
 
